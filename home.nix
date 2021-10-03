@@ -92,5 +92,6 @@
     pkgs.ansible
     pkgs.ansible-lint
     pkgs.hugo
+    pkgs.neofetch
   ];
 }
