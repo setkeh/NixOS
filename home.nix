@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Let Home Manager install and manage itself.
@@ -36,8 +36,7 @@
 
   programs.alacritty = {
     enable = true;
-    settings = {
-      font.size = 11;
+    settings = lib.attrsets.recursiveUpdate (import ./dotfiles/alacritty/default.nix) {
       shell.program = "/home/setkeh/.nix-profile/bin/fish";
     };
   };
