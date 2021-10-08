@@ -68,10 +68,9 @@
 (after! org
   (add-to-list 'org-capture-templates
         '("b" "Bookmark (Clipboard)" entry (file+headline "~/storage/org/personal/bookmarks.org" "Bookmarks")
-           "** %(org-cliplink-capture)%?\n:PROPERTIES:\n:TIMESTAMP: %t\n:END:%?\n" :empty-lines 1 :prepend t))
+           "** %(org-cliplink-capture)\n:PROPERTIES:\n:TIMESTAMP: %t\n:END:%?\n" :empty-lines 1 :prepend t))
 )
 
-;; Projectile
 (setq projectile-project-search-path '(
                                        "~/git"
                                        "~/go/src/github.com/setkeh/"
@@ -83,3 +82,35 @@
                                        "~/.config"
                                        "~/.esp"
                                        ))
+
+;; ERC Setup
+;;(setq erc-server "irc.libera.chat"
+;;      erc-port "6697"
+;;      erc-nick "setkeh"
+;;      erc-user-full-name "James <SETKEH> Griffis"
+;;      erc-autojoin-channels-alist '(("irc.libera.chat" "#systemcrafters" "#emacs" "#nixos"))
+;;      erc-prompt-for-password true)
+
+(load "~/.ercpass")
+
+(add-hook 'erc-after-connect
+    	  '(lambda (SERVER NICK)
+    	     (cond
+    	      ((string-match "libera\\.chat" SERVER)
+    	       (erc-message "PRIVMSG" (format "NickServ identify setkeh %s" libera-pass)))
+
+    	      ((string-match "oftc\\.net" SERVER)
+    	       (erc-message "PRIVMSG" (format "NickServ identify %s setkeh" oftc-pass))))))
+
+;;(setq erc-nickserv-passwords
+;;          `((irc.libera.chat     (("nick-one" . ,libera-pass)))
+;;            (irc.oftc.net       (("nickname" . ,oftc-pass)))))
+
+(require 'erc-join)
+(erc-autojoin-mode 1)
+(setq erc-autojoin-channels-alist
+          '(("libera.chat" "#emacs" "#systemcrafters" "#emacs" "#nixos")
+            ("oftc.net" "#home-manager")))
+
+(erc-tls :server "irc.libera.chat" :port 6697 :nick "setkeh")
+(erc-tls :server "irc.oftc.net" :port 6697 :nick "setkeh")

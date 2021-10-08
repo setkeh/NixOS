@@ -53,5 +53,9 @@
     pkgs.ansible-lint
     pkgs.hugo
     pkgs.neofetch
+    pkgs.qutebrowser
+    pkgs._1password
+    pkgs._1password-gui
+    pkgs.rofi
   ];
 }

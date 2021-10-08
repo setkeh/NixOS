@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-
   # Import the Modules
   imports = [
     ./user/packages.nix
@@ -36,10 +35,17 @@
     };
   };
 
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      opl = "eval (op signin griffis)";
+    };
+  };
 
   services.kbfs.enable = true;
   services.keybase.enable = true;
+
+  programs.go.enable = true;
 
   programs.alacritty = {
     enable = true;
