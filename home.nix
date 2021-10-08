@@ -35,6 +35,10 @@
     };
   };
 
+  home.sessionVariables = {
+    PATH = "$PATH:/home/setkeh/go/bin";
+  };
+
   programs.fish = {
     enable = true;
     shellAliases = {
