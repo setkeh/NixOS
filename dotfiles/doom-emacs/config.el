@@ -3,6 +3,8 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; Add GOBIN to emacs Path
+(setq exec-path (append exec-path '("~/go/bin")))
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -82,6 +84,26 @@
                                        "~/.config"
                                        "~/.esp"
                                        ))
+
+;; Go - lsp-mode
+;; Set up before-save hooks to format buffer and add/delete imports.
+(require 'lsp-mode)
+(add-hook 'go-mode-hook #'lsp-deferred)
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Python lsp-mode
+;;(use-package lsp-jedi
+;;  :ensure t
+;;  :config
+;;  (with-eval-after-load "lsp-mode"
+;;    (add-to-list 'lsp-disabled-clients 'pyls)
+;;    (add-to-list 'lsp-enabled-clients 'jedi 'gopls)))
 
 ;; ERC Setup
 ;;(setq erc-server "irc.libera.chat"

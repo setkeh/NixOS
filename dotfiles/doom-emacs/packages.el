@@ -68,3 +68,6 @@
 ;; weechat
 (package! s)
 (package! weechat)
+
+;; LSP Servers
+(package! lsp-jedi)

@@ -37,6 +37,7 @@
 
   home.sessionVariables = {
     PATH = "$PATH:/home/setkeh/go/bin";
+    GOBIN = "/home/setkeh/go/bin";
   };
 
   programs.fish = {
@@ -49,7 +50,13 @@
   services.kbfs.enable = true;
   services.keybase.enable = true;
 
-  programs.go.enable = true;
+  programs.go = {
+    enable = true;
+    packages = {
+      "github.com/sirupsen/logrus" = builtins.fetchGit "https://github.com/sirupsen/logrus";
+      "golang.org/x/sys" = builtins.fetchGit "https://go.googlesource.com/sys";
+    };
+  };
 
   programs.alacritty = {
     enable = true;

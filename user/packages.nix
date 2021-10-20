@@ -57,5 +57,11 @@
     pkgs._1password
     pkgs._1password-gui
     pkgs.rofi
+    pkgs.rnix-lsp
+    pkgs.terraform-lsp
+    pkgs.python39Packages.pip
+    pkgs.vivaldi
+    pkgs.cgminer
+    pkgs.teamviewer
   ];
 }
