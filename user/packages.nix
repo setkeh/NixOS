@@ -62,6 +62,5 @@
     pkgs.python39Packages.pip
     pkgs.vivaldi
     pkgs.cgminer
-    pkgs.teamviewer
   ];
 }
