@@ -33,7 +33,6 @@
     pkgs.discord
     pkgs.calc
     pkgs.pavucontrol
-    pkgs.arduino
     pkgs.freecad
     pkgs.slic3r
     pkgs.jre8
@@ -62,5 +61,17 @@
     pkgs.python39Packages.pip
     pkgs.vivaldi
     pkgs.cgminer
+    pkgs.ipmitool
+    pkgs.giblib
+    pkgs.binutils
+    pkgs.xz
+    pkgs.lzma
+    pkgs.perl
+    pkgs.ipmiview
+    pkgs.file
+    pkgs.steam-run
+    pkgs.appimage-run
+    pkgs.nix-prefetch-scripts
+    pkgs.asciinema
   ];
 }
