@@ -75,5 +75,6 @@
     pkgs.nix-prefetch-scripts
     pkgs.asciinema
     pkgs.dbeaver
+    pkgs.ripgrep
   ];
 }
