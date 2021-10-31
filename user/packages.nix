@@ -3,6 +3,7 @@
 {
    home.packages = [
     pkgs.htop
+    pkgs.nerdfonts
     pkgs.imagemagick
     pkgs.vagrant
     pkgs.gcc
@@ -73,5 +74,6 @@
     pkgs.appimage-run
     pkgs.nix-prefetch-scripts
     pkgs.asciinema
+    pkgs.dbeaver
   ];
 }

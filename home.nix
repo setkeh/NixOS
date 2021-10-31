@@ -5,6 +5,9 @@
   imports = [
     ./user/packages.nix
     ./user/non-nix-dots.nix
+    ./user/applications/fish/init.nix
+    ./user/applications/fish/plugins.nix
+    ./user/applications/fish/functions.nix
   ];
 
   # Let Home Manager install and manage itself.
@@ -41,21 +44,28 @@
     _JAVA_AWT_WM_NONREPARENTING = 1;
   };
 
-  programs.fish = {
-    enable = true;
-    plugins = [{
-      name = "hydro";
-      src = pkgs.fetchFromGitHub {
-        owner = "setkeh";
-        repo = "hydro";
-        rev = "7068cf4b8e77d638be3e9b5872e916502fbc6bc8";
-        sha256 = "0nwz632cyvc0pvfv9i1ba75cs9yjy2wmfyhxnp53pipc84h9yca8";
-      };
-    }];
-    shellAliases = {
-      opl = "eval (op signin griffis)";
-    };
-  };
+#  programs.fish = {
+#    enable = true;
+#    plugins = [{
+#      name = "hydro";
+#      src = pkgs.fetchFromGitHub {
+#        owner = "setkeh";
+#        repo = "hydro";
+#        rev = "7068cf4b8e77d638be3e9b5872e916502fbc6bc8";
+#        sha256 = "0nwz632cyvc0pvfv9i1ba75cs9yjy2wmfyhxnp53pipc84h9yca8";
+#      };
+#    }];
+#    shellAliases = {
+##    };
+
+#    functions = {
+#      fish_greeting = {
+#        description = "fish greeting";
+#        body = "echo Hello Fish";
+#      interactiveShellInit = ''
+
+#      '';
+# };
 
   services.kbfs.enable = true;
   services.keybase.enable = true;

@@ -12,7 +12,7 @@
   };
 
   font = {
-    size = 12.0;
+    size = 8.0;
     use_thin_strokes = true;
 
     normal.family = "FuraCode Nerd Font";
