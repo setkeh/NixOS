@@ -6,7 +6,7 @@
     ./user/packages.nix
     ./user/non-nix-dots.nix
     ./user/applications/fish/init.nix
-    ./user/applications/fish/plugins.nix
+    #./user/applications/fish/plugins.nix
     ./user/applications/fish/functions.nix
   ];
 
@@ -32,7 +32,7 @@
     enable = true;
     userName = "James <SETKEH> Griffis";
     userEmail = "setkeh@gmail.com";
-    signing = { 
+    signing = {
       signByDefault = true;
       key = "1DE2EE2BD0F84215";
     };
