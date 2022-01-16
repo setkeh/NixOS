@@ -76,5 +76,9 @@
     pkgs.asciinema
     pkgs.dbeaver
     pkgs.ripgrep
+    pkgs.websocat
+    pkgs.mcrcon
+    pkgs.filezilla
+    pkgs.arandr
   ];
 }
