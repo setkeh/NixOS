@@ -34,7 +34,7 @@
     pkgs.discord
     pkgs.calc
     pkgs.pavucontrol
-    pkgs.freecad
+#    pkgs.freecad
     pkgs.slic3r
     pkgs.jre8
     pkgs.chromium
@@ -61,17 +61,16 @@
     pkgs.terraform-lsp
     pkgs.python39Packages.pip
     pkgs.vivaldi
-    pkgs.cgminer
-    pkgs.ipmitool
-    pkgs.giblib
+#    pkgs.cgminer
+    #pkgs.ipmitool
     pkgs.binutils
     pkgs.xz
     pkgs.lzma
     pkgs.perl
-    pkgs.ipmiview
+    #pkgs.ipmiview
     pkgs.file
-    pkgs.steam-run
-    pkgs.appimage-run
+#    pkgs.steam-run
+#    pkgs.appimage-run
     pkgs.nix-prefetch-scripts
     pkgs.asciinema
     pkgs.dbeaver
@@ -80,5 +79,27 @@
     pkgs.mcrcon
     pkgs.filezilla
     pkgs.arandr
+    pkgs.iotop
+    pkgs.sysstat
+    pkgs.xmrig
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+    pkgs.openssl
+    pkgs.tanka
+    pkgs.jsonnet-bundler
+    pkgs.apacheHttpd
+    pkgs.mariadb-client
+    pkgs.python39Packages.tomlkit
+    pkgs.tmux-mem-cpu-load
+    pkgs.postman
+    pkgs.xclip
+    pkgs.go-jsonnet
+    pkgs.stern
+    pkgs.cacert
+    pkgs.drone-cli
+    pkgs.s3cmd
+    pkgs.razergenie
+    pkgs.weechat
+    pkgs.neovim
   ];
 }

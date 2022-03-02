@@ -1,7 +1,7 @@
 { stdenv, lib, fetchurl, dpkg
 , alsaLib, atk, cairo, cups, curl, dbus, expat, fontconfig, freetype, glib, glibc
 , qtbase, qttools, wrapQtAppsHook, libnotify, libpulseaudio, libsecret, libv4l, nspr, nss, pango, systemd, wrapGAppsHook, xorg
-, at-spi2-atk, libGLU }:
+, at-spi2-atk, libGLU, libGL }:
 
 let
 
@@ -33,6 +33,7 @@ let
     libv4l
 
     libGLU
+    libGL
 
     xorg.libxkbfile
     xorg.libX11
@@ -71,9 +72,10 @@ in stdenv.mkDerivation rec {
     wrapGAppsHook
     glib # For setup hook populating GSETTINGS_SCHEMA_PATH
     libGLU
+    libGL
   ];
 
-  buildInputs = [ dpkg libGLU ];
+  buildInputs = [ dpkg libGLU libGL ];
 
   unpackPhase = "true";
   installPhase = ''

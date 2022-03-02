@@ -39,6 +39,17 @@
       '';
       onVariable = "term_background";
     };
+
+    play = {
+      body = ''
+        switch $argv
+          case 'eve'
+            WINEPREFIX=$HOME/Games/eve-online/ wine64 Games/eve-online/drive_c/EVE/eve.exe
+          case 'wow'
+            WINEPREFIX=$HOME/Games/WoW/ wine64 $HOME/Games/WoW/drive_c/Program\ Files\ \(x86\)/Battle.net/Battle.net\ Launcher.exe
+          end
+      '';
+    };
     # }}}
  };
 }
