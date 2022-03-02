@@ -22,7 +22,9 @@ in {
     # Enable Home Manager Starship Prompt Module
     programs.starship.enable = true;
 
-    imports = [];
+    imports = [
+      ../../dotfiles/fish/init.nix
+    ];
 
   };
 }
