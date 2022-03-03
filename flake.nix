@@ -17,11 +17,22 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs }: {
+  outputs = inputs @ { self, nixpkgs, home-manager, ... }:
+    let
+      lib = import ./lib;
+    in {
+    nixosConfigurations = {
+      laptop = lib.mkNixOSConfig {
+        name = "laptop";
+        system = "x86_64_linux";
 
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+        imports = [
+          hosts/laptop/laptop.nix
+        ];
 
-    defaultPackage.x86_64-linux = self.packages.x86_64-linux.hello;
-
+        sys.users.primaryUser.extraGroups = [ "wheel" "networkmanager" "libvirtd" "docker" ];
+        sys.security.username = "wil";
+      };
+    };
   };
 }

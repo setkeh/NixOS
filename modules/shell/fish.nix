@@ -1,4 +1,4 @@
-{pkgs, config, lib,  ...}:
+{pkgs, config, lib, ...}:
 with builtins;
 with lib;
 let
@@ -24,6 +24,10 @@ in {
 
     imports = [
       ../../dotfiles/fish/init.nix
+      ../../dotfiles/fish/starship-settings.nix
+      #../../dotfiles/fish/alias.nix
+      ../../dotfiles/fish/functions.nix
+      ../../dotfiles/fish/plugins.nix
     ];
 
   };

@@ -1,0 +1,30 @@
+{ config, pkgs, ... }:
+{
+  programs.tmux.extraTmuxConf = ''
+set-option -g status on
+set-option -g status-interval 1
+set-option -g status-justify centre
+set-option -g status-keys vi
+set-option -g status-position bottom
+set-option -g status-style fg=colour136,bg=colour235
+set-option -g status-left-length 540
+set-option -g status-left-style default
+set-option -g status-left "\
+#[fg=green]#H #[fg=black]• #[fg=green,bright]#(uname -r)#[default] \
+#[fg=white]• #[fg=green,bright]#(apcaccess -p STATUS)#[default]\
+#[fg=white]• #[fg=green,bright]CHAR: #(apcaccess -p BCHARGE | cut -f 1 -d ' ')#[default]#[fg=green,bright]% \
+#[fg=white]• #[fg=green,bright]LOAD: #(apcaccess -p LOADPCT | cut -f 1 -d ' ')#[default]#[fg=green,bright]% \
+#[fg=white]• #[fg=green,bright]TEMP: #(apcaccess -p ITEMP | cut -f 1 -d ' ')#[default]#[fg=green,bright]C \
+#[fg=white]• #[fg=green,bright]TIME: #(apcaccess -p TIMELEFT | cut -f 1 -d ' ')#[default]#[fg=green,bright]M \
+#[fg=white]• #[fg=green,bright]LINE: #(apcaccess -p LINEV | cut -f 1 -d ' ')#[default]#[fg=green,bright]V "
+set-option -g status-right-length 140
+set-option -g status-right-style default
+set-option -g status-right "#[fg=green,bg=default,bright]#(tmux-mem-cpu-load) "
+set-option -ag status-right "#[fg=red,dim,bg=default]UP#(uptime | cut -f 5-8 -d ' ' | cut -f 1 -d ',') "
+set-option -ag status-right " #[fg=white,bg=default]%a%l:%M:%S %p#[default] #[fg=blue]%Y-%m-%d"
+set-window-option -g window-status-style fg=colour244
+set-window-option -g window-status-style bg=default
+set-window-option -g window-status-current-style fg=colour166
+set-window-option -g window-status-current-style bg=default
+  '';
+}
