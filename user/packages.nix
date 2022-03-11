@@ -34,7 +34,7 @@
     pkgs.discord
     pkgs.calc
     pkgs.pavucontrol
-    pkgs.freecad
+    #pkgs.freecad
     pkgs.slic3r
     pkgs.jre8
     pkgs.chromium
@@ -63,7 +63,7 @@
     pkgs.vivaldi
     pkgs.cgminer
     pkgs.ipmitool
-    pkgs.giblib
+    #pkgs.giblib
     pkgs.binutils
     pkgs.xz
     pkgs.lzma
@@ -80,5 +80,7 @@
     pkgs.mcrcon
     pkgs.filezilla
     pkgs.arandr
+    pkgs.wimlib
+    pkgs.weechat
   ];
 }

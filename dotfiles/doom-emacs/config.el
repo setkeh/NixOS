@@ -113,26 +113,26 @@
 ;;      erc-autojoin-channels-alist '(("irc.libera.chat" "#systemcrafters" "#emacs" "#nixos"))
 ;;      erc-prompt-for-password true)
 
-(load "~/.ercpass")
+;;(load "~/.ercpass")
 
-(add-hook 'erc-after-connect
-    	  '(lambda (SERVER NICK)
-    	     (cond
-    	      ((string-match "libera\\.chat" SERVER)
-    	       (erc-message "PRIVMSG" (format "NickServ identify setkeh %s" libera-pass)))
+;;(add-hook 'erc-after-connect
+;;    	  '(lambda (SERVER NICK)
+;;    	     (cond
+;;    	      ((string-match "libera\\.chat" SERVER)
+;;    	       (erc-message "PRIVMSG" (format "NickServ identify setkeh %s" libera-pass)))
 
-    	      ((string-match "oftc\\.net" SERVER)
-    	       (erc-message "PRIVMSG" (format "NickServ identify %s setkeh" oftc-pass))))))
+;;    	      ((string-match "oftc\\.net" SERVER)
+;;    	       (erc-message "PRIVMSG" (format "NickServ identify %s setkeh" oftc-pass))))))
 
 ;;(setq erc-nickserv-passwords
 ;;          `((irc.libera.chat     (("nick-one" . ,libera-pass)))
 ;;            (irc.oftc.net       (("nickname" . ,oftc-pass)))))
 
-(require 'erc-join)
-(erc-autojoin-mode 1)
-(setq erc-autojoin-channels-alist
-          '(("libera.chat" "#emacs" "#systemcrafters" "#emacs" "#nixos")
-            ("oftc.net" "#home-manager")))
+;;(require 'erc-join)
+;;(erc-autojoin-mode 1)
+;;(setq erc-autojoin-channels-alist
+;;          '(("libera.chat" "#emacs" "#systemcrafters" "#emacs" "#nixos")
+;;            ("oftc.net" "#home-manager")))
 
-(erc-tls :server "irc.libera.chat" :port 6697 :nick "setkeh")
-(erc-tls :server "irc.oftc.net" :port 6697 :nick "setkeh")
+;;(erc-tls :server "irc.libera.chat" :port 6697 :nick "setkeh")
+;;(erc-tls :server "irc.oftc.net" :port 6697 :nick "setkeh")
