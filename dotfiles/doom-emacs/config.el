@@ -83,6 +83,7 @@
                                        "~/.doom.d"
                                        "~/.config"
                                        "~/.esp"
+                                       "~/rust"
                                        ))
 
 ;; Go - lsp-mode

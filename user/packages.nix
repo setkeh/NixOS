@@ -82,5 +82,11 @@
     pkgs.arandr
     pkgs.wimlib
     pkgs.weechat
+    pkgs.cargo
+    pkgs.rustc
+    pkgs.rls
+    pkgs.pkg-config
+    pkgs.openssl
+    pkgs.xclip
   ];
 }
