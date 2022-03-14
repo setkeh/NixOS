@@ -9,4 +9,7 @@
   #QuteBrowser
   home.file.".config/qutebrowser/config.py".source = ../dotfiles/qutebrowser/config.py;
   home.file.".config/qutebrowser/1pass.py".source = ../dotfiles/qutebrowser/1pass.py;
+
+  #TMUX
+  home.file.".tmux.conf".source = ../dotfiles/tmux/tmux.conf;
 }
