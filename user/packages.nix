@@ -88,5 +88,10 @@
     pkgs.pkg-config
     pkgs.openssl
     pkgs.xclip
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+    pkgs.postman
+    pkgs.drone-cli
+    pkgs.s3cmd
   ];
 }
