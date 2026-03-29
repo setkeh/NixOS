@@ -3,11 +3,11 @@
 {
   programs.git = {
     enable = true;
-    userName = "James <SETKEH> Griffis";
-    userEmail = "setkeh@gmail.com";
+    settings.user.name = "James <SETKEH> Griffis";
+    settings.user.email = "setkeh@gmail.com";
     signing = {
       signByDefault = true;
-      key = "1DE2EE2BD0F84215";
+      key = "FA929DF32F5BEA3FDBBDA2A86740B732D3507B5E";
     };
   };
 }
