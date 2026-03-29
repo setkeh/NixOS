@@ -3,6 +3,7 @@
 {
   # Import the Modules
   imports = [
+    ./user/nixpkgs.nix
     ./user/packages.nix
     #./user/non-nix-dots.nix
     #./user/applications/fish/init.nix
