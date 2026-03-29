@@ -3,16 +3,15 @@
 {
   # Import the Modules
   imports = [
-    ./user/packages.nix
-    ./user/non-nix-dots.nix
-    ./user/applications/fish/init.nix
+    #./user/packages.nix
+    #./user/non-nix-dots.nix
+    #./user/applications/fish/init.nix
     #./user/applications/fish/plugins.nix
-    ./user/applications/fish/functions.nix
-    ./user/applications/alacritty/default.nix
-    ./user/applications/git/default.nix
-    ./user/applications/go/default.nix
-    ./user/applications/keybase/default.nix
-
+    #./user/applications/fish/functions.nix
+    #./user/applications/alacritty/default.nix
+    #./user/applications/git/default.nix
+    #./user/applications/go/default.nix
+    #./user/applications/keybase/default.nix
   ];
 
   # Let Home Manager install and manage itself.
@@ -31,5 +30,5 @@
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "22.05";
+  home.stateVersion = "25.11";
 }
