@@ -3,12 +3,10 @@
 {
    home.packages = [
     pkgs.btop
+    pkgs.xclip
     pkgs.feh
     pkgs.nerd-fonts.space-mono
-    pkgs.imagemagick
-    pkgs.gcc
-    pkgs.python3
-    pkgs.gnumake
+    pkgs.imagemagick 
     pkgs.obs-studio
     pkgs.slack
     pkgs.kbfs
@@ -20,8 +18,8 @@
     pkgs.ncdu
     pkgs.scrot
     pkgs.jq
-    pkgs.virt-manager
-    pkgs.awscli2
+    /* pkgs.virt-manager */
+    /* pkgs.awscli2 */
     pkgs.tmux
     pkgs.smartmontools
     pkgs.terminator
@@ -30,7 +28,6 @@
     pkgs.slstatus
     pkgs.discord
     pkgs.calc
-    pkgs.jre8
     pkgs.chromium
     pkgs.gparted
     pkgs.p7zip
@@ -39,19 +36,13 @@
     pkgs.spotify
     pkgs.cryptomator
     pkgs.gqrx
-    pkgs.terraform
-    pkgs.ansible
-    pkgs.ansible-lint
     pkgs.neofetch
     pkgs._1password-cli
     pkgs._1password-gui
     pkgs.rofi
-#    pkgs.rnix-lsp RIP @jD91mZM2
-    pkgs.terraform-lsp
-    pkgs.python3Packages.pip
+    /* pkgs.rnix-lsp RIP @jD91mZM2 */
     pkgs.vivaldi
     pkgs.ipmitool
-    pkgs.binutils
     pkgs.xz
     pkgs.perl
     pkgs.ipmiview
@@ -66,14 +57,12 @@
     pkgs.filezilla
     pkgs.arandr
     pkgs.weechat
-    pkgs.cargo
-    pkgs.rustc
-    pkgs.pkg-config
     pkgs.openssl
     pkgs.xclip
     pkgs.kubectl
     pkgs.kubernetes-helm
     pkgs.postman
-    pkgs.s3cmd
+    /* pkgs.s3cmd */
+    pkgs.vscode
   ];
 }
