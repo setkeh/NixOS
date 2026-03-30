@@ -24,6 +24,7 @@
   # }}}
 
   programs.fish.interactiveShellInit = ''
+    set -gx GPG_TTY (tty)
     set -g fish_greeting ""
     # {pkgs.thefuck}/bin/thefuck --alias | source
     # Run function to set colors that are dependant on `$term_background` and to register them so
