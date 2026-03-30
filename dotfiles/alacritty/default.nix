@@ -11,7 +11,7 @@
     decorations = "none";
   };
 
-  font = { size = 8.0; use_thin_strokes = true;
+  font = { size = 8.0;
 
     normal.family = "FuraCode Nerd Font";
     bold.family = "FuraCode Nerd Font";
@@ -20,12 +20,9 @@
 
   cursor.style = "Beam";
 
-  shell = {
+  terminal.shell = {
     program = "fish";
-    args = [
-      "-C"
-      "neofetch"
-    ];
+    args = [ "-C neofetch" ];
   };
 
   colors = {
