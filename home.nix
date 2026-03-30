@@ -6,9 +6,9 @@
     ./user/nixpkgs.nix
     ./user/packages.nix
     #./user/non-nix-dots.nix
-    #./user/applications/fish/init.nix
-    #./user/applications/fish/plugins.nix
-    #./user/applications/fish/functions.nix
+    ./user/applications/fish/init.nix
+    ./user/applications/fish/plugins.nix
+    ./user/applications/fish/functions.nix
     #./user/applications/alacritty/default.nix
     ./user/applications/git/default.nix
     #./user/applications/go/default.nix
