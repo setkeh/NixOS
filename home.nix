@@ -5,15 +5,21 @@
   imports = [
     ./user/nixpkgs.nix
     ./user/packages.nix
+    ./user/services.nix
     #./user/non-nix-dots.nix
     ./user/applications/fish/init.nix
     ./user/applications/fish/plugins.nix
     ./user/applications/fish/functions.nix
     ./user/applications/fish/alias.nix
     ./user/applications/alacritty/default.nix
-    ./user/applications/git/default.nix
+    ./user/applications/git/default.nix 
     #./user/applications/go/default.nix
     #./user/applications/keybase/default.nix
+  ];
+
+  /* Home Manager Overlays */
+  nixpkgs.overlays = [
+    (import etc/overlays/slstatus.nix)
   ];
 
   # Let Home Manager install and manage itself.
@@ -23,6 +29,9 @@
   # paths it should manage.
   home.username = "setkeh";
   home.homeDirectory = "/home/setkeh";
+
+  # Enable X Compositing
+  services.picom.enable = true;
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

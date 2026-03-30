@@ -17,6 +17,16 @@ static const char *colors[][3]      = {
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
+/* Define opacity (0 = transparent, 255 = opaque) */
+static const unsigned int baralpha = 20; // 0xd0 is roughly 80% opaque
+static const unsigned int borderalpha = 255;
+
+/* Alpha Patch alpha's */
+static const unsigned int alphas[][3]      = {
+    /*               fg      bg        border */
+    [SchemeNorm] = { 125, baralpha, borderalpha },
+    [SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+};
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };

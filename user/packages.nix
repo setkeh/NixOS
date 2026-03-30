@@ -3,6 +3,7 @@
 {
    home.packages = [
     pkgs.btop
+    pkgs.feh
     pkgs.nerd-fonts.space-mono
     pkgs.imagemagick
     pkgs.gcc
@@ -26,6 +27,7 @@
     pkgs.terminator
     pkgs.xlockmore
     pkgs.dmenu
+    pkgs.slstatus
     pkgs.discord
     pkgs.calc
     pkgs.jre8
