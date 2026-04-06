@@ -2,6 +2,7 @@
 
 {
    home.packages = [
+    pkgs.gemini-cli
     pkgs.btop
     pkgs.xclip
     pkgs.feh

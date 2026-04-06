@@ -11,11 +11,11 @@
     decorations = "none";
   };
 
-  font = { size = 8.0;
+  font = { size = 6.0;
 
-    normal.family = "FuraCode Nerd Font";
-    bold.family = "FuraCode Nerd Font";
-    italic.family = "FuraCode Nerd Font";
+    normal.family = "SpaceMono Nerd Font"; #"FuraCode Nerd Font";
+    bold.family = "SpaceMono Nerd Font";  #"FuraCode Nerd Font";
+    italic.family = "SpaceMono Nerd Font"; #"FuraCode Nerd Font";
   };
 
   cursor.style = "Beam";

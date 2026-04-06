@@ -6,13 +6,14 @@
     ./user/nixpkgs.nix
     ./user/packages.nix
     ./user/services.nix
-    #./user/non-nix-dots.nix
+    ./user/non-nix-dots.nix
     ./user/applications/fish/init.nix
     ./user/applications/fish/plugins.nix
     ./user/applications/fish/functions.nix
     ./user/applications/fish/alias.nix
     ./user/applications/alacritty/default.nix
-    ./user/applications/git/default.nix 
+    ./user/applications/git/default.nix
+    ./user/applications/tmux/default.nix
     #./user/applications/go/default.nix
     #./user/applications/keybase/default.nix
   ];
