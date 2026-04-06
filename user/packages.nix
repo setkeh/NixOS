@@ -2,6 +2,7 @@
 
 {
    home.packages = [
+    pkgs.vim
     pkgs.btop
     pkgs.xclip
     pkgs.feh
