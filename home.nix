@@ -10,7 +10,7 @@
     ./user/applications/fish/init.nix
     ./user/applications/fish/plugins.nix
     ./user/applications/fish/functions.nix
-    ./user/applications/fish/alias.nix
+#    ./user/applications/fish/alias.nix
     ./user/applications/alacritty/default.nix
     ./user/applications/git/default.nix
     ./user/applications/tmux/default.nix
@@ -19,9 +19,15 @@
   ];
 
   /* Home Manager Overlays */
-  nixpkgs.overlays = [
-    (import etc/overlays/slstatus.nix)
-  ];
+  nixpkgs = {
+    overlays = [
+    /*    (import etc/overlays/slstatus.nix) */
+    ];
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

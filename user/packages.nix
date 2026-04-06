@@ -2,6 +2,7 @@
 
 {
    home.packages = [
+    pkgs.vim
     pkgs.gemini-cli
     pkgs.btop
     pkgs.xclip
