@@ -8,9 +8,19 @@
     };
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11"; # Use the appropriate branch
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
+    /* overlays.default = final: prev: {
+        dwm = prev.callPackage ./etc/overlays/dwm.nix { };
+        slstatus = prev.callPackage ./etc/overlays/alstatus.nix { };
+      };
+
+      packages.x86_64-linux = {
+        inherit (pkgs) dwm;
+        inherit (pkgs) slstatus; 
+      }; */
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, agenix, ... }@inputs: {
@@ -22,12 +32,12 @@
           ./hosts/wsl
           nixos-wsl.nixosModules.default
           {
-            age = {
-              identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
-              secrets = {
-                gpg-email.file = ./secrets/gpg-email.age;
-              };
-            };
+            #age = {
+            #  identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
+            #  secrets = {
+            #    git-email.file = ./secrets/git-email.age;
+            #  };
+            #};
           }
           {
             environment.systemPackages = [ agenix.packages.x86_64-linux.default ];
@@ -37,22 +47,59 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.setkeh = import ./home/wsl;
+            home-manager.users.setkeh = {
+              imports = [
+                ./home/wsl
+                agenix.homeManagerModules.default
+              ];
+              age = {
+                identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
+                secrets = {
+                  git-email.file = ./secrets/git-email.age;
+                };
+              };
+            };
           }
         ];
       };
 
       # Laptop configuration
-      laptop = nixpkgs.lib.nixosSystem {
+      nixos-e7250 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./hosts/laptop
+          ./hosts/nixos-e7250
+
+          /* Overlay Module */
+          ./etc/overlays
+
+          {
+            #age = {
+            #  identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
+            #  secrets = {
+            #    git-email.file = ./secrets/git-email.age;
+            #  };
+            #};
+          }
+          {
+            environment.systemPackages = [ agenix.packages.x86_64-linux.default ];
+          }
           home-manager.nixosModules.home-manager
           agenix.nixosModules.default
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.setkeh = import ./home/laptop;
+            home-manager.users.setkeh = {
+              imports = [
+                ./home/nixos-e7250
+                agenix.homeManagerModules.default
+              ];
+              age = {
+                identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
+                secrets = {
+                  git-email.file = ./secrets/git-email.age;
+                };
+              };
+            };
           }
         ];
       };
