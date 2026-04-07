@@ -4,6 +4,7 @@
     ./packages.nix
 
     /* Common Configs */
+    ../../common/env.nix
     ../../common/git.nix
     ../../common/services.nix
 
