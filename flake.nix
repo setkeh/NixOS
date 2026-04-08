@@ -40,7 +40,10 @@
             #};
           }
                     ({ pkgs, ... }: {
-                      environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey ];
+                      environment.systemPackages = [
+                        agenix.packages.x86_64-linux.default
+                        pkgs.age-plugin-yubikey
+                      ];
                     })
                     home-manager.nixosModules.home-manager 
                     agenix.nixosModules.default
@@ -73,15 +76,18 @@
           ./etc/overlays
 
           {
-            #age = {
-            #  identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
-            #  secrets = {
-            #    git-email.file = ./secrets/git-email.age;
-            #  };
-            #};
+            age = {
+              identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
+              secrets = {
+                git-email.file = ./secrets/fish-alias.age;
+              };
+            };
           }
                     ({ pkgs, ... }: {
-                      environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey ];
+                      environment.systemPackages = [
+                        agenix.packages.x86_64-linux.default
+                        pkgs.age-plugin-yubikey
+                      ];
                     })
                     home-manager.nixosModules.home-manager
                     agenix.nixosModules.default
