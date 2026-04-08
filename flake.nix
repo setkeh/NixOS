@@ -39,29 +39,29 @@
             #  };
             #};
           }
-          {
-            environment.systemPackages = [ agenix.packages.x86_64-linux.default ];
-          }
-          home-manager.nixosModules.home-manager 
-          agenix.nixosModules.default
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.setkeh = {
-              imports = [
-                ./home/wsl
-                agenix.homeManagerModules.default
-              ];
-              age = {
-                identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
-                secrets = {
-                  git-email.file = ./secrets/git-email.age;
+                    ({ pkgs, ... }: {
+                      environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey ];
+                    })
+                    home-manager.nixosModules.home-manager 
+                    agenix.nixosModules.default
+                    {
+                      home-manager.useGlobalPkgs = true;
+                      home-manager.useUserPackages = true;
+                      home-manager.users.setkeh = { pkgs, ... }: {
+                        imports = [
+                          ./home/wsl
+                          agenix.homeManagerModules.default
+                        ];
+                        age = {
+                          identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
+                          secrets = {
+                            fish-alias.file = ./secrets/fish-alias.age;
+                          };
+                        };
+                      };
+                    }
+                  ];
                 };
-              };
-            };
-          }
-        ];
-      };
 
       # Laptop configuration
       nixos-e7250 = nixpkgs.lib.nixosSystem {
@@ -80,29 +80,29 @@
             #  };
             #};
           }
-          {
-            environment.systemPackages = [ agenix.packages.x86_64-linux.default ];
-          }
-          home-manager.nixosModules.home-manager
-          agenix.nixosModules.default
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.setkeh = {
-              imports = [
-                ./home/nixos-e7250
-                agenix.homeManagerModules.default
-              ];
-              age = {
-                identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
-                secrets = {
-                  git-email.file = ./secrets/git-email.age;
+                    ({ pkgs, ... }: {
+                      environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey ];
+                    })
+                    home-manager.nixosModules.home-manager
+                    agenix.nixosModules.default
+                    {
+                      home-manager.useGlobalPkgs = true;
+                      home-manager.useUserPackages = true;
+                      home-manager.users.setkeh = { pkgs, ... }: {
+                        imports = [
+                          ./home/nixos-e7250
+                          agenix.homeManagerModules.default
+                        ];
+                        age = {
+                          identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
+                          secrets = {
+                            fish-alias.file = ./secrets/fish-alias.age;
+                          };
+                        };
+                      };
+                    }
+                  ];
                 };
-              };
-            };
-          }
-        ];
-      };
 
     # Define a specific configuration for your user and system
     #homeConfigurations."setkeh@nixos-e7250" = home-manager.lib.homeManagerConfiguration {

@@ -68,5 +68,6 @@
     pkgs.vscode
     pkgs.mc
     pkgs.yubikey-manager
+    pkgs.age-plugin-yubikey
   ];
 }

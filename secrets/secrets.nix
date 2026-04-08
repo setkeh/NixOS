@@ -8,7 +8,7 @@ let
 
 in
 {
-  "git-email.age".publicKeys = users ++ systems;
+  "fish-alias.age".publicKeys = users ++ systems;
   "armored-secret.age" = {
     publicKeys = users ++ systems;
     armor = true;

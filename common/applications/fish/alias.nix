@@ -2,8 +2,6 @@
 
 {
   programs.fish.shellAliases = {
-      ll = "ls -lh";
-      nswitch = "sudo nixos-rebuild switch --flake .#myhostname";
-      testcle = "echo 'test'";
+      builtins.readFile config.age.secrets.fish-alias.path
     };
 }

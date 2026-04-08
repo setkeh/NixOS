@@ -4,6 +4,7 @@
   nixpkgs = {
     overlays = [
       (import ./slstatus.nix)
+      (import ./dwm.nix)
     ];
     config = {
       allowUnfree = true;

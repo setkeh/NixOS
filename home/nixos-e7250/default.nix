@@ -1,10 +1,9 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   imports = [
     /* Packages */
     ./packages.nix
 
     /* Common Configs */
-    ../../common/env.nix
     ../../common/git.nix
     ../../common/services.nix
 
@@ -22,5 +21,4 @@
 
   # Basic user info
   home.stateVersion = "25.11";
-  
 }
