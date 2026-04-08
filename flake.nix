@@ -75,11 +75,18 @@
           /* Overlay Module */
           ./etc/overlays
 
+          ({ pkgs, ... }: {
+            environment.systemPackages = [
+              agenix.packages.x86_64-linux.default
+              pkgs.age-plugin-yubikey
+            ];
+          })
+
           {
             age = {
               identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
               secrets = {
-                git-email.file = ./secrets/fish-alias.age;
+                fish-alias.file = ./secrets/fish-alias.age;
               };
             };
           }
