@@ -29,7 +29,7 @@
               age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
               defaultSopsFile = ./secrets/nixos-e7250.yaml;
               secrets = {
-                /* Im not sure if there is a better way to do this */
+                /* Im not sure if there is a better way to do this but it works for now */
                 "nixos-e7250/fish_aliases" = {
                   owner = config.users.users.setkeh.name;
                   path = "/home/setkeh/.config/fish/conf.d/alias.fish";
