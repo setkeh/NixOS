@@ -84,9 +84,8 @@
                   path = "${config.home.homeDirectory}/aliases.fish";
                 };
               };*/
-              /* age = {
-                #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
-                identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
+              /*age = {
+                identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
                 secrets = {
                   fish-alias.file = ./secrets/fish-alias.age;
                 };
