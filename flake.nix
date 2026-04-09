@@ -31,7 +31,7 @@
       # WSL Configurationc
       nixos-e7250 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        sops-nix.defaultSopsFile = ./secrets/fish_alias.yaml;
+        sops.defaultSopsFile = ./secrets/fish_alias.yaml;
         modules = [
           ./hosts/nixos-e7250
 
