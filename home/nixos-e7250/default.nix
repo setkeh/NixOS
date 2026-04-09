@@ -11,6 +11,7 @@
     ../../common/applications/fish/init.nix
     ../../common/applications/fish/plugins.nix
     ../../common/applications/fish/functions.nix
+    ../../common/applications/fish/alias.nix
 
     /* Alacritty Terminal */
     ../../common/applications/alacritty/default.nix
