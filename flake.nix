@@ -70,6 +70,12 @@
               sops = {
                 age.keyFile = /home/setkeh/.identitys/age-yubikey-identity-44672097.txt;
                 defaultSopsFile = ./secrets/fish-alias.yaml;
+
+                secrets.my-fish-aliases = {
+                # This will take the content of fish-alias.yaml and place it
+                # in ~/.config/fish/aliases.fish
+                  path = "${config.home.homeDirectory}/aliases.fish";
+                };
               };
               /* age = {
                 #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
