@@ -70,5 +70,6 @@
     pkgs.yubikey-manager
     pkgs.age-plugin-yubikey
     pkgs.age
+    pkgs.element-desktop
   ];
 }
