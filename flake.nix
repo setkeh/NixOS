@@ -47,6 +47,7 @@
           {
             sops = {
               age.keyFile = ../../.identitys/age-yubikey-identity-44672097.txt; # Relative to flake.nix
+              age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
               defaultSopsFile = ./secrets/fish_alias.yaml;
             };
           }
@@ -77,6 +78,7 @@
 
               sops = {
                 age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt"; # Relative to flake.nix
+                age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
                 defaultSopsFile = ./secrets/fish_alias.yaml;
                 secrets = {
                   "fish_aliases/nswitch" = {};
