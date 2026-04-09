@@ -3,7 +3,7 @@ NixOS Configuration and Dotfiles Repo
 
 ## Flake
 
-I'm still relativly newish to flakes so i have likely done some things incorrectly, But at this stake its working on my laptop and hopefully soon a lot more hosts.
+I'm still relativly newish to flakes so i have likely done some things incorrectly, But at this stage its working on my laptop and hopefully soon a lot more hosts.
 
 That said please open an issue/pr if you have any suggestions on fixing anything i had implimented oddly.
 
