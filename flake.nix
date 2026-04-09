@@ -56,13 +56,13 @@
           })*/
         
           home-manager.nixosModules.home-manager
-          ({ lib, pkgs, ...}: {
+          ({ config, lib, pkgs, ...}: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.sharedModules = [
               inputs.sops-nix.homeManagerModules.sops
             ];
-            home-manager.users.setkeh = { pkgs, ... }: {
+            home-manager.users.setkeh = { config, pkgs, ... }: {
               imports = [
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
