@@ -50,7 +50,7 @@
               age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
               defaultSopsFile = ./secrets/fish_alias.yaml;
               secrets = {
-                "fish_aliases/nswitch" = {
+                "fish-aliases" = {
                   owner = config.users.users.setkeh.name;
                 };
               };
@@ -80,8 +80,6 @@
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
               ];
-
-              home.file."some-config".source = config.sops.secrets."fish_aliases/nswitch".path;
 
               /*sops = {
                 age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt"; # Relative to flake.nix
