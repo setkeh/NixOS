@@ -74,18 +74,18 @@
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
               ];
-              /*sops = {
-                age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt";
-                defaultSopsFile = ./secrets/fish-alias.yaml;
 
-                secrets.my-fish-aliases = {
-                # This will take the content of fish-alias.yaml and place it
-                # in ~/.config/fish/aliases.fish
-                  path = "${config.home.homeDirectory}/aliases.fish";
-                };
+              sops.secrets."fish-aliases" = {
+                path = "${config.home.homeDirectory}/.config/fish/sops_aliases.fish";
+              };
+
+              /*sops = {
+                age.keyFile = /home/setkeh/.identitys/age-yubikey-identity-44672097.txt;
+                defaultSopsFile = ./secrets/fish-alias.yaml;
               };*/
-              /*age = {
-                identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
+              /* age = {
+                #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
+                identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
                 secrets = {
                   fish-alias.file = ./secrets/fish-alias.age;
                 };
