@@ -44,6 +44,13 @@
 
           sops-nix.nixosModules.sops
 
+          {
+            sops = {
+              age.keyFile = ../.identitys/age-yubikey-identity-44672097.txt; # Relative to flake.nix
+              defaultSopsFile = ./secrets/fish-alias.yaml;
+            };
+          }
+
           /*({ lib, pkgs, ...}: {
             age = {
               ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
@@ -67,7 +74,7 @@
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
               ];
-              sops = {
+              /*sops = {
                 age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt";
                 defaultSopsFile = ./secrets/fish-alias.yaml;
 
@@ -76,7 +83,7 @@
                 # in ~/.config/fish/aliases.fish
                   path = "${config.home.homeDirectory}/aliases.fish";
                 };
-              };
+              };*/
               /* age = {
                 #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
                 identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
