@@ -75,14 +75,12 @@
                 #agenix.homeManagerModules.default
               ];
 
-              {
-                sops = {
-                  age.keyFile = ../../.identitys/age-yubikey-identity-44672097.txt; # Relative to flake.nix
-                  #defaultSopsFile = ./secrets/fish-alias.yaml;
-                  secrets = {
-                    "fish-aliases" = {
-                      path = "${config.home.homeDirectory}/.config/fish/sops_aliases.fish";
-                    };
+              sops = {
+                age.keyFile = ../../.identitys/age-yubikey-identity-44672097.txt; # Relative to flake.nix
+                #defaultSopsFile = ./secrets/fish-alias.yaml;
+                secrets = {
+                  "fish-aliases" = {
+                    path = "${config.home.homeDirectory}/.config/fish/sops_aliases.fish";
                   };
                 };
               };
