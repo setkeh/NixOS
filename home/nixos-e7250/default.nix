@@ -11,21 +11,10 @@
     ../../common/applications/fish/init.nix
     ../../common/applications/fish/plugins.nix
     ../../common/applications/fish/functions.nix
-    #../../common/applications/fish/alias.nix
 
     /* Alacritty Terminal */
     ../../common/applications/alacritty/default.nix
   ];
-
-  #nixpkgs = {
-  #  overlays = [
-  #    (import ../../etc/overlays/age.nix)
-  #  ];
-  #  config = {
-  #    allowUnfree = true;
-  #    allowUnfreePredicate = (_: true);
-  #  };
-  #};
 
   # Enable X Compositing
   services.picom.enable = true;
