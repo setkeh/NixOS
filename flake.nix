@@ -2,10 +2,13 @@
   description = "My Home Manager configuration flake";
 
   inputs = {
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #agenix = {
+    #  url = "github:ryantm/agenix";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
+
+    inputs.sops-nix.url = "github:Mic92/sops-nix";
+    inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11"; # Use the appropriate branch
     home-manager.url = "github:nix-community/home-manager/release-25.11";
@@ -23,7 +26,7 @@
       }; */
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, agenix, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix /*agenix*/, ... }@inputs: {
     nixosConfigurations = {
       # WSL Configurationc
       nixos-e7250 = nixpkgs.lib.nixosSystem {
@@ -34,12 +37,14 @@
           /* Overlay Module */
           ./etc/overlays
 
-          agenix.nixosModules.default
+          /*agenix.nixosModules.default
           ({ pkgs, ... }: {
             environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey pkgs.age ];
-          })
+          })*/
 
-          ({ lib, pkgs, ...}: {
+          sops-nix.nixosModules.sops
+
+          /*({ lib, pkgs, ...}: {
             age = {
               ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
               identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
@@ -48,7 +53,7 @@
                 fish-alias.file = ./secrets/fish-alias.age;
               };
             };
-          })
+          })*/
         
           home-manager.nixosModules.home-manager
           ({ lib, pkgs, ...}: {
