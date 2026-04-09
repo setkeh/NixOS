@@ -52,7 +52,7 @@
               secrets = {
                 fish_aliases = {
                   owner = config.users.users.setkeh.name;
-                  path = "/home/setkeh/.config/fish/alias.fish";
+                  path = "/home/setkeh/.config/fish/conf.d/alias.fish";
                 };
               };
             };
