@@ -2,7 +2,7 @@
 
 {
   programs.fish.shellAliases = {
-    nswitch = builtins.readFile config.sops.secrets.fish_alias.nswitch.path;
+    #nswitch = builtins.readFile config.sops.secrets.fish_alias.nswitch.path;
   };
   #programs.fish.shellAliases = {
   #    builtins.readFile config.age.secrets.fish-alias.path
