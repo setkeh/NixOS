@@ -59,10 +59,10 @@
           ({ lib, pkgs, ...}: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.setkeh = { pkgs, ... }: {
             home-manager.sharedModules = [
               inputs.sops-nix.homeManagerModules.sops
             ];
+            home-manager.users.setkeh = { pkgs, ... }: {
               imports = [
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
