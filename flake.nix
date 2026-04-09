@@ -45,6 +45,7 @@
               identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
               secrets = {
                 test-alias.file = ./secrets/fish-alias.age;
+                fish-alias.file = ./secrets/fish-alias.age;
               };
             };
           })
@@ -56,15 +57,15 @@
             home-manager.users.setkeh = { pkgs, ... }: {
               imports = [
                 ./home/nixos-e7250
-                agenix.homeManagerModules.default
+                #agenix.homeManagerModules.default
               ];
-              age = {
+              /* age = {
                 #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
                 identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
                 secrets = {
                   fish-alias.file = ./secrets/fish-alias.age;
                 };
-              };
+              };*/
             };
           })
         ];
