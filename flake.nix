@@ -79,9 +79,7 @@
                 age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt"; # Relative to flake.nix
                 defaultSopsFile = ./secrets/fish_alias.yaml;
                 secrets = {
-                  "fish_aliases" = {
-                    path = "${config.home.homeDirectory}/.config/fish/sops_aliases.fish";
-                  };
+                  "fish_aliases" = {};
                 };
               };
 
