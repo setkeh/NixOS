@@ -76,7 +76,7 @@
               ];
 
               sops = {
-                age.keyFile = ../../.identitys/age-yubikey-identity-44672097.txt; # Relative to flake.nix
+                age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt"; # Relative to flake.nix
                 #defaultSopsFile = ./secrets/fish-alias.yaml;
                 secrets = {
                   "fish-aliases" = {
