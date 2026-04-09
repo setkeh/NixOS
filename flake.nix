@@ -51,7 +51,7 @@
         
           home-manager.nixosModules.home-manager
           ({ lib, pkgs, ...}: {
-            home-manager.useGlobalPkgs = false;
+            home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.setkeh = { pkgs, ... }: {
               imports = [
