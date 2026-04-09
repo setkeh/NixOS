@@ -67,6 +67,7 @@
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
               ];
+              defaultSopsFile = ./secrets/fish-alias.yaml;
               /* age = {
                 #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
                 identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
