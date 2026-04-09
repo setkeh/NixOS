@@ -1,4 +1,4 @@
-{ config, pkgs, sops-nix, ... }:
+{ config, pkgs, sops, ... }:
 
 {
   programs.fish.shellAliases = {
