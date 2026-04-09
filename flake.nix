@@ -68,7 +68,7 @@
                 #agenix.homeManagerModules.default
               ];
               sops = {
-                age.keyFile = /home/setkeh/.identitys/age-yubikey-identity-44672097.txt;
+                age.keyFile = ~/.identitys/age-yubikey-identity-44672097.txt;
                 defaultSopsFile = ./secrets/fish-alias.yaml;
 
                 secrets.my-fish-aliases = {
