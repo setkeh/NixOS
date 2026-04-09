@@ -47,7 +47,7 @@
           {
             sops = {
               age.keyFile = ../../.identitys/age-yubikey-identity-44672097.txt; # Relative to flake.nix
-              defaultSopsFile = ./secrets/fish-alias.yaml;
+              defaultSopsFile = ./secrets/fish_alias.yaml;
             };
           }
 
@@ -77,9 +77,9 @@
 
               sops = {
                 age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt"; # Relative to flake.nix
-                defaultSopsFile = ./secrets/fish-alias.yaml;
+                defaultSopsFile = ./secrets/fish_alias.yaml;
                 secrets = {
-                  "fish-aliases" = {
+                  "fish_aliases" = {
                     path = "${config.home.homeDirectory}/.config/fish/sops_aliases.fish";
                   };
                 };
