@@ -25,44 +25,7 @@
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, agenix, ... }@inputs: {
     nixosConfigurations = {
-      # WSL Configuration
-      wsl = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/wsl
-          nixos-wsl.nixosModules.default
-          {
-            #age = {
-            #  identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
-            #  secrets = {
-            #    git-email.file = ./secrets/git-email.age;
-            #  };
-            #};
-          }
-              ({ pkgs, ... }: {
-                environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey ];
-              })
-              home-manager.nixosModules.home-manager 
-              agenix.nixosModules.default
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.setkeh = { pkgs, ... }: {
-                  imports = [
-                    ./home/wsl
-                    agenix.homeManagerModules.default
-                  ];
-                  age = {
-                    identityPaths = [ "/home/setkeh/age-yubikey-identity-d56ab03e.txt" ];
-                    secrets = {
-                      fish-alias.file = ./secrets/fish-alias.age;
-                    };
-                  };
-                };
-              }
-            ];
-          };
-      # Laptop configuration
+      # WSL Configurationc
       nixos-e7250 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
@@ -71,6 +34,7 @@
           /* Overlay Module */
           ./etc/overlays
 
+          agenix.nixosModules.default
           ({ pkgs, ... }: {
             environment.systemPackages = [ agenix.packages.x86_64-linux.default pkgs.age-plugin-yubikey pkgs.age ];
           })
@@ -80,28 +44,27 @@
               ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
               identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
               secrets = {
-                fish-alias.file = ./secrets/fish-alias.age;
+                test-alias.file = ./secrets/fish-alias.age;
               };
             };
           })
         
           home-manager.nixosModules.home-manager
-          agenix.nixosModules.default
           ({ lib, pkgs, ...}: {
-            home-manager.useGlobalPkgs = true;
+            home-manager.useGlobalPkgs = false;
             home-manager.useUserPackages = true;
             home-manager.users.setkeh = { pkgs, ... }: {
               imports = [
                 ./home/nixos-e7250
                 agenix.homeManagerModules.default
               ];
-              #age = {
-              #  #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey pkgs.age ]}";
-              #  identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
-              #  secrets = {
-              #    fish-alias.file = ./secrets/fish-alias.age;
-              #  };
-              #};
+              age = {
+                #ageBin = "PATH=$PATH:${lib.makeBinPath [ pkgs.age-plugin-yubikey ]} ${pkgs.age}/bin/age";
+                identityPaths = [ "/home/setkeh/.identitys/age-yubikey-identity-44672097.txt" ];
+                secrets = {
+                  fish-alias.file = ./secrets/fish-alias.age;
+                };
+              };
             };
           })
         ];

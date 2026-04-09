@@ -9,6 +9,7 @@ let
 in
 {
   "fish-alias.age".publicKeys = users ++ systems;
+  "test-alias.age".publicKeys = users ++ systems;
   "armored-secret.age" = {
     publicKeys = users ++ systems;
     armor = true;

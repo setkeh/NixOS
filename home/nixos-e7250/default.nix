@@ -16,6 +16,16 @@
     ../../common/applications/alacritty/default.nix
   ];
 
+  nixpkgs = {
+    overlays = [
+      (import ../../etc/overlays/age.nix)
+    ];
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
+  };
+
   # Enable X Compositing
   services.picom.enable = true;
 
