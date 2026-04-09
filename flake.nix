@@ -50,7 +50,7 @@
               age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
               defaultSopsFile = ./secrets/fish_alias.yaml;
               secrets = {
-                "fish-aliases" = {
+                "fish-aliases/nswitch" = {
                   owner = config.users.users.setkeh.name;
                 };
               };
