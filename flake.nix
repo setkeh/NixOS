@@ -31,7 +31,6 @@
       # WSL Configurationc
       nixos-e7250 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        sops.defaultSopsFile = ./secrets/fish_alias.yaml;
         modules = [
           ./hosts/nixos-e7250
 
@@ -61,6 +60,9 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.setkeh = { pkgs, ... }: {
+            home-manager.sharedModules = [
+              inputs.sops-nix.homeManagerModules.sops
+            ];
               imports = [
                 ./home/nixos-e7250
                 #agenix.homeManagerModules.default
