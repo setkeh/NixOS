@@ -97,6 +97,10 @@
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
   '';
 
+  services.openssh = {
+    enable = true;
+  };
+
   # Install firefox.
   programs.firefox.enable = true;
 
