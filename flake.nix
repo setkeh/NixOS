@@ -7,8 +7,8 @@
     #  inputs.nixpkgs.follows = "nixpkgs";
     #};
 
-    inputs.sops-nix.url = "github:Mic92/sops-nix";
-    inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11"; # Use the appropriate branch
     home-manager.url = "github:nix-community/home-manager/release-25.11";
