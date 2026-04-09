@@ -69,7 +69,7 @@
           })*/
         
           home-manager.nixosModules.home-manager
-          ({ config, lib, pkgs, osConfig, ...}: {
+          ({ config, lib, pkgs, ...}: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.sharedModules = [
@@ -81,7 +81,7 @@
                 #agenix.homeManagerModules.default
               ];
 
-              home.file."some-config".source = osConfig.sops.secrets."fish_aliases/nswitch".path;
+              home.file."some-config".source = config.sops.secrets."fish_aliases/nswitch".path;
 
               /*sops = {
                 age.keyFile = "${config.home.homeDirectory}/.identitys/age-yubikey-identity-44672097.txt"; # Relative to flake.nix
