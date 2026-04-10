@@ -21,9 +21,10 @@
       #[fg=white]• #[fg=green,bright]BATT: #(~/.config/home-manager/dotfiles/slstatus/battery_charge.sh)#[default]#[fg=green,bright]
       set-option -g status-right-length 140
       set-option -g status-right-style default
-      set-option -g status-right "#[fg=green,bg=default,bright]#(tmux-mem-cpu-load) "
-      set-option -ag status-right "#[fg=red,dim,bg=default]UP#(uptime | awk -F'up |,' '{print $2}') "
-      set-option -ag status-right " #[fg=white,bg=default]%a%l:%M:%S %p#[default] #[fg=blue]%Y-%m-%d"
+      set-option -g status-right "\
+      #[fg=green,bg=default,bright]#(tmux-mem-cpu-load) \
+      #[fg=red,dim,bg=default]UP#(uptime | awk -F'up |,' '{print $2}') \
+      #[fg=white,bg=default]%a%l:%M:%S %p#[default] #[fg=blue]%Y-%m-%d"
       set-window-option -g window-status-style fg=colour244
       set-window-option -g window-status-style bg=default
       set-window-option -g window-status-current-style fg=colour166
