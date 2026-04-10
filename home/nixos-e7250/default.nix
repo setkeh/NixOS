@@ -14,6 +14,9 @@
 
     /* Alacritty Terminal */
     ../../common/applications/alacritty/default.nix
+
+    /* Tmux Config */
+    ../../common/applications/tmux/e7250.nix
   ];
 
   # Enable X Compositing
