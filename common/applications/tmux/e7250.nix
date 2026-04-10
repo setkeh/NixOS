@@ -10,7 +10,7 @@
       set-option -g status-keys vi
       set-option -g status-position bottom
       set-option -g status-style fg=colour136,bg=colour235
-      set-option -g status-left-length 540
+      set-option -g status-left-length 440
       set-option -g status-left-style default
       set-option -g status-left "\
       #[fg=green]#H #[fg=black]• #[fg=green,bright]#(uname -r)#[default] \
