@@ -1,10 +1,9 @@
 {config, pkgs, lib, osConfig, ...}:
-
-lib.mkIf (osConfig.networking.hostName == "nixos-e7250") {
+{
   programs.tmux = {
     enable = true;
     extraConfig = ''
-      set-option -g default-shell "/home/setkeh/.nix-profile/bin/fish"
+      set-option -g default-shell "${pkgs.fish}/bin/fish"
       set-option -g status on
       set-option -g status-interval 1
       set-option -g status-justify centre
