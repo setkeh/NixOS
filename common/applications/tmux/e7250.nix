@@ -14,7 +14,6 @@
       set-option -g status-left-style default
       set-option -g status-left "\
       #[fg=green]#H #[fg=black]• #[fg=green,bright]#(uname -r)#[default] \
-      #[fg=white]• #[fg=green,bright]#(apcaccess -p STATUS)#[default]\
       #[fg=white]• #[fg=green,bright]WIFI: #(nmcli -f NAME c | cut -f 2 -d $'\n')#[default]#[fg=green,bright] \
       #[fg=white]• #[fg=green,bright]LOAD: #(cat /proc/loadavg | cut -f 1-3 -d $' ')#[default]#[fg=green,bright] \
       #[fg=white]• #[fg=green,bright]RAM: #(free -h | awk '/Mem:/ {print $4 "/" $3 "/" $2}')#[default]#[fg=green,bright] \
@@ -23,8 +22,8 @@
       set-option -g status-right-style default
       set-option -g status-right "\
       #[fg=green,bg=default,bright]#(tmux-mem-cpu-load) \
-      #[fg=red,dim,bg=default]UP#(uptime | awk -F'up |,' '{print $2}') \
-      #[fg=white,bg=default]%a%l:%M:%S %p#[default] #[fg=blue]%Y-%m-%d"
+      #[fg=red,dim,bg=default]UP #(uptime | awk -F'up |,' '{print $2}') \
+      #[fg=white,bg=default]%a %l:%M:%S %p#[default] #[fg=blue]%Y-%m-%d"
       set-window-option -g window-status-style fg=colour244
       set-window-option -g window-status-style bg=default
       set-window-option -g window-status-current-style fg=colour166
