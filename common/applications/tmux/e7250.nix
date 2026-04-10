@@ -1,4 +1,4 @@
-{config, pkgs, lib, osConfig, ...}:
+{config, pkgs, lib, ...}:
 {
   programs.tmux = {
     enable = true;
@@ -15,11 +15,10 @@
       set-option -g status-left "\
       #[fg=green]#H #[fg=black]• #[fg=green,bright]#(uname -r)#[default] \
       #[fg=white]• #[fg=green,bright]#(apcaccess -p STATUS)#[default]\
-      #[fg=white]• #[fg=green,bright]WIFI: #(nmcli -f NAME c | cut -f 1 -d $'\n')#[default]#[fg=green,bright]% \
-      #[fg=white]• #[fg=green,bright]LOAD: #(apcaccess -p LOADPCT | cut -f 1 -d ' ')#[default]#[fg=green,bright]% \
-      #[fg=white]• #[fg=green,bright]TEMP: #(apcaccess -p ITEMP | cut -f 1 -d ' ')#[default]#[fg=green,bright]C \
-      #[fg=white]• #[fg=green,bright]TIME: #(apcaccess -p TIMELEFT | cut -f 1 -d ' ')#[default]#[fg=green,bright]M \
-      #[fg=white]• #[fg=green,bright]LINE: #(apcaccess -p LINEV | cut -f 1 -d ' ')#[default]#[fg=green,bright]V "
+      #[fg=white]• #[fg=green,bright]WIFI: #(nmcli -f NAME c | cut -f 2 -d $'\n')#[default]#[fg=green,bright] \
+      #[fg=white]• #[fg=green,bright]LOAD: #(cat /proc/loadavg | cut -f 1-3 -d $' ')#[default]#[fg=green,bright] \
+      #[fg=white]• #[fg=green,bright]RAM: #(free -h | awk '/Mem:/ {print $4 "/" $3 "/" $2}')#[default]#[fg=green,bright] \
+      #[fg=white]• #[fg=green,bright]BATT: #(~/.config/home-manager/dotfiles/slstatus/battery_charge.sh)#[default]#[fg=green,bright]
       set-option -g status-right-length 140
       set-option -g status-right-style default
       set-option -g status-right "#[fg=green,bg=default,bright]#(tmux-mem-cpu-load) "
