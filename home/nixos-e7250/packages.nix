@@ -71,5 +71,6 @@
     pkgs.age-plugin-yubikey
     pkgs.age
     pkgs.element-desktop
+    pkgs.lmstudio
   ];
 }
