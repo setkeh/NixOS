@@ -26,7 +26,7 @@
             nixpkgs = {
               overlays = [
                 /* My Custom Package Channel */
-                (import ./etc/overlays/nixpkgs-channel.nix { inherit inputs; })
+                inputs.nixpkgs-channel.overlays.default
 
                 /* Custom Package Configuration */
                 (import ./etc/overlays/slstatus.nix)
