@@ -9,7 +9,7 @@
     nixpkgs-channel.url = "github:setkeh/nixpkgs-channel";
     nixpkgs-channel.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-channel";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
   };
 
@@ -61,7 +61,6 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.sharedModules = [
-              inputs.nixpkgs-channel.overlays.default
               inputs.sops-nix.homeManagerModules.sops
             ];
             home-manager.users.setkeh = { config, pkgs, ... }: {
