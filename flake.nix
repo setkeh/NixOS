@@ -61,6 +61,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.sharedModules = [
+              inputs.nixpkgs-channel.overlays.default
               inputs.sops-nix.homeManagerModules.sops
             ];
             home-manager.users.setkeh = { config, pkgs, ... }: {

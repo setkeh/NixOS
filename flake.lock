@@ -153,11 +153,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1776277112,
-        "narHash": "sha256-dGwFmSB1uoxhvT0svBLTs6JDpLeG9HRAaQwZpAOjEDg=",
+        "lastModified": 1776280277,
+        "narHash": "sha256-qZGCpkVmmf6VQIjbizdSh+YnA3pkOY7uvzclt1ovpc0=",
         "owner": "setkeh",
         "repo": "nixpkgs-channel",
-        "rev": "45a4000a122cfede327f96433793d21d7a3b3abb",
+        "rev": "2f8106d183c469ff7992a032db6feb0cb2778226",
         "type": "github"
       },
       "original": {
