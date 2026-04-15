@@ -22,7 +22,7 @@
 
           /* Overlay Module */
           ({ config, pkgs, ... }: {
-            pkgs = import inputs.nixpkgs {
+            nixpkgs = import inputs.nixpkgs {
               overlays = [
                 /* My Custom Package Channel */
                 (import ./etc/overlays/nixpkgs-channel.nix { inherit inputs; })
