@@ -72,5 +72,6 @@
     pkgs.age
     pkgs.element-desktop
     pkgs.lmstudio
+    pkgs.mqtt-explorer
   ];
 }
