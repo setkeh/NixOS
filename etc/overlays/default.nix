@@ -1,10 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   pkgs = import inputs.nixpkgs {
     overlays = [
       /* My Custom Package Channel */
-      inputs.nixpkgs-channel.overlays.default
+      (import ./nixpkgs-channel.nix { inherit inputs; })
 
       /* Custom Package Configuration */
       (import ./slstatus.nix)

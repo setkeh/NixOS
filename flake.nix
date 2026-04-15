@@ -21,7 +21,23 @@
           ./hosts/nixos-e7250
 
           /* Overlay Module */
-          ./etc/overlays
+          ({ config, pkgs, ... }: {
+            pkgs = import inputs.nixpkgs {
+              overlays = [
+                /* My Custom Package Channel */
+                (import ./etc/overlays/nixpkgs-channel.nix { inherit inputs; })
+
+                /* Custom Package Configuration */
+                (import ./etc/overlays/slstatus.nix)
+                (import ./etc/overlays/dwm.nix)
+                (import ./etc/overlays/age.nix)
+              ];
+              config = {
+                allowUnfree = true;
+                allowUnfreePredicate = (_: true);
+              };
+            };
+          })
 
           sops-nix.nixosModules.sops
 
