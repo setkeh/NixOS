@@ -13,7 +13,7 @@
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, ... }@inputs: {
     nixosConfigurations = {
-      # WSL Configurationc
+      # E7250 Laptop Config
       nixos-e7250 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
