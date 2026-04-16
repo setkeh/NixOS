@@ -53,7 +53,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-channel"
+          "nixpkgs"
         ]
       },
       "locked": {
