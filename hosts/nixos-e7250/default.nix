@@ -9,6 +9,7 @@
     ./hardware-configuration.nix
     #./services.nix
     ../../common/gpg.nix
+    ../../common/cleanup.nix
   ];
 
   # Bootloader.
@@ -19,6 +20,8 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.luks.devices."luks-f8a9a2b4-2023-4248-8132-90cd855d9c2b".device = "/dev/disk/by-uuid/f8a9a2b4-2023-4248-8132-90cd855d9c2b";
+  boot.loader.systemd-boot.configurationLimit = 10;
+
   networking.hostName = "nixos-e7250"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
