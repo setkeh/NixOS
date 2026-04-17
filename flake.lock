@@ -99,11 +99,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1776445683,
-        "narHash": "sha256-9tsg5R2qQfznedlKeRtI9M5e59y6TrAV25Y4oR3RVCc=",
+        "lastModified": 1776454490,
+        "narHash": "sha256-rq+AC1KY13HabEJKn/eWj6uJ0PqXGHqgbhJuGHl6PGU=",
         "owner": "setkeh",
         "repo": "nixpkgs-channel",
-        "rev": "1b2c63cc044fc859cf1e081d65eea4600236e71a",
+        "rev": "be7239af9d804e72244edd599846a4e4420541a3",
         "type": "github"
       },
       "original": {
