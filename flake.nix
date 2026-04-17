@@ -13,7 +13,7 @@
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, ... }@inputs: {
     nixosConfigurations = {
       # E7250 Laptop Config
       nixos-e7250 = nixpkgs.lib.nixosSystem {
@@ -26,7 +26,7 @@
             nixpkgs = {
               overlays = [
                 /* My Custom Package Channel */
-                inputs.nixpkgs-channel.overlays.default
+                nixpkgs-channel.overlays.default
 
                 /* Custom Package Configuration */
                 (import ./etc/overlays/slstatus.nix)
