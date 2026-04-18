@@ -32,7 +32,7 @@
   networking.networkmanager.enable = true;
 
   # Tailscale Client Options
-  services.tailscale.useRoutingFeatures = client;
+  services.tailscale.useRoutingFeatures = "client";
 
   # Set your time zone.
   time.timeZone = "Australia/Sydney";
