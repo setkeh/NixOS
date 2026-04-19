@@ -22,6 +22,8 @@
   programs.fish.enable = true;
   users.users.setkeh.shell = pkgs.fish;
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [
     wget
