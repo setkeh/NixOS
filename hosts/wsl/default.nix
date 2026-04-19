@@ -22,6 +22,8 @@
   programs.fish.enable = true;
   users.users.setkeh.shell = pkgs.fish;
 
+  # Allow unfree packages and eperimental features.
+  nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   /* These packages to make yubikey work */
