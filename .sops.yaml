@@ -5,6 +5,7 @@
 keys:
   - &setkeh_pgp FA929DF32F5BEA3FDBBDA2A86740B732D3507B5E
   - &nixos-e7250 age1tgugndgw2vcsyfhquxdzurrf63pmgcp7nn5llzgj9qkea2g6kausgf4kjp
+  - &wsl age1g920hgj0t0m9z7uw34s8fgstc7sn5fw2lqcxdcguflc9cp0gdpesdwsnse
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
@@ -12,3 +13,4 @@ creation_rules:
       - *setkeh_pgp
       age:
       - *nixos-e7250
+      - *wsl
