@@ -18,6 +18,10 @@
   # Set your time zone.
   time.timeZone = "Australia/Sydney";
 
+  /* Switch Shell to Fish */
+  programs.fish.enable = true;
+  users.users.setkeh.shell = pkgs.fish;
+
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [
     wget
