@@ -9,15 +9,18 @@
 
 {
   imports = [
-    # include NixOS-WSL modules
-    #<nixos-wsl/modules>
     ./wsl.nix
     ./services.nix
     ../../common/gpg.nix
+    ../../common/cleanup.nix
   ];
+
+  # Set your time zone.
+  time.timeZone = "Australia/Sydney";
 
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [
+    wget
     socat
     linuxPackages.usbip
     yubikey-manager
@@ -26,6 +29,10 @@
     age-plugin-yubikey
     age
   ];
+
+  services.openssh = {
+    enable = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

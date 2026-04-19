@@ -1,6 +1,7 @@
 { config, pkgs, ... }: {
   imports = [
     ./packages.nix
+    ../../common/git.nix
   ];
 
   # Basic user info
