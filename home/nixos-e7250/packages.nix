@@ -73,5 +73,6 @@
     pkgs.element-desktop
     pkgs.lmstudio
     pkgs.mqtt-explorer
+    pkgs.inetutils
   ];
 }
