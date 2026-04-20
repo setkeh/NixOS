@@ -8,6 +8,7 @@
      tmux
      curl
      wget
+     direnv
      age-plugin-yubikey
    ];
 }

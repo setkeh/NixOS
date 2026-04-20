@@ -15,7 +15,63 @@
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, ... }@inputs: {
     nixosConfigurations = {
-      # E7250 Laptop Config
+      /* WSL Config */
+      wsl = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          nixos-wsl.nixosModules.default
+          ./hosts/wsl
+
+          /* Overlay Module */
+          ({ config, pkgs, ... }: {
+            nixpkgs = {
+              overlays = [
+                /* My Custom Package Channel */
+                nixpkgs-channel.overlays.default
+
+                /* Local Package Overlays */
+                (import ./etc/overlays/age.nix)
+              ];
+              config = {
+                allowUnfree = true;
+                allowUnfreePredicate = (_: true);
+              };
+            };
+          })
+
+          sops-nix.nixosModules.sops
+
+          ({ config, ...}: {
+            sops = {
+              age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+              defaultSopsFile = ./secrets/nixos-e7250.yaml;
+              secrets = {
+                /* Im not sure if there is a better way to do this but it works for now */
+                "nixos-e7250/fish_aliases" = {
+                  owner = config.users.users.setkeh.name;
+                  path = "/home/setkeh/.config/fish/conf.d/alias.fish";
+                };
+              };
+            };
+          })
+        
+          home-manager.nixosModules.home-manager
+          ({ config, lib, pkgs, ...}: {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              inputs.sops-nix.homeManagerModules.sops
+            ];
+            home-manager.users.setkeh = { config, pkgs, ... }: {
+              imports = [
+                ./home/wsl
+              ];
+            };
+          })
+        ];
+      };
+
+      /* E7250 Laptop Config */
       nixos-e7250 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
