@@ -58,12 +58,12 @@
   # Enable the XFCE Desktop Environment.
   services.xserver.displayManager.lightdm = {
     enable = true;
-    background = "/home/setkeh/Wallpaper/IMG-57dc78dcb5f8086349cdb611a4a0fe5f-V.jpg"
+    background = "/etc/wallpaper/IMG-57dc78dcb5f8086349cdb611a4a0fe5f-V.jpg";
   };
-  
+
   services.xserver.displayManager.sessionCommands = ''
     # Commands to run on login
-    ${pkgs.feh}/bin/feh --bg-fill /home/setkeh/Wallpaper/IMG-f6daf8d4f70c3d9d6c88c85cfa55b6d4-V.jpg &
+    ${pkgs.feh}/bin/feh --bg-fill /home/setkeh/Wallpaper/uwp5001833.png &
   '';
 
   #services.xserver.desktopManager.xfce.enable = true;
