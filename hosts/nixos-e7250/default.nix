@@ -59,6 +59,9 @@
   services.xserver.displayManager.lightdm = {
     enable = true;
     background = "/etc/wallpaper/IMG-57dc78dcb5f8086349cdb611a4a0fe5f-V.jpg";
+    extraConfig = ''
+      background-style = scaled
+    '';
   };
 
   services.xserver.displayManager.sessionCommands = ''
