@@ -7,7 +7,7 @@
     usbip = {
       enable = true;
       # Replace this with the BUSID for your Yubikey
-      autoAttach = ["11-4"];
+      autoAttach = ["10-1"];
     };
   };
 }
