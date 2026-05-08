@@ -26,6 +26,9 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Setup nix-ld for vscode.
+  programs.nix-ld.enable = true;
+
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [
     wget
