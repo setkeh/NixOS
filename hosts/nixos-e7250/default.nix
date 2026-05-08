@@ -110,6 +110,7 @@
     ccid
     age-plugin-yubikey
     age
+    nfs-utils
   ];
 
   environment.shellInit = ''
