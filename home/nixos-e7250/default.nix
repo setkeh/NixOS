@@ -17,6 +17,9 @@
 
     /* Tmux Config */
     ../../common/applications/tmux/e7250.nix
+
+    /* SSH Configuration */
+    ../../common/ssh.nix
   ];
 
   # Enable X Compositing
