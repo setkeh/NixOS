@@ -53,6 +53,7 @@
     pkgs.nix-prefetch-scripts
     pkgs.asciinema
     pkgs.dbeaver-bin
+    pkgs.mssql_jdbc
     pkgs.ripgrep
     pkgs.websocat
     pkgs.mcrcon
