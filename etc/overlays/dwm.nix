@@ -9,7 +9,8 @@ final: prev: {
         url = "https://dwm.suckless.org/patches/alpha/dwm-alpha-20250918-74edc27.diff";
         # replace hash with the value from `nix-prefetch-url "https://dwm.suckless.org/patches/path/to/patch.diff"
         # or just leave it blank, rebuild, and use the hash value from the error
-        sha256 = "1q999v0p09c1xs0ryzwjsmds6g0n7p9qr6ji985gf9dx7wg352hz";
+        #sha256 = "1q999v0p09c1xs0ryzwjsmds6g0n7p9qr6ji985gf9dx7wg352hz";
+        sha256 = "sha256-CUM4AfvLFyrUJMMV+IvWcSpv4Zv6k96YYLys65pWPew=";
       })
 
       /* Status2d Patch for Bar Color Rendering */
