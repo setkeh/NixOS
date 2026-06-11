@@ -22,7 +22,7 @@
 
   terminal.shell = {
     program = "fish";
-    args = [ "-C neofetch" ];
+    args = [ "-C fastfetch" ];
   };
 
   colors = {

@@ -2,6 +2,7 @@
 
 {
    home.packages = [
+    pkgs.affine
     pkgs.vim
     pkgs.gemini-cli
     pkgs.btop
@@ -38,7 +39,7 @@
     pkgs.spotify
     pkgs.cryptomator
     pkgs.gqrx
-    pkgs.neofetch
+    pkgs.fastfetch
     pkgs._1password-cli
     pkgs._1password-gui
     pkgs.rofi
