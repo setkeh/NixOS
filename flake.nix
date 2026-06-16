@@ -11,6 +11,9 @@
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
+    # Ai-Server specific inputs
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, ... }@inputs: {
@@ -125,6 +128,70 @@
               ];
             };
           })
+        ];
+      };
+
+      /* Ai-Server Config */
+      nixos-ai-server = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/nixos-ai-server
+
+          /* Overlay Module */
+          ({ config, pkgs, ... }: {
+            nixpkgs = {
+              overlays = [
+                /* My Custom Package Channel */
+                nixpkgs-channel.overlays.default
+
+                /* Custom Package Configuration */
+                (import ./etc/overlays/slstatus.nix)
+                (import ./etc/overlays/dwm.nix)
+                (import ./etc/overlays/age.nix)
+              ];
+              config = {
+                allowUnfree = true;
+                allowUnfreePredicate = (_: true);
+              };
+            };
+          })
+
+          sops-nix.nixosModules.sops
+
+          /*({ config, ...}: {
+            sops = {
+              age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+              defaultSopsFile = ./secrets/nixos-ai-server.yaml;
+              secrets = {
+                # Im not sure if there is a better way to do this but it works for now 
+                "nixos-ai-server/fish_aliases" = {
+                  owner = config.users.users.setkeh.name;
+                  path = "/home/setkeh/.config/fish/conf.d/alias.fish";
+                };
+
+                "hermes/env" = {
+                  owner = config.users.users.setkeh.name;
+                  path = "/home/setkeh/.config/.hermes/.env";
+                };
+              };*/
+            };
+          })
+        
+          home-manager.nixosModules.home-manager
+          ({ config, lib, pkgs, ...}: {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              inputs.sops-nix.homeManagerModules.sops
+            ];
+            home-manager.users.setkeh = { config, pkgs, ... }: {
+              imports = [
+                ./home/ai-server
+              ];
+            };
+          })
+
+          hermes-agent.nixosModules.default
         ];
       };
     };
