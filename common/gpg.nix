@@ -10,7 +10,7 @@
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
-    pinentryPackage = pkgs.pinentry-dmenu; #pkgs.pinentry-curses;
+    pinentryPackage = pkgs.pinentry-gtk2; #pkgs.pinentry-curses;
     enableExtraSocket = true;
   };
 }
