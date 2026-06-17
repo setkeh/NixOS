@@ -86,6 +86,10 @@
     isNormalUser = true;
     description = "setkeh";
     extraGroups = [ "networkmanager" "wheel" ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMmH6ShUmcPTP9SpyOIKpoZoR8YlFld1J5QUKPnkUW6y setkeh@github/121839022"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAXsYSlu1gncZLQ1TWdx4T4dZp0ltb7G61sfeCLSWXn8 setkeh@github/70758014"
+    ];
   };
 
   # Enable sound with pipewire.
@@ -116,7 +120,33 @@
 
   services.openssh = {
     enable = true;
+    settings = {
+      # require public key authentication for better security
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+
+      # SSH and GPG Agent Forwarding
+      AllowAgentForwarding = true;
+      # Unlink old socket files when a new connection is established. 
+      # This fixes errors where forwarding breaks on reconnecting.
+      StreamLocalBindUnlink = true;
+    };
   };
+
+  programs.gnupg.agent = {
+    enable = true;
+    # Ensure pinentry-tty or similar is available if the server needs to ask for anything
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-gtk2; 
+  };
+
+  # Prevent systemd-managed gpg-agent sockets from conflicting with the socket you are forwarding over SSH.
+  systemd.user.services.gpg-agent.environment.gpg_agent_env_file = "/dev/null";
+
+  systemd.user.tmpfiles.rules = [
+    "d %t/gnupg 0700 - - - -"
+  ];
 
   # Install firefox.
   programs.firefox.enable = true;
