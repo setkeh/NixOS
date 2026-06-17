@@ -13,7 +13,7 @@
            HostKeyAlgorithms +ssh-rsa";
        };
 
-     "hermes" = {
+     "10.0.66.75" = {
         hostname = "10.0.66.75";
         user = "setkeh";
         forwardAgent = true;
