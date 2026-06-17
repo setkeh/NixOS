@@ -173,9 +173,9 @@
                   owner = config.users.users.setkeh.name;
                   path = "/home/setkeh/.config/.hermes/.env";
                 };
-              };*/
+              };
             };
-          })
+          })*/
         
           home-manager.nixosModules.home-manager
           ({ config, lib, pkgs, ...}: {
@@ -191,7 +191,7 @@
             };
           })
 
-          hermes-agent.nixosModules.default
+          # hermes-agent.nixosModules.default
         ];
       };
     };
