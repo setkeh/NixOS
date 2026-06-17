@@ -2,6 +2,7 @@
 
 {
   programs.ssh = {
+    enable = true;
     extraConfig = "";
     matchBlocks = {
      "10.0.134.100" = {
