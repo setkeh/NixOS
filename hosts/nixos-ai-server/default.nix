@@ -137,7 +137,7 @@
   programs.gnupg.agent = {
     enable = true;
     # Ensure pinentry-tty or similar is available if the server needs to ask for anything
-    enableSSHSupport = true;
+    enableSSHSupport = false; #Needs to be disabled as we are sending this through from workstation/laptop envs
     pinentryPackage = pkgs.pinentry-gtk2; 
   };
 
