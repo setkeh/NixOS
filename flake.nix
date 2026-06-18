@@ -158,7 +158,7 @@
 
           sops-nix.nixosModules.sops
 
-          /*({ config, ...}: {
+          ({ config, ...}: {
             sops = {
               age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
               defaultSopsFile = ./secrets/nixos-ai-server.yaml;
@@ -175,7 +175,7 @@
                 };
               };
             };
-          })*/
+          })
         
           home-manager.nixosModules.home-manager
           ({ config, lib, pkgs, ...}: {
@@ -191,7 +191,7 @@
             };
           })
 
-          # hermes-agent.nixosModules.default
+          hermes-agent.nixosModules.default
         ];
       };
     };
