@@ -16,7 +16,7 @@
     hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, ... }@inputs: {
     nixosConfigurations = {
       /* WSL Config */
       wsl = nixpkgs.lib.nixosSystem {
