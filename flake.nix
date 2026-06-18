@@ -170,6 +170,7 @@
                 };
 
                 "hermes/env" = {
+                  sopsFile = ./secrets/hermes.yaml;
                   owner = config.users.users.setkeh.name;
                   path = "/home/setkeh/.config/.hermes/.env";
                 };
