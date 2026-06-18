@@ -115,7 +115,7 @@
   ];
 
   environment.shellInit = ''
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    #export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
   '';
 
   services.openssh = {
