@@ -56,7 +56,7 @@
     enableSSHSupport = true;
     enableExtraSocket = true;
     settings = {
-      pinentry-program = "/mnt/c/Program Files (x86)/GnuPG/bin/pinentry-basic.exe";
+      pinentry-program = pkgs.lib.mkForce "/mnt/c/Program Files (x86)/GnuPG/bin/pinentry-basic.exe";
     };
   };
 
