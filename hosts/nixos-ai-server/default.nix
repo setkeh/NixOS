@@ -151,7 +151,7 @@
 
   services.synergy.client = {
     enable = true;
-    server = "10.0.13.146";
+    serverAddress = "10.0.13.146";
   };
 
   # Install firefox.
