@@ -112,6 +112,7 @@
   environment.systemPackages = with pkgs; [
     age
     nfs-utils
+    synergy
   ];
 
   environment.shellInit = ''
@@ -147,6 +148,11 @@
   systemd.user.tmpfiles.rules = [
     "d %t/gnupg 0700 - - - -"
   ];
+
+  services.synergy.client = {
+    enable = true;
+    server = "10.0.13.146";
+  };
 
   # Install firefox.
   programs.firefox.enable = true;
