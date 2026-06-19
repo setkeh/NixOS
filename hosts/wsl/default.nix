@@ -11,7 +11,7 @@
   imports = [
     ./wsl.nix
     ./services.nix
-    ../../common/gpg.nix
+    #../../common/gpg.nix
     ../../common/cleanup.nix
   ];
 
@@ -44,6 +44,23 @@
   services.openssh = {
     enable = true;
   };
+
+  # GPG Yubikey & SSH
+  services.pcscd.enable = true;
+  hardware.gpgSmartcards.enable = true;
+
+  programs.ssh.startAgent = false;
+  
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    enableExtraSocket = true;
+    settings = {
+      pinentry-program = "/mnt/c/Program Files (x86)/GnuPG/bin/pinentry-basic.exe";
+    };
+  };
+
+  networking.resolvconf.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
