@@ -151,6 +151,7 @@
 
   services.synergy.client = {
     enable = true;
+    autoStart = true;
     serverAddress = "10.0.13.146";
   };
 
