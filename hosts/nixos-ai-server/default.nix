@@ -149,12 +149,6 @@
     "d %t/gnupg 0700 - - - -"
   ];
 
-  services.synergy.client = {
-    enable = true;
-    autoStart = true;
-    serverAddress = "10.0.13.146";
-  };
-
   # Install firefox.
   programs.firefox.enable = true;
 
@@ -163,6 +157,16 @@
 
   # Keyring
   services.gnome.gnome-keyring.enable = true;
+
+  # Need Flatpak for Synergy
+  services.flatpak.enable = true;
+
+  # Ensure standard desktop integration files are watched
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = "*";
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
