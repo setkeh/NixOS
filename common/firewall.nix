@@ -7,7 +7,7 @@
   networking.firewall = {
     enable = true;
     # Allowed TCP Ports (e.g., SSH, HTTP)
-    allowedTCPPorts = [ 24800, 22 ];
+    allowedTCPPorts = [ 24800 22 ];
     # Always allow traffic from your Tailscale network
     trustedInterfaces = [ "tailscale0" ];
     # Allow the Tailscale UDP port through the firewall
