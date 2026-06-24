@@ -11,6 +11,7 @@
     #../../common/gpg.nix
     ../../common/cleanup.nix
     ../../common/firewall.nix
+    ./hermes.nix
   ];
 
   # Bootloader.
@@ -74,13 +75,6 @@
     layout = "au";
     variant = "";
   };
-
-  /*services.hermes-agent = {
-    enable = true;
-    settings.model.default = "gemini-3.5-flash";
-    environmentFiles = [ config.sops.secrets."hermes/env".path ];
-    addToSystemPackages = true;
-  };*/
 
   users.users.setkeh = {
     isNormalUser = true;
