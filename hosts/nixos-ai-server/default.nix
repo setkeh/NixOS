@@ -11,7 +11,7 @@
     #../../common/gpg.nix
     ../../common/cleanup.nix
     ../../common/firewall.nix
-    ./hermes.nix
+    ../../hermes/hermes.nix
   ];
 
   # Bootloader.
