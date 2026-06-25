@@ -9,6 +9,11 @@
         provider = "gemini";
         base_url = "";
       };
+      api_server = {
+        enable = true;
+        host = "0.0.0.0";
+        port = 9119;
+      };
       providers = {
         gemini = {
           provider_type = "google";
@@ -19,7 +24,7 @@
     environmentFiles = [ config.sops.secrets."hermes/env".path ];
     addToSystemPackages = true;
 
-    profiles = [
+    /*profiles = [
           # Default/orchestrator profile configuration
           ({
             config, pkgs, lib, ...
@@ -46,6 +51,6 @@
               };
             };
           })
-        ];
+        ];*/
   };
 }
