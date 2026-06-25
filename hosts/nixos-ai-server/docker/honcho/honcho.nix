@@ -33,10 +33,11 @@ let
   # rather than relying on `uv sync` during the build phase.
   pythonEnv = pkgs.python313.withPackages (ps: with ps; [
     fastapi
+    fastapi-cli
+    fastapi-pagination
     uvicorn
     sqlalchemy
     python-dotenv
-    fastapi-pagination
     pgvector
     sentry-sdk
     greenlet
