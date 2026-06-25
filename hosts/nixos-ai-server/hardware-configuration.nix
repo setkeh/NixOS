@@ -28,6 +28,20 @@
     [ { device = "/dev/disk/by-uuid/e422e9d3-4ced-4eb3-be0d-a9e95f860381"; }
     ];
 
+  fileSystems."/srv/ssd" = 
+    {
+      device = "/dev/disk/by-uuid/29eced76-08b8-4ce8-ae0a-270e28f5e7a9";
+      fsType = "ext4"; # Replace with your filesystem type
+      options = [ "defaults" "nofail" ];
+    };
+
+  fileSystems."/srv/2tb" = 
+    {
+      device = "/dev/disk/by-uuid/8fccd209-9e6b-4713-a3fe-b38e3fea3f4f";
+      fsType = "ext4"; # Replace with your filesystem type
+      options = [ "defaults" "nofail" ];
+    };
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
