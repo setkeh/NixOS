@@ -5,7 +5,7 @@
     enable = true;
 
     # 1. Inject API call tuning variables here
-    extraEnvironment = {
+    environment = {
       # Extends the timeout window for a single payload to finish processing
       HERMES_API_TIMEOUT = "120"; 
       
