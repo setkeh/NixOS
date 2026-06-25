@@ -59,12 +59,13 @@ in
       environment = {
         POSTGRES_DB = "postgres";
         POSTGRES_USER = "postgres";
-        POSTGRES_PASSWORD = db_password;
+        POSTGRES_PASSWORD_FILE = /run/secrets/db_password;
       };
       ports = [
         "127.0.0.1:5432:5432"
       ];
       volumes = [
+        "/var/lib/sops/secrets/DB_PASSWORD:/run/secrets/db_password:ro"
         "./database/init.sql:/docker-entrypoint-initdb.d/init.sql"
         "/srv/2tb/postgresql/honcho:/var/lib/postgresql/data"
       ];

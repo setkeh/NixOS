@@ -188,6 +188,7 @@
                 # Add Honcho DB_PASSWORD secret
                 "DB_PASSWORD" = {
                   sopsFile = ./secrets/honcho_db.yaml;
+                  path = "/var/lib/sops/secrets/DB_PASSWORD";
                 };
               };
             };
