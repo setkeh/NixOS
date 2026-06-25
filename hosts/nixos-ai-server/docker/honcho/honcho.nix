@@ -125,7 +125,7 @@ in
           "${pkgs.bash}/bin/bash" "-c" 
           "${pythonEnv}/bin/alembic upgrade head && ${pythonEnv}/bin/fastapi run --host 0.0.0.0 src/main.py" 
         ];
-        environmentFiles = [ "${config.sops.secrets."honcho/env".path}" ];
+        environmentFiles = [ config.sops.secrets."honcho/env".path ];
         extraOptions = [ "--network=host" ];
         ports = [
           "0.0.0.0:8000:8000"
@@ -137,7 +137,7 @@ in
         image = "honcho-local:latest";
         dependsOn = [ "honcho-api" ];
         cmd = [ "${pythonEnv}/bin/python" "-m" "src.deriver" ];
-        environmentFiles = [ "${config.sops.secrets."honcho/env".path}" ];
+        environmentFiles = [ config.sops.secrets."honcho/env".path ];
         extraOptions = [ "--network=host" ];
       };
 
