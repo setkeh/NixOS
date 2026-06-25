@@ -109,7 +109,7 @@ in
     5432 # Postgres
     6379 # Redis
   ];
-  
+
   virtualisation.oci-containers = {
     backend = "docker";
 
@@ -119,6 +119,12 @@ in
       honcho-api = {
         image = "honcho-local:latest";
         imageFile = honchoImage;
+        dependsOn = [ "honcho-postgres" ];
+        # Override the command to run migrations first, then start the API
+        cmd = [ 
+          "${pkgs.bash}/bin/bash" "-c" 
+          "${pythonEnv}/bin/alembic upgrade head && ${pythonEnv}/bin/fastapi run --host 0.0.0.0 src/main.py" 
+        ];
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
         extraOptions = [ "--network=host" ];
         ports = [
