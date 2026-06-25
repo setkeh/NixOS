@@ -63,6 +63,7 @@ let
     prometheus_client
     cloudevents
     lancedb
+    turbopuffer
   ]);
 
   # 3. Build the Docker image purely in Nix
@@ -108,6 +109,7 @@ in
       # Honcho API Service
       honcho-api = {
         image = "honcho-local:latest";
+        imageFile = honchoImage;
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
         ports = [
           "127.0.0.1:8000:8000"
@@ -117,6 +119,7 @@ in
       # Honcho Deriver Service
       honcho-deriver = {
         image = "honcho-local:latest";
+        imageFile = honchoImage;
         cmd = [ "/app/.venv/bin/python" "-m" "src.deriver" ];
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
       };
