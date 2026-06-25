@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   # Get secrets from SOPS configuration
-  db_password = config.sops.secrets."DB_PASSWORD";
+  db_password = config.sops.secrets."DB_PASSWORD".text;
 in
 {
   virtualisation.docker.containers = {
@@ -59,7 +59,7 @@ in
       environment = {
         POSTGRES_DB = "postgres";
         POSTGRES_USER = "postgres";
-        POSTGRES_PASSWORD = db_password.text;
+        POSTGRES_PASSWORD = db_password;
       };
       ports = [
         "127.0.0.1:5432:5432"
