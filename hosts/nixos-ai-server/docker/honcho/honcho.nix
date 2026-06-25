@@ -13,7 +13,7 @@ let
       inherit pname version;
       # Run `nix run nixpkgs#nix-prefetch-github` or similar, 
       # or just leave it empty to let Nix error out and give you the correct hash
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; 
+      hash = "sha256-FI9JO436dJD83tmyLTYSWNLSUkeErgGwId3ewI9j9ig="; 
     };
     
     doCheck = false; # Skip tests to speed up the build
