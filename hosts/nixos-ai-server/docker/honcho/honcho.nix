@@ -60,7 +60,7 @@ let
     redis
     cashews
     scikit-learn
-    prometheus_client
+    prometheus-client
     cloudevents
     lancedb
     turbopuffer
