@@ -136,8 +136,9 @@ in
       honcho-deriver = {
         image = "honcho-local:latest";
         dependsOn = [ "honcho-api" ];
-        cmd = [ "/app/.venv/bin/python" "-m" "src.deriver" ];
+        cmd = [ "${pythonEnv}/bin/python" "-m" "src.deriver" ];
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
+        extraOptions = [ "--network=host" ];
       };
 
       # PostgreSQL with pgvector
