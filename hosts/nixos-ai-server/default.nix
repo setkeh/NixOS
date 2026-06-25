@@ -12,6 +12,7 @@
     ../../common/cleanup.nix
     ../../common/firewall.nix
     ./hermes/hermes.nix
+    ./docker/honcho/honcho.nix
   ];
 
   # Bootloader.

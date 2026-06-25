@@ -66,7 +66,7 @@ in
       ];
       volumes = [
         "./database/init.sql:/docker-entrypoint-initdb.d/init.sql",
-        "/etc/postgresql/honcho:/var/lib/postgresql/data"
+        "/srv/2tb/postgresql/honcho:/var/lib/postgresql/data"
       ];
       healthCheck = {
         test = ["CMD-SHELL", "pg_isready -U postgres -d postgres"];
@@ -83,7 +83,7 @@ in
         "127.0.0.1:6379:6379"
       ];
       volumes = [
-        "/etc/redis/honcho:/data"
+        "/srv/ssd/redis/honcho:/data"
       ];
       healthCheck = {
         test = ["CMD-SHELL", "redis-cli ping"];
