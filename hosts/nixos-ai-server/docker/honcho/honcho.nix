@@ -69,7 +69,7 @@ in
         "/srv/2tb/postgresql/honcho:/var/lib/postgresql/data"
       ];
       healthCheck = {
-        test = ["CMD-SHELL", "pg_isready -U postgres -d postgres"];
+        test = ["CMD-SHELL" "pg_isready -U postgres -d postgres"];
         interval = "5s";
         timeout = "5s";
         retries = 5;
@@ -86,7 +86,7 @@ in
         "/srv/ssd/redis/honcho:/data"
       ];
       healthCheck = {
-        test = ["CMD-SHELL", "redis-cli ping"];
+        test = ["CMD-SHELL" "redis-cli ping"];
         interval = "5s";
         timeout = "5s";
         retries = 5;
