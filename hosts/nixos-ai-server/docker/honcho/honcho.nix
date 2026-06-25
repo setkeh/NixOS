@@ -104,6 +104,12 @@ let
   };
 in
 {
+  networking.firewall.allowedTCPPorts = [ 
+    8000 # Honcho API
+    5432 # Postgres
+    6379 # Redis
+  ];
+  
   virtualisation.oci-containers = {
     backend = "docker";
 
@@ -114,8 +120,9 @@ in
         image = "honcho-local:latest";
         imageFile = honchoImage;
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
+        extraOptions = [ "--network=host" ];
         ports = [
-          "127.0.0.1:8000:8000"
+          "0.0.0.0:8000:8000"
         ];
       };
 
@@ -135,8 +142,9 @@ in
           POSTGRES_USER = "postgres";
           POSTGRES_PASSWORD_FILE = "/run/secrets/db_password";
         };
+        extraOptions = [ "--network=host" ];
         ports = [
-          "127.0.0.1:5432:5432"
+          "0.0.0.0:5432:5432"
         ];
         volumes = [
           "/var/lib/sops/secrets/DB_PASSWORD:/run/secrets/db_password:ro"
@@ -148,8 +156,9 @@ in
       # Redis
       honcho-redis = {
         image = "redis:8.2";
+        extraOptions = [ "--network=host" ];
         ports = [
-          "127.0.0.1:6379:6379"
+          "0.0.0.0:6379:6379"
         ];
         volumes = [
           "/srv/ssd/redis/honcho:/data"
