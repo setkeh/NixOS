@@ -174,7 +174,7 @@
                   sopsFile = ./secrets/hermes.yaml;
                   owner = "hermes";
                   group = "hermes";
-                  path = "/var/lib/hermes/.hermes/.env";
+                  path = "/var/lib/sops/secrets/.hermes/.env";
                 };
 
                 # Add Honcho secrets
