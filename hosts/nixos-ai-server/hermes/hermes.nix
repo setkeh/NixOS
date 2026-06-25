@@ -20,9 +20,16 @@
           api_key_env = "GEMINI_API_KEY"; 
         };
       };
+      honcho = {
+        url = "http://localhost:8000";
+      };
     };
+    
     environmentFiles = [ config.sops.secrets."hermes/env".path ];
     addToSystemPackages = true;
+
+    extraDependencyGroups = [ "honcho" "messaging" ];
+    settings.memory.provider = "honcho";
 
     /*profiles = [
           # Default/orchestrator profile configuration
