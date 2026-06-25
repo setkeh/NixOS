@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   # Get secrets from SOPS configuration
-  db_password = config.sops.secrets."DB_PASSWORD".text;
+  db_password = (config.sops.secrets."DB_PASSWORD").decryptedValue;
 in
 {
   virtualisation.docker.containers = {
