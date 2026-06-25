@@ -13,7 +13,7 @@ let
       inherit pname version;
       # Run `nix run nixpkgs#nix-prefetch-github` or similar, 
       # or just leave it empty to let Nix error out and give you the correct hash
-      hash = "sha256-FI9JO436dJD83tmyLTYSWNLSUkeErgGwId3ewI9j9ig="; 
+      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Replace with actual SRI hash
     };
     
     doCheck = false; # Skip tests to speed up the build
@@ -25,7 +25,7 @@ let
     owner = "plastic-labs";
     repo = "honcho";
     rev = "main"; # Recommend pinning this to a specific commit or release tag
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Replace with actual SRI hash
+    hash = "sha256-FI9JO436dJD83tmyLTYSWNLSUkeErgGwId3ewI9j9ig="; # Replace with actual SRI hash
   };
 
   # 2. Package the Python Environment
