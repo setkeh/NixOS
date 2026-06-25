@@ -15,13 +15,13 @@ in
         ports = [
           "127.0.0.1:8000:8000"
         ];
-        healthCheck = {
-          test = "${pkgs.python3}/bin/python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\", timeout=2).read()'";
-          interval = "5s";
-          timeout = "5s";
-          retries = 5;
-          startPeriod = "10s";
-        };
+        #healthCheck = {
+        #  test = "${pkgs.python3}/bin/python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\", timeout=2).read()'";
+        #  interval = "5s";
+        #  timeout = "5s";
+        #  retries = 5;
+        #  startPeriod = "10s";
+        #};
         dependsOn = [
           {
             name = "honcho-postgres";
@@ -71,12 +71,12 @@ in
           "./database/init.sql:/docker-entrypoint-initdb.d/init.sql"
           "/srv/2tb/postgresql/honcho:/var/lib/postgresql/data"
         ];
-        healthCheck = {
-          test = ["CMD-SHELL" "pg_isready -U postgres -d postgres"];
-          interval = "5s";
-          timeout = "5s";
-          retries = 5;
-        };
+        #healthCheck = {
+        #  test = ["CMD-SHELL" "pg_isready -U postgres -d postgres"];
+        #  interval = "5s";
+        #  timeout = "5s";
+        #  retries = 5;
+        #};
       };
 
       # Redis
@@ -88,12 +88,12 @@ in
         volumes = [
           "/srv/ssd/redis/honcho:/data"
         ];
-        healthCheck = {
-          test = ["CMD-SHELL" "redis-cli ping"];
-          interval = "5s";
-          timeout = "5s";
-          retries = 5;
-        };
+        #healthCheck = {
+        #  test = ["CMD-SHELL" "redis-cli ping"];
+        #  interval = "5s";
+        #  timeout = "5s";
+        #  retries = 5;
+        #};
       };
     };
 
