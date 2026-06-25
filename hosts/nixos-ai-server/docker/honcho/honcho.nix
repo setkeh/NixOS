@@ -119,7 +119,7 @@ in
       # Honcho Deriver Service
       honcho-deriver = {
         image = "honcho-local:latest";
-        imageFile = honchoImage;
+        dependsOn = [ "honcho-api" ];
         cmd = [ "/app/.venv/bin/python" "-m" "src.deriver" ];
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
       };
