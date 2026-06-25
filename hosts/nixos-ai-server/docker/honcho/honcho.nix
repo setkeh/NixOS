@@ -7,6 +7,7 @@ in
   virtualisation.oci-containers = {
     backend = "docker";
 
+    # docker-honcho-api.service, docker-honcho-deriver.service, docker-honcho-postgres.service, docker-honcho-redis.service
     containers = {
       # Honcho API Service
       honcho-api = {

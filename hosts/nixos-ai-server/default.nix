@@ -80,7 +80,7 @@
   users.users.setkeh = {
     isNormalUser = true;
     description = "setkeh";
-    extraGroups = [ "networkmanager" "wheel" "hermes" ];
+    extraGroups = [ "networkmanager" "wheel" "hermes" "docker" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMmH6ShUmcPTP9SpyOIKpoZoR8YlFld1J5QUKPnkUW6y setkeh@github/121839022"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAXsYSlu1gncZLQ1TWdx4T4dZp0ltb7G61sfeCLSWXn8 setkeh@github/70758014"
