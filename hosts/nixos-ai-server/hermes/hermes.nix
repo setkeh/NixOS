@@ -3,6 +3,19 @@
 {
   services.hermes-agent = {
     enable = true;
+
+    # 1. Inject API call tuning variables here
+    extraEnvironment = {
+      # Extends the timeout window for a single payload to finish processing
+      HERMES_API_TIMEOUT = "120"; 
+      
+      # Sets the base delay multiplier for retry logic (default is usually ~2-5s)
+      HERMES_RETRY_BASE_DELAY = "15"; 
+      
+      # Caps the maximum delay between backoff retries so it doesn't scale to infinity
+      HERMES_RETRY_MAX_DELAY = "60"; 
+    };
+
     settings = {
       model = {
         default = "gemini-3.5-flash";
