@@ -169,12 +169,13 @@
                   path = "/home/setkeh/.config/fish/conf.d/alias.fish";
                 };
 
-                # Add Hermes secrets -- Should no longer be required
-                #"hermes/env" = {
-                #  sopsFile = ./secrets/hermes.yaml;
-                #  owner = config.users.users.setkeh.name;
-                #  path = "/home/setkeh/.config/.hermes/.env";
-                #};
+                # Add Hermes secrets
+                "hermes/env" = {
+                  sopsFile = ./secrets/hermes.yaml;
+                  owner = "hermes";
+                  group = "hermes";
+                  path = "/var/lib/hermes/.hermes/.env";
+                };
 
                 # Add Honcho secrets
                 "honcho/env" = {
