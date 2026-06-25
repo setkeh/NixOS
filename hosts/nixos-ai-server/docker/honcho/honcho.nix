@@ -20,7 +20,7 @@ in
       # Honcho Deriver Service
       honcho-deriver = {
         image = "ghcr.io/nousresearch/honcho:latest";
-        cmd = "/app/.venv/bin/python -m src.deriver";
+        cmd = [ "/app/.venv/bin/python" "-m" "src.deriver" ];
         environmentFiles = [ config.sops.secrets."honcho/env".path ];
       };
 
