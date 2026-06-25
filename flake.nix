@@ -180,6 +180,14 @@
                 # Add Honcho secrets
                 "honcho/env" = {
                   sopsFile = ./secrets/honcho.yaml;
+                  owner = "root";
+                  group = "root";
+                  path = "/var/lib/honcho/.honcho/.env";
+                };
+
+                # Add Honcho DB_PASSWORD secret
+                "honcho/DB_PASSWORD" = {
+                  sopsFile = ./secrets/honcho_db.yaml;
                 };
               };
             };

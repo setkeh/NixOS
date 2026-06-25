@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   # Get secrets from SOPS configuration
-  honchoSecrets = config.sops.secrets."honcho/env";
+  db_password = config.sops.secrets."honcho/DB_PASSWORD";
 in
 {
   virtualisation.docker.containers = {
@@ -9,19 +9,7 @@ in
     # Honcho API Service
     honcho-api = {
       image = "ghcr.io/nousresearch/honcho:latest";
-      environment = {
-        LOG_LEVEL = honchoSecrets.LOG_LEVEL.text;
-        DB_CONNECTION_URI = "postgresql+psycopg://${config.services.postgresql.packages.psql.package.name}:${honchoSecrets.DB_PASSWORD.text}@honcho-postgres:5432/postgres";
-        CACHE_URL = "redis://honcho-redis:6379/0?suppress=true";
-        CACHE_ENABLED = "true";
-        LLM_GEMINI_API_KEY = honchoSecrets.LLM_GEMINI_API_KEY.text;
-        AUTH_USE = honchoSecrets.AUTH_USE.text;
-        AUTH_JWT_SECRET = honchoSecrets.AUTH_JWT_SECRET.text;
-        METRICS_ENABLED = honchoSecrets.METRICS_ENABLED.text;
-        METRICS_NAMESPACE = honchoSecrets.METRICS_NAMESPACE.text;
-        VECTOR_STORE_TYPE = honchoSecrets.VECTOR_STORE_TYPE.text;
-        VECTOR_STORE_MIGRATED = honchoSecrets.VECTOR_STORE_MIGRATED.text;
-      };
+      environmentFiles = [ config.sops.secrets."honcho/env".path ];
       ports = [
         "127.0.0.1:8000:8000"
       ];
@@ -48,18 +36,7 @@ in
     honcho-deriver = {
       image = "ghcr.io/nousresearch/honcho:latest";
       command = "/app/.venv/bin/python -m src.deriver";
-      environment = {
-        DB_CONNECTION_URI = "postgresql+psycopg://${config.services.postgresql.packages.psql.package.name}:${honchoSecrets.DB_PASSWORD.text}@honcho-postgres:5432/postgres";
-        CACHE_URL = "redis://honcho-redis:6379/0?suppress=true";
-        CACHE_ENABLED = "true";
-        LLM_GEMINI_API_KEY = honchoSecrets.LLM_GEMINI_API_KEY.text;
-        AUTH_USE = honchoSecrets.AUTH_USE.text;
-        AUTH_JWT_SECRET = honchoSecrets.AUTH_JWT_SECRET.text;
-        METRICS_ENABLED = honchoSecrets.METRICS_ENABLED.text;
-        METRICS_NAMESPACE = honchoSecrets.METRICS_NAMESPACE.text;
-        VECTOR_STORE_TYPE = honchoSecrets.VECTOR_STORE_TYPE.text;
-        VECTOR_STORE_MIGRATED = honchoSecrets.VECTOR_STORE_MIGRATED.text;
-      };
+      environmentFiles = [ config.sops.secrets."honcho/env".path ];
       dependsOn = [
         {
           name = "honcho-api";
@@ -82,7 +59,7 @@ in
       environment = {
         POSTGRES_DB = "postgres";
         POSTGRES_USER = "postgres";
-        POSTGRES_PASSWORD = honchoSecrets.DB_PASSWORD.text;
+        POSTGRES_PASSWORD = db_password.text;
       };
       ports = [
         "127.0.0.1:5432:5432"
@@ -121,7 +98,7 @@ in
   services.postgresql = {
     enable = true;
     environment = {
-        POSTGRES_PASSWORD = honchoSecrets.DB_PASSWORD.text;
+        POSTGRES_PASSWORD = db_password.text;
       };
     package = pkgs.postgresql_16;
     ensureDatabases = ["postgres"];
