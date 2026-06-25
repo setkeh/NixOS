@@ -65,6 +65,7 @@ let
     cloudevents
     lancedb
     turbopuffer
+    anthropic
   ]);
 
   # 3. Build the Docker image purely in Nix
