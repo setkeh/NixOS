@@ -65,7 +65,7 @@ in
         "127.0.0.1:5432:5432"
       ];
       volumes = [
-        "./database/init.sql:/docker-entrypoint-initdb.d/init.sql",
+        "./database/init.sql:/docker-entrypoint-initdb.d/init.sql"
         "/srv/2tb/postgresql/honcho:/var/lib/postgresql/data"
       ];
       healthCheck = {
