@@ -95,16 +95,16 @@ in
   };
 
   # PostgreSQL service configuration
-  services.postgresql = {
-    enable = true;
-    environment = {
-        POSTGRES_PASSWORD = db_password.text;
-      };
-    package = pkgs.postgresql_16;
-    ensureDatabases = ["postgres"];
-    ensureUsers = [ "postgres" ];
-    settings = {
-      max_connections = 200;
-    };
-  };
+  #services.postgresql = {
+  #  enable = true;
+  #  environment = {
+  #      POSTGRES_PASSWORD = db_password.text;
+  #    };
+  #  package = pkgs.postgresql_16;
+  #  ensureDatabases = ["postgres"];
+  #  ensureUsers = [ "postgres" ];
+  #  settings = {
+  #    max_connections = 200;
+  #  };
+  #};
 }
