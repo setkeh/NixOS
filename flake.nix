@@ -177,7 +177,7 @@
                 };
 
                 # Add Honcho secrets
-                "honcho" = {
+                "honcho/env" = {
                   sopsFile = ./secrets/honcho.yaml;
                 };
               };
