@@ -21,10 +21,10 @@
         };
       };
       honcho = {
-        url = "http://localhost:8000";
+        url = "http://127.0.0.1:8000";
       };
     };
-    
+
     environmentFiles = [ config.sops.secrets."hermes/env".path ];
     addToSystemPackages = true;
 
