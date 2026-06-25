@@ -30,7 +30,7 @@ in
         environment = {
           POSTGRES_DB = "postgres";
           POSTGRES_USER = "postgres";
-          POSTGRES_PASSWORD_FILE = /run/secrets/db_password;
+          POSTGRES_PASSWORD_FILE = "/run/secrets/db_password";
         };
         ports = [
           "127.0.0.1:5432:5432"
