@@ -177,12 +177,8 @@
                 };
 
                 # Add Honcho secrets
-                honcho/env = {
+                "honcho/env" = {
                   sopsFile = ./secrets/honcho.yaml;
-                };
-      
-                postgres/password = {
-                  sopsFile = ./secrets/honcho-postgres.yaml;
                 };
               };
             };

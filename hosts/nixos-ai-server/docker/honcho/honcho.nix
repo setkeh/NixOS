@@ -19,6 +19,8 @@ in
         AUTH_JWT_SECRET = honchoSecrets.AUTH_JWT_SECRET.text;
         METRICS_ENABLED = honchoSecrets.METRICS_ENABLED.text;
         METRICS_NAMESPACE = honchoSecrets.METRICS_NAMESPACE.text;
+        VECTOR_STORE_TYPE = honchoSecrets.VECTOR_STORE_TYPE.text;
+        VECTOR_STORE_MIGRATED = honchoSecrets.VECTOR_STORE_MIGRATED.text;
       };
       ports = [
         "127.0.0.1:8000:8000"
@@ -55,7 +57,8 @@ in
         AUTH_JWT_SECRET = honchoSecrets.AUTH_JWT_SECRET.text;
         METRICS_ENABLED = honchoSecrets.METRICS_ENABLED.text;
         METRICS_NAMESPACE = honchoSecrets.METRICS_NAMESPACE.text;
-
+        VECTOR_STORE_TYPE = honchoSecrets.VECTOR_STORE_TYPE.text;
+        VECTOR_STORE_MIGRATED = honchoSecrets.VECTOR_STORE_MIGRATED.text;
       };
       dependsOn = [
         {
@@ -85,6 +88,7 @@ in
         "127.0.0.1:5432:5432"
       ];
       volumes = [
+        "./database/init.sql:/docker-entrypoint-initdb.d/init.sql",
         "/etc/postgresql/honcho:/var/lib/postgresql/data"
       ];
       healthCheck = {
