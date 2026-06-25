@@ -66,6 +66,7 @@ let
     lancedb
     turbopuffer
     anthropic
+    python-multipart
   ]);
 
   # 3. Build the Docker image purely in Nix
