@@ -50,7 +50,7 @@
     extraDependencyGroups = [ "honcho" "messaging" ];
     settings.memory.provider = "honcho";
 
-    profiles = [
+    /*profiles = [
           # Default/orchestrator profile configuration
           ({
             config, pkgs, lib, ...
@@ -77,6 +77,6 @@
               };
             };
           })
-        ];
+        ];*/
   };
 }
