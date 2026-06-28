@@ -107,7 +107,7 @@
   environment.systemPackages = with pkgs; [
     age
     nfs-utils
-    synergy
+    sops
   ];
 
   environment.shellInit = ''
