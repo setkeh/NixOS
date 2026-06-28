@@ -1,6 +1,10 @@
 { config, pkgs, age, ... }:
 
 {
+  networking.firewall.allowedTCPPorts = [ 
+    9119 # Hermes Dashboard
+  ];
+  
   services.hermes-agent = {
     enable = true;
 
