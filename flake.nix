@@ -22,7 +22,7 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, ... }@inputs: {
     nixosConfigurations = {
       /* WSL Config */
       wsl = nixpkgs.lib.nixosSystem {
