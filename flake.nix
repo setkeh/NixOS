@@ -2,18 +2,24 @@
   description = "My Home Manager configuration flake";
 
   inputs = {
+    /* Sops Inputs */
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
+    /* Nixpkgs inputs */
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-channel.url = "github:setkeh/nixpkgs-channel";
-    #nixpkgs-channel.inputs.nixpkgs.follows = "nixpkgs";
+
+    /* Home Manager inputs */
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    /* WSL Host inputs */
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # Ai-Server specific inputs
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, ... }@inputs: {
@@ -209,6 +215,12 @@
           })
 
           hermes-agent.nixosModules.default
+
+          /* Setup VScode remote server */
+          vscode-server.nixosModules.default
+          ({ config, pkgs, ... }: {
+            services.vscode-server.enable = true;
+          })
         ];
       };
     };
