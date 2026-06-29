@@ -45,7 +45,7 @@
 
     settings = {
       model = {
-        default = "gemini-3.5-flash";
+        default = "gemini-2.5-pro";
         provider = "gemini";
         base_url = "";
         max_tokens = 8192;
