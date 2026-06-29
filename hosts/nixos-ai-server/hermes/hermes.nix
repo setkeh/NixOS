@@ -59,7 +59,7 @@
         apiKey = "";
         url = "http://127.0.0.1:8000";
       };
-      compression = {                                                                                                                                  │
+      compression = {
         enabled = true;                                                                                                                                                               │
         threshold = 0.50;      # Compresses when context is 50% full                                                                                                                  │
         target_ratio = 0.20;   # Compresses down to 20% size                                                                                                                          │
