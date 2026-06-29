@@ -27,12 +27,12 @@
         tools = {
           # Specify ONLY the tools you want Hermes to have access to
           include = [
-            "mcp_affine_create_doc"
-            "mcp_affine_read_doc"
-            "mcp_affine_search_docs"
-            "mcp_affine_update_doc_title"
-            "mcp_affine_append_markdown"
-            "mcp_affine_list_organize_nodes"
+            "create_doc"
+            "read_doc"
+            "search_docs"
+            "update_doc_title"
+            "append_markdown"
+            "list_organize_nodes"
           ];
         };
       };
