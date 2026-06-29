@@ -32,6 +32,7 @@
         default = "gemini-3.5-flash";
         provider = "gemini";
         base_url = "";
+        max_tokens = 8192;
       };
       api_server = {
         enable = true;
