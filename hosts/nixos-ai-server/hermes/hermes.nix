@@ -59,6 +59,17 @@
           api_key_env = "GEMINI_API_KEY"; 
         };
       };
+      fallback_providers = [
+        {
+          provider = "gemini";
+          model = "gemini-2.5-flash";
+        },
+        {
+          provider = "anthropic";
+          model = "anthropic/claude-sonnet-4";
+        }
+      ];
+
       honcho = {
         enable = true;
         apiKey = "";
