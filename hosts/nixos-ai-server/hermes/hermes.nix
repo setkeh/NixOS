@@ -34,10 +34,8 @@
         base_url = "";
         max_tokens = 8192;
       };
-      api_server = {
-        enable = true;
-        host = "0.0.0.0";
-        port = 9119;
+      agent = {
+        reasoning_effort = "low";
       };
       providers = {
         gemini = {
