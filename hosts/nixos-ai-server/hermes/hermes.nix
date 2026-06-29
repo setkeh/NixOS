@@ -24,6 +24,17 @@
       affine = {
         url = "http://10.20.16.242:3000/mcp";
         headers.Authorization = "Bearer \${AFFINE_MCP_BEARER}";
+        tools = {
+          # Specify ONLY the tools you want Hermes to have access to
+          include = [
+            "mcp_affine_create_doc"
+            "mcp_affine_read_doc"
+            "mcp_affine_search_docs"
+            "mcp_affine_update_doc_title"
+            "mcp_affine_append_markdown"
+            "mcp_affine_list_organize_nodes"
+          ];
+        };
       };
     };
 
@@ -47,6 +58,12 @@
         enable = true;
         apiKey = "";
         url = "http://127.0.0.1:8000";
+      };
+      compression = {                                                                                                                                  │
+        enabled = true;                                                                                                                                                               │
+        threshold = 0.50;      # Compresses when context is 50% full                                                                                                                  │
+        target_ratio = 0.20;   # Compresses down to 20% size                                                                                                                          │
+        protect_last_n = 15;   # Keeps the most recent 15 messages uncompressed                                                                                                       │
       };
     };
 
