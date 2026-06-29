@@ -16,6 +16,9 @@
 
     /* SSH Configuration */
     ../../common/ssh.nix
+
+    /* Windows GPG Fuckery */
+    ./gpg-forward.nix
   ];
 
   # Basic user info
