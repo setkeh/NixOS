@@ -45,10 +45,9 @@
 
     settings = {
       model = {
-        default = "gemini-2.5-pro";
-        provider = "gemini";
-        base_url = "";
-        max_tokens = 8192;
+        provider = "novita";
+        default = "deepseek/deepseek-v4-pro";
+        base_url = "https://api.novita.ai/openai/v1";
       };
       agent = {
         reasoning_effort = "low";
@@ -58,6 +57,9 @@
           provider_type = "google";
           api_key_env = "GEMINI_API_KEY"; 
         };
+        novita = {
+          provider_type = "novita";
+        };
       };
       fallback_providers = [
         {
@@ -65,8 +67,8 @@
           model = "gemini-2.5-flash";
         },
         {
-          provider = "anthropic";
-          model = "anthropic/claude-sonnet-4";
+          provider = "novita";
+          model = "qwen/qwen3.5-397b-a17b";
         }
       ];
 
