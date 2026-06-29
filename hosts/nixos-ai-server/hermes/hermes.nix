@@ -65,7 +65,7 @@
         {
           provider = "gemini";
           model = "gemini-2.5-flash";
-        },
+        }
         {
           provider = "novita";
           model = "qwen/qwen3.5-397b-a17b";
