@@ -20,16 +20,38 @@
       HERMES_RETRY_MAX_DELAY = "60"; 
     };
 
+    mcpServers = {
+      affine = {
+        url = "http://10.20.16.242:3000/mcp";
+        headers.Authorization = "Bearer \${AFFINE_MCP_BEARER}";
+        tools = {
+          # Specify ONLY the tools you want Hermes to have access to
+          include = [
+            "list_workspaces"
+            "get_workspace"
+            "create_doc"
+            "read_doc"
+            "list_docs"
+            "get_doc"
+            "search_docs"
+            "update_doc_title"
+            "append_markdown"
+            "list_organize_nodes"
+            "create_folder"
+          ];
+        };
+      };
+    };
+
     settings = {
       model = {
         default = "gemini-3.5-flash";
         provider = "gemini";
         base_url = "";
+        max_tokens = 8192;
       };
-      api_server = {
-        enable = true;
-        host = "0.0.0.0";
-        port = 9119;
+      agent = {
+        reasoning_effort = "low";
       };
       providers = {
         gemini = {
@@ -41,6 +63,12 @@
         enable = true;
         apiKey = "";
         url = "http://127.0.0.1:8000";
+      };
+      compression = {
+        enabled = true;
+        threshold = 0.50;      # Compresses when context is 50% full
+        target_ratio = 0.20;   # Compresses down to 20% size
+        protect_last_n = 15;   # Keeps the most recent 15 messages uncompressed
       };
     };
 
