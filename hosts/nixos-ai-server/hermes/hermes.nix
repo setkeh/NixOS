@@ -20,6 +20,13 @@
       HERMES_RETRY_MAX_DELAY = "60"; 
     };
 
+    mcpServers = {
+      affine = {
+        url = "http://10.20.16.242:3000/mcp";
+        headers.Authorization = "Bearer \${AFFINE_MCP_BEARER}";
+      };
+    };
+
     settings = {
       model = {
         default = "gemini-3.5-flash";
