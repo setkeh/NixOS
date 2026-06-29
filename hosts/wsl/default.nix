@@ -13,6 +13,9 @@
     ./services.nix
     #../../common/gpg.nix
     ../../common/cleanup.nix
+
+    /* Windows GPG Fuckery */
+    ./gpg-forward.nix
   ];
 
   # Set your time zone.
