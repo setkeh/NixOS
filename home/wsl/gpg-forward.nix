@@ -10,16 +10,16 @@ let
     cleanup() {
         echo ""
         echo "Closing tunnel and releasing remote socket..."
-        ${pkgs.openssh}/bin/ssh "${REMOTE_USER}@${REMOTE_HOST}" "rm -f ${REMOTE_SOCKET}" 2>/dev/null || true
+        ${pkgs.openssh}/bin/ssh "''${REMOTE_USER}@''${REMOTE_HOST}" "rm -f ''${REMOTE_SOCKET}" 2>/dev/null || true
         echo "Done. Laptop can now take over."
         exit 0
     }
 
     trap cleanup INT TERM EXIT
 
-    echo "GPG tunnel → ${REMOTE_HOST}"
-    echo "Local:  ${LOCAL_SOCKET}"
-    echo "Remote: ${REMOTE_SOCKET}"
+    echo "GPG tunnel → ''${REMOTE_HOST}"
+    echo "Local:  ''${LOCAL_SOCKET}"
+    echo "Remote: ''${REMOTE_SOCKET}"
     echo "Press Ctrl+C to release the socket for another machine."
     echo ""
 
@@ -29,8 +29,8 @@ let
         -o "ServerAliveInterval=30" \
         -o "ServerAliveCountMax=3" \
         -o "StreamLocalBindUnlink=yes" \
-        -R "${REMOTE_SOCKET}:''${LOCAL_SOCKET}" \
-        "${REMOTE_USER}@${REMOTE_HOST}"
+        -R "''${REMOTE_SOCKET}:''${LOCAL_SOCKET}" \
+        "''${REMOTE_USER}@''${REMOTE_HOST}"
   '';
 in
 {
