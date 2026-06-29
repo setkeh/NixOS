@@ -27,12 +27,17 @@
         tools = {
           # Specify ONLY the tools you want Hermes to have access to
           include = [
+            "list_workspaces"
+            "get_workspace"
             "create_doc"
             "read_doc"
+            "list_docs"
+            "get_doc"
             "search_docs"
             "update_doc_title"
             "append_markdown"
             "list_organize_nodes"
+            "create_folder"
           ];
         };
       };
