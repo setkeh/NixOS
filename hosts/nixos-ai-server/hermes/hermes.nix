@@ -84,6 +84,18 @@
         target_ratio = 0.20;   # Compresses down to 20% size
         protect_last_n = 5;   # Keeps the most recent 15 messages uncompressed
       };
+      tools = {
+        disabled = [
+          "web"
+          "browser"
+          "image_gen" # May be needed later.
+          "tts" #maybe needed later
+          "computer_use"
+          "feishu_doc"
+          "feishu_drive"
+          "messaging"       # review: needed for cron delivery?
+        ];
+      };
     };
 
     environmentFiles = [ config.sops.secrets."hermes/env".path ];
