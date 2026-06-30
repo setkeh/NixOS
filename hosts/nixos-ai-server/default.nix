@@ -131,7 +131,7 @@
   };
 
   programs.gnupg.agent = {
-    enable = true;
+    enable = false;
     # Ensure pinentry-tty or similar is available if the server needs to ask for anything
     enableSSHSupport = false; #Needs to be disabled as we are sending this through from workstation/laptop envs
     pinentryPackage = pkgs.pinentry-gtk2; 
@@ -152,9 +152,6 @@
 
   # Keyring
   services.gnome.gnome-keyring.enable = false;
-
-  # Need Flatpak for Synergy
-  services.flatpak.enable = true;
 
   # Ensure standard desktop integration files are watched
   xdg.portal = {
