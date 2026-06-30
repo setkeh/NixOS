@@ -51,6 +51,7 @@
       };
       agent = {
         reasoning_effort = "low";
+        notification_sources = [ "*" ];
       };
       providers = {
         gemini = {
