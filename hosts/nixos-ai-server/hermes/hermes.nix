@@ -82,7 +82,7 @@
         enabled = true;
         threshold = 0.50;      # Compresses when context is 50% full
         target_ratio = 0.20;   # Compresses down to 20% size
-        protect_last_n = 15;   # Keeps the most recent 15 messages uncompressed
+        protect_last_n = 5;   # Keeps the most recent 15 messages uncompressed
       };
     };
 
