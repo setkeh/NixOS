@@ -151,7 +151,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # Keyring
-  services.gnome.gnome-keyring.enable = true;
+  services.gnome.gnome-keyring.enable = false;
 
   # Need Flatpak for Synergy
   services.flatpak.enable = true;

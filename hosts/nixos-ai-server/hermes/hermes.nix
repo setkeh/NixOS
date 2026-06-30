@@ -45,13 +45,49 @@
 
     settings = {
       model = {
-        provider = "novita";
-        default = "deepseek/deepseek-v4-pro";
-        base_url = "https://api.novita.ai/openai/v1";
+        provider = "gemini";
+        model = "gemini-2.5-pro";
+        #provider = "novita";
+        #default = "deepseek/deepseek-v4-pro";
+        #base_url = "https://api.novita.ai/openai/v1";
       };
       agent = {
         reasoning_effort = "low";
         notification_sources = [ "*" ];
+        disabled_toolsets = [
+          /* Definatly Need In Some Capacity*/
+          # "web"
+          "browser"
+          # "image_gen"
+          # "terminal"
+          # "file"
+          # "code_execution"
+          "vision"
+          "skills"
+          "todo"
+          "memory"
+          "session_search"
+          # "clarify"
+          # "delegation"
+          "cronjob"
+
+          /* Will probably need in Some Capacity or other */
+          "image_gen"
+          "homeassistant"
+          "x_search"
+          "tts"
+          "context_engine"
+
+          /* Definatly Dont Need */
+          "video"
+          "video_gen"
+          "tts"
+          "computer_use"
+          "feishu_doc"
+          "feishu_drive"
+          "spotify"
+          "yuanbao"
+        ];
       };
       providers = {
         gemini = {
