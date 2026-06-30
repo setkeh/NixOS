@@ -27,7 +27,7 @@ let
 
   # A function to filter out unwanted skill directories from the bundled skills source
   filterSkills = oldAttrs: {
-    # The `bundledSkills` attribute in hermes-agent.nix is what we want to override.
+    # The`bundledSkills` attribute in hermes-agent.nix is what we want to override.
     # We create a filtered source based on the original Hermes Agent's source path.
     bundledSkills = lib.cleanSourceWith {
       # Assuming hermes-agent's skills are located directly in a 'skills' subdirectory
@@ -130,6 +130,7 @@ in
           "context_engine"    # Specialized context engine, disable if not explicitly used
           "spotify"           # Not for orchestration
           "yuanbao"           # Not for orchestration
+          # Keep "terminal", "file", "code_execution", "skills", "todo", "memory", "session_search", "clarify", "delegation", "cronjob" enabled.
         ];
       };
       providers = {
@@ -170,87 +171,81 @@ in
 
     extraDependencyGroups = [ "honcho" "messaging" ]; # Keep messaging if needed for cron delivery
     settings.memory.provider = "honcho";
+  };
 
-    profiles = [
-          # Default/orchestrator profile configuration
-          # Note: The 'profiles' block here defines *other* profiles (coder, researcher)
-          # not the main Aegis orchestrator itself. The 'settings' above apply to Aegis.
-          ({
-            config, pkgs, lib, ...
-          }: {hermes-agent.profiles = {
-              coder = {
-                name = "Coder Profile";
-                model.default = "mistralai/devstral-small-2-2512";
-                model.provider = "lmstudio";
-                model.base_url = "http://100.65.62.97:1234/v1";
+  # This defines the 'hermes-agent.profiles' option,
+  # which is then picked up by the main Hermes Agent module.
+  hermes-agent.profiles = {
+    coder = {
+      name = "Coder Profile";
+      model.default = "mistralai/devstral-small-2-2512";
+      model.provider = "lmstudio";
+      model.base_url = "http://100.65.62.97:1234/v1";
 
-                # Coder profile's toolsets should be specialized.
-                # Ensure these match what the coder truly needs and no more.
-                toolsets = [ "hermes-cli" "terminal" "file" "code_execution" ];
-                agent.personality = "technical";
-                agent.disabled_toolsets = [
-                  "web" # Coder might need web for research, review this
-                  "browser"
-                  "vision"
-                  "image_gen"
-                  "tts"
-                  "computer_use"
-                  "feishu_doc"
-                  "feishu_drive"
-                  "messaging"
-                  "video"
-                  "video_gen"
-                  "homeassistant"
-                  "x_search"
-                  "context_engine"
-                  "spotify"
-                  "yuanbao"
-                  "skills" # Coder probably doesn't need to manage skills
-                  "todo" # Coder has its own todo list usually, but can keep if needed for self-management
-                  "memory" # Coder might have its own memory, depends on config
-                  "session_search"
-                  "clarify"
-                  "delegation" # Coder should be a leaf, not delegating further
-                  "cronjob"
-                ];
-                # Add coder-specific settings here
-              };
+      # Coder profile's toolsets should be specialized.
+      # Ensure these match what the coder truly needs and no more.
+      toolsets = [ "hermes-cli" "terminal" "file" "code_execution" ];
+      agent.personality = "technical";
+      agent.disabled_toolsets = [
+        "web" # Coder might need web for research, review this carefully
+        "browser"
+        "vision"
+        "image_gen"
+        "tts"
+        "computer_use"
+        "feishu_doc"
+        "feishu_drive"
+        "messaging"
+        "video"
+        "video_gen"
+        "homeassistant"
+        "x_search"
+        "context_engine"
+        "spotify"
+        "yuanbao"
+        "skills" # Coder probably doesn't need to manage skills
+        "todo" # Coder has its own todo list usually, but can keep if needed for self-management
+        "memory" # Coder might have its own memory, depends on config
+        "session_search"
+        "clarify"
+        "delegation" # Coder should be a leaf, not delegating further
+        "cronjob"
+      ];
+      # Add coder-specific settings here
+    };
 
-              researcher = {
-                name = "Researcher Profile";
-                model.default = "gemini-3.1-pro-preview";
-                # Researcher profile's toolsets should be specialized.
-                # Ensure these match what the researcher truly needs and no more.
-                toolsets = [ "web" "browser" "file" "search" ]; # Added 'file' for reading local data
-                agent.disabled_toolsets = [
-                  "terminal" # Researcher typically doesn't need terminal for general research
-                  "code_execution"
-                  "vision"
-                  "image_gen"
-                  "tts"
-                  "computer_use"
-                  "feishu_doc"
-                  "feishu_drive"
-                  "messaging"
-                  "video"
-                  "video_gen"
-                  "homeassistant"
-                  "x_search"
-                  "context_engine"
-                  "spotify"
-                  "yuanbao"
-                  "skills" # Researcher probably doesn't need to manage skills
-                  "todo"
-                  "memory"
-                  "session_search"
-                  "clarify"
-                  "delegation" # Researcher should be a leaf
-                  "cronjob"
-                ];
-                # Add researcher-specific settings here
-              };
-            };
-          })
-        ];
+    researcher = {
+      name = "Researcher Profile";
+      model.default = "gemini-3.1-pro-preview";
+      # Researcher profile's toolsets should be specialized.
+      # Ensure these match what the researcher truly needs and no more.
+      toolsets = [ "web" "browser" "file" "search" ]; # Added 'file' for reading local data
+      agent.disabled_toolsets = [
+        "terminal" # Researcher typically doesn't need terminal for general research
+        "code_execution"
+        "vision"
+        "image_gen"
+        "tts"
+        "computer_use"
+        "feishu_doc"
+        "feishu_drive"
+        "messaging"
+        "video"
+        "video_gen"
+        "homeassistant"
+        "x_search"
+        "context_engine"
+        "spotify"
+        "yuanbao"
+        "skills" # Researcher probably doesn't need to manage skills
+        "todo"
+        "memory"
+        "session_search"
+        "clarify"
+        "delegation" # Researcher should be a leaf
+        "cronjob"
+      ];
+      # Add researcher-specific settings here
+    };
   };
 }
