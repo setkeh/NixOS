@@ -28,7 +28,7 @@
       };
 
       # Your AI Server block with the YubiKey tunnel
-      "Ai-Server" = {
+      "10.0.66.75" = {
         HostName = "10.0.66.75";
         User = "setkeh";
         ForwardAgent = true;
