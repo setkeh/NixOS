@@ -24,6 +24,10 @@
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, ... }@inputs: {
     nixosConfigurations = {
+      lib = {
+        mkClaudeInfra = import ./common/claude-infra;
+      };
+
       /* WSL Config */
       wsl = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
