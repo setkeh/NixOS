@@ -91,13 +91,13 @@ let
   # launch (via your Yubikey GPG) so values live only in the child process —
   # never on disk, never in the store. Runs decrypt-on-invocation; nothing
   # lingers after the shell exits.
-  #sopsPreamble =
-  #  if mcpSecretsEnv == null then ""
-  #  else ''
-  #    set -a
-  #    . <(${pkgs.sops}/bin/sops -d --output-type dotenv ${mcpSecretsEnv})
-  #    set +a
-  #  '';
+  sopsPreamble =
+    if mcpSecretsEnv == null then ""
+    else ''
+      set -a
+      . <(${pkgs.sops}/bin/sops -d --output-type dotenv ${mcpSecretsEnv})
+      set +a
+    '';
 in
 pkgs.writeShellScriptBin "claude-infra" ''
   ${sopsPreamble}
