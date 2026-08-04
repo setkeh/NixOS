@@ -83,6 +83,13 @@ let
       #     SOME_API_KEY = "$SOME_API_KEY";   # populated by the SOPS preamble
       #   };
       # };
+      grafana = {
+        type = "http";
+        url = "https://alessia.setkeh.com/grafana/mcp";
+        headers = {
+          Authorization = "Bearer \${MCP_TOKEN_GRAFANA}";
+        };
+      };
     };
   };
 
