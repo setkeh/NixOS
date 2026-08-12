@@ -52,31 +52,53 @@
     LC_TIME = "en_AU.UTF-8";
   };
 
+  # ---------- X11 DWM Config ----------
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  #services.xserver.enable = true;
 
   # Enable the XFCE Desktop Environment.
-  services.xserver.displayManager.lightdm = {
-    enable = true;
-    background = "/etc/wallpaper/IMG-57dc78dcb5f8086349cdb611a4a0fe5f-V.jpg";
-    extraConfig = ''
-      background-style = centered
-    '';
-  };
+  #services.xserver.displayManager.lightdm = {
+  #  enable = true;
+  #  background = "/etc/wallpaper/IMG-57dc78dcb5f8086349cdb611a4a0fe5f-V.jpg";
+  #  extraConfig = ''
+  #    background-style = centered
+  #  '';
+  #};
 
-  services.xserver.displayManager.sessionCommands = ''
+  #services.xserver.displayManager.sessionCommands = ''
     # Commands to run on login
-    ${pkgs.feh}/bin/feh --bg-fill /home/setkeh/Wallpaper/uwp5001833.png &
-  '';
+  #  ${pkgs.feh}/bin/feh --bg-fill /home/setkeh/Wallpaper/uwp5001833.png &
+  #'';
 
   #services.xserver.desktopManager.xfce.enable = true;
-  services.xserver.windowManager.dwm.enable = true;
+  #services.xserver.windowManager.dwm.enable = true;
 
   # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "au";
-    variant = "";
+  #services.xserver.xkb = {
+  #  layout = "au";
+  #  variant = "";
+  #};
+
+  programs.niri.enable = true;
+  # programs.niri.package = pkgs.niri-stable;  # or niri-unstable
+
+  # Login manager: greetd + tuigreet launching a niri session
+  services.greetd = {
+    enable = true;
+    settings.default_session = {
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd niri-session";
+      user = "greeter";
+    };
   };
+
+  # XDG portals: screenshots, file pickers, screen share
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+   };
+
+  # Electron/Chromium apps run native Wayland (helps VS Code, Claude-in-Chrome, etc.)
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   users.users.setkeh = {
     isNormalUser = true;
