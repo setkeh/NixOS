@@ -32,7 +32,7 @@
         HostName = "10.0.66.75";
         User = "setkeh";
         ForwardAgent = true;
-        RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
+        RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent";
       };
     };
   };

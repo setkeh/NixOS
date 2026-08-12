@@ -76,5 +76,6 @@
     pkgs.lmstudio
     pkgs.mqtt-explorer
     pkgs.inetutils
+    pkgs.claude-monitor
   ];
 }
