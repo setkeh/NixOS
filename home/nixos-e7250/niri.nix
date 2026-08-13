@@ -1,8 +1,8 @@
 { config, pkgs, lib, ... }: {
-    xdg.configFile."niri/config.kdl".source = ../../common/niri/config.kdl;
+    #xdg.configFile."niri/config.kdl".source = ../../common/niri/config.kdl;
     xdg.configFile."niri/config-machine.kdl".source = ./niri/config-machine.kdl;
 
-    xdg.configFile."niri/config.kdl".source =
+    xdg.configFile."niri/config.kdl".source = ../../common/niri/config.kdl
         pkgs.runCommand "niri-config-checked"
           {
             nativeBuildInputs = [ pkgs.niri ];
