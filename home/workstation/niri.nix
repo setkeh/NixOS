@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }: {
-    #xdg.configFile."niri/config.kdl".source = ../../common/niri/config.kdl;
     xdg.configFile."niri/config-machine.kdl".source = ./niri/config-machine.kdl;
 
     xdg.configFile."niri/config.kdl".source =
@@ -8,8 +7,18 @@
             nativeBuildInputs = [ pkgs.niri ];
           }
           ''
-            niri validate --config ${../../common/niri/config.kdl}
-            cp ${../../common/niri/config.kdl} $out
+            mkdir -p check
+            cp ${../../common/niri/config.kdl} check/config.kdl
+
+            ${lib.optionalString (builtins.pathExists ./niri/config-machine.kdl) ''
+              cp ${./niri/config-machine.kdl} check/config-machine.kdl
+            ''}
+
+            niri validate --config check/config.kdl
+            
+            cp check/config.kdl $out
+
+            rm -rf check
           '';
 
     programs.fuzzel.enable = true; # Super+D in the default setting (app launcher)

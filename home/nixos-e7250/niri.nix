@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }: {
-    #xdg.configFile."niri/config.kdl".source = ../../common/niri/config.kdl;
     xdg.configFile."niri/config-machine.kdl".source = ./niri/config-machine.kdl;
 
     xdg.configFile."niri/config.kdl".source =
@@ -17,9 +16,9 @@
 
             niri validate --config check/config.kdl
             
-            rm -rf check
-            
             cp check/config.kdl $out
+
+            rm -rf check
           '';
 
     programs.fuzzel.enable = true; # Super+D in the default setting (app launcher)
