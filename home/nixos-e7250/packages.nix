@@ -77,5 +77,6 @@
     pkgs.mqtt-explorer
     pkgs.inetutils
     pkgs.claude-monitor
+    pkgs.swayimg
   ];
 }
