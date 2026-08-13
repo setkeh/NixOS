@@ -301,4 +301,4 @@ binds {
 // Machine Specifc Config (e.g home/workstation/niri/config-machine.kdl)
 // ----------------------------------------------------------------------------
 
-include "~/.config/niri/config-machine.kdl"
+include "config-machine.kdl"
