@@ -24,6 +24,7 @@
     /* Wayland / Niri WM Config */
     ./mako.nix
     ./niri.nix
+    ./waybar.nix
   ];
 
   # Enable X Compositing
