@@ -1,0 +1,67 @@
+{ pkgs, config, ... }:
+
+{
+   home.packages = [
+    pkgs.vim
+    pkgs.gemini-cli
+    pkgs.btop
+    pkgs.xclip
+    pkgs.feh
+    pkgs.nerd-fonts.space-mono
+    pkgs.imagemagick 
+    pkgs.obs-studio
+    pkgs.slack
+    pkgs.unzip
+    pkgs.gnupg
+    pkgs.udisks
+    pkgs.ncdu
+    pkgs.scrot
+    pkgs.tmux
+    pkgs.smartmontools
+    pkgs.terminator
+    pkgs.discord
+    pkgs.calc
+    pkgs.chromium
+    pkgs.gparted
+    pkgs.p7zip
+    pkgs.ntfs3g
+    pkgs.freerdp
+    pkgs.spotify
+    pkgs.cryptomator
+    pkgs.fastfetch
+    pkgs._1password-cli
+    pkgs._1password-gui
+    /* pkgs.rnix-lsp RIP @jD91mZM2 */
+    pkgs.vivaldi
+    pkgs.ipmitool
+    pkgs.xz
+    pkgs.perl
+    pkgs.ipmiview
+    pkgs.file
+    pkgs.appimage-run
+    pkgs.nix-prefetch-scripts
+    pkgs.asciinema
+    pkgs.dbeaver-bin
+    pkgs.mssql_jdbc
+    pkgs.ripgrep
+    pkgs.websocat
+    pkgs.mcrcon
+    pkgs.filezilla
+    pkgs.weechat
+    pkgs.openssl
+    pkgs.xclip
+    pkgs.postman
+    pkgs.vscode
+    pkgs.mc
+    pkgs.yubikey-manager
+    pkgs.age-plugin-yubikey
+    pkgs.age
+    pkgs.element-desktop
+    pkgs.lmstudio
+    pkgs.mqtt-explorer
+    pkgs.inetutils
+    pkgs.moonlight-qt
+    pkgs.xwayland-satellite
+    pkgs.swaybg
+  ];
+}

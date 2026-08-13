@@ -20,10 +20,19 @@
 
     /* SSH Configuration */
     ../../common/ssh.nix
+
+    /* Wayland / Niri WM Config */
+    ./mako.nix
+    ./niri.nix
   ];
 
   # Enable X Compositing
   services.picom.enable = true;
+
+  xdg.configFile."wallpapers" = {
+    source = ../../common/wallpapers;
+    recursive = true;
+  };
 
   # Basic user info
   home.stateVersion = "25.11";

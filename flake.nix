@@ -28,6 +28,61 @@
     };
 
     nixosConfigurations = {
+      /* Workstation Config */
+      workstation = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/workstation
+
+          /* Overlay Module */
+          ({ config, pkgs, ... }: {
+            nixpkgs = {
+              overlays = [
+                /* My Custom Package Channel */
+                nixpkgs-channel.overlays.default
+
+                /* Custom Package Configuration */
+                (import ./etc/overlays/age.nix)
+              ];
+              config = {
+                allowUnfree = true;
+                allowUnfreePredicate = (_: true);
+              };
+            };
+          })
+
+          sops-nix.nixosModules.sops
+
+          ({ config, ...}: {
+            sops = {
+              age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+              defaultSopsFile = ./secrets/workstation.yaml;
+              secrets = {
+                /* Im not sure if there is a better way to do this but it works for now */
+                "workstation/fish_aliases" = {
+                  owner = config.users.users.setkeh.name;
+                  path = "/home/setkeh/.config/fish/conf.d/alias.fish";
+                };
+              };
+            };
+          })
+        
+          home-manager.nixosModules.home-manager
+          ({ config, lib, pkgs, ...}: {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              inputs.sops-nix.homeManagerModules.sops
+            ];
+            home-manager.users.setkeh = { config, pkgs, ... }: {
+              imports = [
+                ./home/workstation
+              ];
+            };
+          })
+        ];
+      };
+
       /* WSL Config */
       wsl = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
