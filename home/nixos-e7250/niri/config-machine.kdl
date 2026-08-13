@@ -1,7 +1,14 @@
 input {
     // Omitting touchpad settings disables them, or leaves them at their default values.
     touchpad {
-        off
+        // Tapping anywhere registers a left click.
+        tap
+
+        // Inverted scrolling.
+        natural-scroll
+
+        // Disable acceleration.
+        accel-profile "flat"
     }
 
     mouse {
