@@ -71,6 +71,7 @@
           ({ config, lib, pkgs, ...}: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "hm-bak";
             home-manager.sharedModules = [
               inputs.sops-nix.homeManagerModules.sops
             ];
@@ -184,6 +185,7 @@
           ({ config, lib, pkgs, ...}: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "hm-bak";
             home-manager.sharedModules = [
               inputs.sops-nix.homeManagerModules.sops
             ];
