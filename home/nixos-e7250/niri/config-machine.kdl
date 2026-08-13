@@ -30,7 +30,7 @@ workspace "common"
 workspace "media"
 prefer-no-csd
 
-spawn-at-startup "swaybg" "-m" "fill" "-i" "~/.config/wallpapers/space-planet-science-night-generated-by-ai.jpg"
+spawn-sh-at-startup "swaybg -m fill -i ~/.config/wallpapers/space-planet-science-night-generated-by-ai.jpg"
 //spawn-at-startup "gammastep"
 //spawn-at-startup "nwg-panel"
 //spawn-at-startup "pipewire"
