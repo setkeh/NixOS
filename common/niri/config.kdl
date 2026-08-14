@@ -79,6 +79,7 @@ environment {
     QT_QPA_PLATFORM "wayland"
     MOZ_ENABLE_WAYLAND "1"
     QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
+    DISPLAY ":0"
 }
 
 screenshot-path "~/Screenshots/%Y-%m-%d %H-%M-%S.png"

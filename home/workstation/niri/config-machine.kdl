@@ -16,7 +16,7 @@ input {
     // warp-mouse-to-focus
 
     // Focus windows and outputs automatically when moving the mouse into them.
-    focus-follows-mouse
+    // focus-follows-mouse
 }
 
 workspace "common"

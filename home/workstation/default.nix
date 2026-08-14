@@ -5,7 +5,7 @@
 
     /* Common Configs */
     ../../common/git.nix
-    ../../common/services.nix
+    /*../../common/services.nix*/
 
     /* Fish Imports */
     ../../common/applications/fish/init.nix

@@ -19,7 +19,6 @@
     pkgs.tmux
     pkgs.smartmontools
     pkgs.terminator
-    pkgs.discord
     pkgs.calc
     pkgs.chromium
     pkgs.gparted
@@ -63,5 +62,8 @@
     pkgs.moonlight-qt
     pkgs.xwayland-satellite
     pkgs.swaybg
+    pkgs.pwvucontrol
+    pkgs.xwayland-satellite
+    pkgs.discord
   ];
 }

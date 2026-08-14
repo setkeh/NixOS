@@ -7,6 +7,7 @@ keys:
   - &nixos-e7250 age1tgugndgw2vcsyfhquxdzurrf63pmgcp7nn5llzgj9qkea2g6kausgf4kjp
   - &wsl age1g920hgj0t0m9z7uw34s8fgstc7sn5fw2lqcxdcguflc9cp0gdpesdwsnse
   - &nixos-ai-server age1zfwa82m003rgjxyrwg80rjn744v9wncyugacx9z5vngjm607hu8s8e0g04
+  - &workstation age1krtultg7500l0lhst09g7hycjcsrwnt0388ktynwd9favttkm5lsjet38f
 creation_rules:
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
@@ -16,3 +17,4 @@ creation_rules:
       - *nixos-e7250
       - *wsl
       - *nixos-ai-server
+      - *workstation
