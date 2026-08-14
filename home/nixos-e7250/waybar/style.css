@@ -51,6 +51,7 @@ window#waybar {
 #jack,
 #tray,
 #window,
+#workspaces,
 #workspaces button#niri-workspace-3,
 #workspaces button#niri-workspace-3 label {
     opacity: 0;

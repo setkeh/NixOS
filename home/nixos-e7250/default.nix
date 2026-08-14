@@ -35,6 +35,16 @@
     recursive = true;
   };
 
+  programs.foot = {
+  enable = true;
+    settings = {
+      main = {
+        font = "Fira Code:size=11";
+        term = "xterm-256color";
+      };
+    };
+  };
+
   # Basic user info
   home.stateVersion = "25.11";
 }
