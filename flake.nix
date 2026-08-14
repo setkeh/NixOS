@@ -195,6 +195,7 @@
             home-manager.backupFileExtension = "hm-bak";
             home-manager.sharedModules = [
               inputs.sops-nix.homeManagerModules.sops
+              inputs.lan-mouse.homeManagerModules.default
             ];
             home-manager.users.setkeh = { config, pkgs, ... }: {
               imports = [

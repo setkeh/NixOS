@@ -25,9 +25,6 @@
     ./mako.nix
     ./niri.nix
     ./waybar.nix
-
-    /* lan-mouse */
-    inputs.lan-mouse.homeManagerModules.default
   ];
 
   # Enable X Compositing
