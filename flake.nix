@@ -26,7 +26,7 @@
     lan-mouse.url = "github:feschber/lan-mouse";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, lan-mouse, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, claude-desktop, lan-mouse, ... }@inputs: {
     lib = {
       mkClaudeInfra = import ./common/claude-infra;
     };
