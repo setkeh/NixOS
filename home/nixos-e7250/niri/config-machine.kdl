@@ -1,4 +1,4 @@
-input {
+ input {
     // Omitting touchpad settings disables them, or leaves them at their default values.
     touchpad {
         // Tapping anywhere registers a left click.
@@ -26,8 +26,9 @@ input {
     focus-follows-mouse
 }
 
-workspace "common"
-workspace "media"
+workspace "Development"
+workspace "Brwoser"
+
 prefer-no-csd
 
 spawn-sh-at-startup "swaybg -m fill -i ~/.config/wallpapers/space-planet-science-night-generated-by-ai.jpg"
