@@ -23,9 +23,10 @@
 
     /* Non System Specific tooling imports */
     claude-desktop.url = "github:aaddrick/claude-desktop-debian";
+    lan-mouse.url = "github:feschber/lan-mouse";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, lan-mouse, ... }@inputs: {
     lib = {
       mkClaudeInfra = import ./common/claude-infra;
     };
