@@ -103,6 +103,7 @@
     age-plugin-yubikey
     age
     nfs-utils
+    claude-desktop
   ];
 
   environment.shellInit = ''

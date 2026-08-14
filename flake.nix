@@ -17,9 +17,12 @@
     /* WSL Host inputs */
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
-    # Ai-Server specific inputs
+    /* Ai-Server specific inputs */
     hermes-agent.url = "github:NousResearch/hermes-agent";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+
+    /* Non System Specific tooling imports */
+    claude-desktop.url = "github:aaddrick/claude-desktop-debian";
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, ... }@inputs: {
@@ -40,6 +43,9 @@
               overlays = [
                 /* My Custom Package Channel */
                 nixpkgs-channel.overlays.default
+
+                /* Claude Desktop */
+                claude-desktop.overlays.default
 
                 /* Custom Package Configuration */
                 (import ./etc/overlays/age.nix)
