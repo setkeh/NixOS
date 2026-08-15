@@ -24,6 +24,9 @@
     /* Wayland / Niri WM Config */
     ./mako.nix
     ./niri.nix
+
+    /* Lan-Mouse */
+    ./lan-mouse
   ];
 
   xdg.configFile."wallpapers" = {
