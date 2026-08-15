@@ -27,6 +27,9 @@
 
     /* Lan-Mouse */
     ./lan-mouse
+
+    /* Obsidian */
+    ./obsidian
   ];
 
   xdg.configFile."wallpapers" = {
