@@ -4,7 +4,6 @@
    home.packages = [
     pkgs.vim
     pkgs.gemini-cli
-    pkgs.btop
     pkgs.xclip
     pkgs.feh
     pkgs.nerd-fonts.space-mono
