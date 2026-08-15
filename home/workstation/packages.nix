@@ -65,5 +65,6 @@
     pkgs.pwvucontrol
     pkgs.xwayland-satellite
     pkgs.discord
+    pkgs.tibia
   ];
 }
