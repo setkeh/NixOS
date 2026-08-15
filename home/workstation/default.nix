@@ -34,6 +34,10 @@
     recursive = true;
   };
 
+  programs.alacritty.settings = {
+    font.size = lib.mkForce 8.0;
+  };
+
   # Basic user info
   home.stateVersion = "26.05";
 }

@@ -6,6 +6,7 @@
     ../../common/gpg.nix
     ../../common/cleanup.nix
     ../../common/firewall.nix
+    ./pipewire
   ];
 
   /* Bootloader. */

@@ -12,7 +12,7 @@
                   /* Connect as soon as the daemon starts. */
                   activate_on_startup = true;
                   /* Optional; hostname resolution is used when omitted. */
-                  ips = [ "10.0.119.10" ];
+                  ips = [ "10.0.119.10" "10.0.130.142" ];
                 }
             ];
         };
