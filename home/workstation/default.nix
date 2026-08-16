@@ -45,8 +45,8 @@
   };
 
   programs.btop.settings = {
-    show_battery = false;
-    net_iface = "bond0";
+    show_battery = lib.mkForce false;
+    net_iface = lib.mkForce "bond0";
   };
 
   # Basic user info
