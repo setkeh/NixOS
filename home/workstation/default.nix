@@ -27,6 +27,7 @@
     /* Wayland / Niri WM Config */
     ./mako.nix
     ./niri.nix
+    ./waybar
 
     /* Lan-Mouse */
     ./lan-mouse
