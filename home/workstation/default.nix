@@ -21,6 +21,9 @@
     /* SSH Configuration */
     ../../common/ssh.nix
 
+    /* Btop */
+    ../../common/applications/btop
+
     /* Wayland / Niri WM Config */
     ./mako.nix
     ./niri.nix
@@ -41,14 +44,10 @@
     font.size = lib.mkForce 8.0;
   };
 
-  programs.btop = {
-  enable = true;
-  package = pkgs.btop.override { rocmSupport = true; };
-  settings = {
-    update_ms = 2000;       # bump this if the ROCm-polling lag bites
-    show_gpu_info = "On";   # "Auto" | "On" | "Off"
+  programs.btop.settings = {
+    show_battery = false;
+    net_iface = "bond0";
   };
-};
 
   # Basic user info
   home.stateVersion = "26.05";
