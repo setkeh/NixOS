@@ -102,8 +102,10 @@ elif [ "$primary" -ge "$WARN" ]; then
     class="cputemp cputemp-warning"
 fi
 
+# -c matters: Waybar's json return-type parses exactly one object per line, so
+# pretty-printed output fails on the bare "{" of line 1.
 printf '%s\n' "${lines[@]}" |
-    jq -Rs --arg temp "$primary" --arg class "$class" \
+    jq -Rsc --arg temp "$primary" --arg class "$class" \
         "{ text: \"$ICON_JSON \\(\$temp)°C\",
            tooltip: rtrimstr(\"\\n\"),
            class: (\$class | split(\" \")) }"

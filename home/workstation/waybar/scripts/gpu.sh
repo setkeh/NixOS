@@ -159,8 +159,10 @@ if [ -n "$fan_rpm" ];       then lines+=("Fan      ${fan_rpm} RPM"); fi
 if [ -n "$sclk_mhz" ];      then lines+=("Core     ${sclk_mhz} MHz"); fi
 if [ -n "$mclk_mhz" ];      then lines+=("Memory   ${mclk_mhz} MHz"); fi
 
+# -c matters: Waybar's json return-type parses exactly one object per line, so
+# pretty-printed output fails on the bare "{" of line 1.
 printf '%s\n' "${lines[@]}" |
-    jq -Rs --arg busy "$busy" --arg class "$class" \
+    jq -Rsc --arg busy "$busy" --arg class "$class" \
         "{ text: \"$ICON_JSON \\(\$busy | tostring)%\",
            tooltip: rtrimstr(\"\\n\"),
            class: (\$class | split(\" \")) }"
