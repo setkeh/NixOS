@@ -65,5 +65,6 @@
     pkgs.xwayland-satellite
     pkgs.discord
     pkgs.tibia
+    pkgs.handbrake
   ];
 }
