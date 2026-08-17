@@ -68,7 +68,7 @@ window-rule {
     match app-id="firefox"
     block-out-from "screencast"
     open-on-output "DP-2"
-    default-column-display "tabbed"
+    default-column-width { proportion 0.5; }
     opacity 1.0
 }
 
