@@ -47,14 +47,16 @@ spawn-sh-at-startup "swaybg -m fill -i ~/.config/wallpapers/space-planet-science
 spawn-at-startup "waybar"
 
 window-rule {
-    match app-id="com.1password.1password"
+    match app-id="1password"
+    block-out-from "screen-capture"
+    open-on-workspace "Secret"
     opacity 0.75
 }
 
 window-rule {
-    match app-id="mpv"
-    match title="swayimg"
-    opacity 1.0
+    match app-id="vivaldi-stable"
+    open-on-workspace "Browsers"
+    opacity 0.75
 }
 
 // Revist this
