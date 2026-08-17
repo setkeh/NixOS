@@ -77,13 +77,14 @@ in
 
       modules-left = [
         "custom/logo"
-        "clock"
-        "custom/weather"
+        "niri/workspaces"
         "niri/window"
       ];
 
       modules-center = [
-        "niri/workspaces"
+        "clock"
+        "custom/weather"
+        
       ];
 
       modules-right = [
