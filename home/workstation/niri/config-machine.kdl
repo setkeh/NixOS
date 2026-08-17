@@ -32,13 +32,13 @@ workspace "OzRust Devel" {
 
 // Setup Workspaces For Display HDMI-A-1
 workspace "Browsers" {
-    open-on-output "DP-2"
+    open-on-output "HDMI-A-1"
 }
 workspace "Chat" {
-    open-on-output "DP-2"
+    open-on-output "HDMI-A-1"
 }
 workspace "Secret" {
-    open-on-output "DP-2"
+    open-on-output "HDMI-A-1"
 }
 
 prefer-no-csd
