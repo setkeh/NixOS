@@ -46,6 +46,9 @@ prefer-no-csd
 spawn-sh-at-startup "swaybg -m fill -i ~/.config/wallpapers/space-planet-science-night-generated-by-ai.jpg"
 spawn-at-startup "waybar"
 
+//Window Rules
+
+// Secrets Management
 window-rule {
     match app-id="1password"
     block-out-from "screen-capture"
@@ -53,9 +56,24 @@ window-rule {
     opacity 0.75
 }
 
+// Browsers
 window-rule {
     match app-id="vivaldi-stable"
     open-on-workspace "Browsers"
+    opacity 0.75
+}
+
+window-rule {
+    match title="Picture-in-Picture"
+    match app-id="firefox"
+    open-on-workspace "4"
+    opacity 1.0
+}
+
+// Chat Apps 
+window-rule {
+    match app-id="discord"
+    open-on-workspace "Chat"
     opacity 0.75
 }
 
