@@ -19,25 +19,32 @@ input {
     // focus-follows-mouse
 }
 
-workspace "common"
-workspace "media"
+// Setup Workspaces For Display DP-2
+workspace "Common" {
+    open-on-output "DP-2"
+}
+workspace "ADE-Devel" {
+    open-on-output "DP-2"
+}
+workspace "OzRust Devel" {
+    open-on-output "DP-2"
+}
+
+// Setup Workspaces For Display HDMI-A-1
+workspace "Browsers" {
+    open-on-output "DP-2"
+}
+workspace "Chat" {
+    open-on-output "DP-2"
+}
+workspace "Secret" {
+    open-on-output "DP-2"
+}
+
 prefer-no-csd
 
 spawn-sh-at-startup "swaybg -m fill -i ~/.config/wallpapers/space-planet-science-night-generated-by-ai.jpg"
 spawn-at-startup "waybar"
-//spawn-at-startup "gammastep"
-//spawn-at-startup "nwg-panel"
-//spawn-at-startup "pipewire"
-//spawn-at-startup "wireplumber"
-//spawn-at-startup "pipewire-pulse"
-//spawn-at-startup "nm-applet" "--indicator"
-//spawn-at-startup "mako"
-//spawn-at-startup "/usr/libexec/polkit-gnome-authentication-agent-1"
-//spawn-at-startup "udiskie" "-ans"
-//spawn-at-startup "batterynotify.sh"
-//spawn-at-startup "/home/kkm/.config/niri/swayidle.sh"
-//spawn-at-startup "/home/kkm/.config/niri/swaybg.sh"
-//spawn-at-startup "waybar" "-c" "/home/kkm/.config/niri/waybar/config" "-s" "/home/kkm/.config/niri/waybar/style.css"
 
 window-rule {
     match app-id="com.1password.1password"

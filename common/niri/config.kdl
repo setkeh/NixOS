@@ -82,12 +82,12 @@ environment {
     DISPLAY ":0"
 }
 
-screenshot-path "~/Screenshots/%Y-%m-%d %H-%M-%S.png"
+screenshot-path "~/Screenshots/%Y-%m-%d/%H-%M-%S.png"
 
 animations {
     slowdown 2.0
     window-open {
-        duration-ms 200
+        duration-ms 300
         curve "linear"
         custom-shader r"
     
@@ -110,7 +110,7 @@ animations {
     }
 
     window-close {
-        duration-ms 250
+        duration-ms 450
         curve "linear"
         custom-shader r"
 
