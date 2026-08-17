@@ -66,8 +66,9 @@ window-rule {
 window-rule {
     match title="Picture-in-Picture"
     match app-id="firefox"
+    block-out-from "screencast"
     open-on-output "DP-2"
-    open-on-workspace "4"
+    default-column-display "tabbed"
     opacity 1.0
 }
 
