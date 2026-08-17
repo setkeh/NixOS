@@ -173,25 +173,10 @@ window-rule {
 
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+Return { spawn "foot" "fish"; }
-    Mod+Shift+Return { spawn "foot"; }
+    Mod+Return { spawn "alacritty"; }
     Mod+W { spawn "fuzzel"; }
     Mod+P { spawn "1password"; }
-    Mod+Shift+E { spawn "foot" "/home/kkm/.config/niri/yazi.sh"; }
-    Mod+B { spawn "firejail" "librewolf"; }
-    Mod+Shift+B { spawn "firejail" "qutebrowser"; }
     Mod+T { spawn "alacritty"; }
-    Mod+Shift+T { spawn "transmission-gtk"; }
-    Mod+D { spawn "bash" "-c" "niri msg action focus-workspace media && deadbeef"; }
-    Mod+M { spawn "bash" "-c" "niri msg action focus-workspace media && goodvibes"; }
-    Mod+S { spawn "bash" "-c" "niri msg action focus-workspace media && shortwave"; }
-    Mod+Shift+M { spawn "bash" "-c" "niri msg action focus-workspace media && easyeffects"; }
-    Mod+Ctrl+L { spawn "wlogout"; }
-    Super+Alt+L { spawn "bash" "-c" "niri msg action do-screen-transition --delay-ms 350 && swaylock -f -i /home/kkm/Pictures/p8x6mm-blur.jpg"; }
-    Alt+W { spawn "/home/kkm/.config/niri/wal.sh"; }
-    Alt+B { spawn "/home/kkm/.config/niri/swww_cyclebg.sh"; }
-    Alt+C { spawn "/home/kkm/.config/niri/cyclecolors.sh"; }
-    Alt+S { spawn "bash" "-c" "foot --window-size-pixels=$(slurp -d | cut -d' ' -f2)"; }
     
     // Volume keys mappings for PipeWire & WirePlumber.
     XF86AudioRaiseVolume  allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
@@ -294,7 +279,7 @@ binds {
     Alt+Print { screenshot-window; }
 
     Mod+Shift+P { power-off-monitors; }
-    Mod+Shift+Q { quit skip-confirmation=true; }
+    Mod+Shift+Q { quit; }
     Mod+Z { toggle-column-tabbed-display; }
 }
 

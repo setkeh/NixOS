@@ -152,7 +152,7 @@
   "format-critical": " {temperatureC}°C",
   "interval": 1,
   "critical-threshold": 80,
-  "on-click": "foot btop",
+  "on-click": "alacritty btop",
  },
 
 "pulseaudio": {
