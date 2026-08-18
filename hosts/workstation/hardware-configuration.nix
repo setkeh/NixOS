@@ -13,18 +13,38 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/mapper/luks-a6074c99-c7c5-43a6-b15b-8d64317ab374";
+  fileSystems = [
+    "/" = {
+      device = "/dev/mapper/luks-a6074c99-c7c5-43a6-b15b-8d64317ab374";
       fsType = "xfs";
     };
 
-  boot.initrd.luks.devices."luks-a6074c99-c7c5-43a6-b15b-8d64317ab374".device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
-
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/B8B7-26F4";
+    "/boot" = { 
+      device = "/dev/disk/by-uuid/B8B7-26F4";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
+
+    "/mnt/dev-disk" = {
+      device = "/dev/disk/by-uuid/CA5E410B5E40F22D";
+      fsType = "ntfs";
+      options = [ "uid=1000" "gid=100" ];
+    };
+
+    "/mnt/backup-disk" = {
+      device = "/dev/disk/by-uuid/1ACEC9B8CEC98D07";
+      fsType = "ntfs";
+      options = [ "uid=1000" "gid=100" ];
+    };
+
+    "/mnt/winders" = {
+      device = "/dev/disk/by-uuid/D250EE2650EE1151";
+      fsType = "ntfs";
+      options = [ "uid=1000" "gid=100" ];
+    };
+  ];
+
+  boot.initrd.luks.devices."luks-a6074c99-c7c5-43a6-b15b-8d64317ab374".device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
 
   swapDevices = [{
     device = "/dev/disk/by-partuuid/dd090197-b8da-4702-ab8a-a24fdb7149a8";
