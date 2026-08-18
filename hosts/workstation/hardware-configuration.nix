@@ -12,8 +12,9 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+  boot.supportedFilesystems = [ "ntfs" ];
 
-  fileSystems = [
+  fileSystems = {
     "/" = {
       device = "/dev/mapper/luks-a6074c99-c7c5-43a6-b15b-8d64317ab374";
       fsType = "xfs";
@@ -27,22 +28,22 @@
 
     "/mnt/dev-disk" = {
       device = "/dev/disk/by-uuid/CA5E410B5E40F22D";
-      fsType = "ntfs";
+      fsType = "ntfs-3g";
       options = [ "uid=1000" "gid=100" ];
     };
 
     "/mnt/backup-disk" = {
       device = "/dev/disk/by-uuid/1ACEC9B8CEC98D07";
-      fsType = "ntfs";
+      fsType = "ntfs-3g";
       options = [ "uid=1000" "gid=100" ];
     };
 
     "/mnt/winders" = {
       device = "/dev/disk/by-uuid/D250EE2650EE1151";
-      fsType = "ntfs";
+      fsType = "ntfs-3g";
       options = [ "uid=1000" "gid=100" ];
     };
-  ];
+  };
 
   boot.initrd.luks.devices."luks-a6074c99-c7c5-43a6-b15b-8d64317ab374".device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
 
