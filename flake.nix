@@ -23,10 +23,24 @@
 
     /* Non System Specific tooling imports */
     claude-desktop.url = "github:aaddrick/claude-desktop-debian";
+    claude-code.url = "github:sadjow/claude-code-nix";
     lan-mouse.url = "github:feschber/lan-mouse";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, sops-nix, nixpkgs-channel, hermes-agent, vscode-server, claude-desktop, lan-mouse, ... }@inputs: {
+  outputs = { 
+    self,
+    nixpkgs,
+    home-manager,
+    nixos-wsl,
+    sops-nix,
+    nixpkgs-channel,
+    hermes-agent,
+    vscode-server,
+    claude-desktop,
+    claude-code,
+    lan-mouse,
+    ...
+    }@inputs: {
     lib = {
       mkClaudeInfra = import ./common/claude-infra;
     };
@@ -45,8 +59,9 @@
                 /* My Custom Package Channel */
                 nixpkgs-channel.overlays.default
 
-                /* Claude Desktop */
+                /* Claude */
                 claude-desktop.overlays.default
+                claude-code.overlays.default
 
                 /* Custom Package Configuration */
                 (import ./etc/overlays/age.nix)

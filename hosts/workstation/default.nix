@@ -183,6 +183,7 @@
     age
     nfs-utils
     claude-desktop
+    claude-code
   ];
 
   environment.shellInit = ''
