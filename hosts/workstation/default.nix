@@ -186,6 +186,9 @@
     claude-code
   ];
 
+  /* Claude Desktop requires nix-ld */
+  programs.nix-ld.enable = true;
+
   environment.shellInit = ''
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
   '';
