@@ -41,13 +41,23 @@
     recursive = true;
   };
 
-  programs.alacritty.settings = {
-    font.size = lib.mkForce 8.0;
-  };
+  programs = {
+    alacritty = {
+      settings = {
+        font.size = lib.mkForce 8.0;
+      };
+    };
 
-  programs.btop.settings = {
-    show_battery = lib.mkForce false;
-    net_iface = lib.mkForce "bond0";
+    btop = {
+      settings = {
+        show_battery = lib.mkForce false;
+        net_iface = lib.mkForce "bond0";
+      };
+    };
+
+    mc = {
+      enable = true;
+    };
   };
 
   # Basic user info

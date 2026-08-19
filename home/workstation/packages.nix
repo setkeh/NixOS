@@ -49,8 +49,7 @@
     pkgs.openssl
     pkgs.xclip
     pkgs.postman
-    pkgs.vscode
-    pkgs.mc
+    pkgs.vscodes
     pkgs.yubikey-manager
     pkgs.age-plugin-yubikey
     pkgs.age
