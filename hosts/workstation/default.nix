@@ -103,6 +103,8 @@
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
   /* Tailscale Client Options */
   services.tailscale.useRoutingFeatures = "client";
