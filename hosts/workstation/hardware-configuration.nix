@@ -46,6 +46,7 @@
 
     "/home/setkeh/.claude/skills" = {
       device = "/home/setkeh/SecondMind/AIOS/Skills";
+      fsType = "none";
       options = [ "bind" ];
     };
   };
