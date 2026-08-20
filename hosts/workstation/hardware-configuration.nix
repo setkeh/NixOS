@@ -44,6 +44,11 @@
       options = [ "uid=1000" "gid=100" ];
     };
 
+    /* For some Reason Clause does not work with skills in linux with symlinks like it does in WSL
+    it some sort of directory protection to stop skills from re-Writing themselves while they are running.
+    this fundamentally breaks the workflow. THis does not prevent that protection from working but prevents 
+    the claude link startup check failing because the directory exists in two places via the link. */
+
     "/home/setkeh/.claude/skills" = {
       device = "/home/setkeh/SecondMind/AIOS/Skills";
       fsType = "none";
