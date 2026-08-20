@@ -43,6 +43,11 @@
       fsType = "ntfs-3g";
       options = [ "uid=1000" "gid=100" ];
     };
+
+    "/home/setkeh/.claude/skills" = {
+      device = "/home/setkeh/SecondMind/AIOS/Skills";
+      options = [ "bind" ];
+    };
   };
 
   boot.initrd.luks.devices."luks-a6074c99-c7c5-43a6-b15b-8d64317ab374".device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
