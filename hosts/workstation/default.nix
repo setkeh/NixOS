@@ -202,6 +202,9 @@
     "L+ /usr/share/OVMF/OVMF_CODE_4M.fd - - - - ${pkgs.OVMF.firmware}"
     "L+ /usr/share/OVMF/OVMF_VARS.fd    - - - - ${pkgs.OVMF.variables}"
     "L+ /usr/share/OVMF/OVMF_VARS_4M.fd - - - - ${pkgs.OVMF.variables}"
+
+    "d /usr/libexec 0755 root root -"
+    "L+ /usr/libexec/virtiofsd - - - - ${pkgs.virtiofsd}/bin/virtiofsd"
   ];
 
   environment.shellInit = ''
