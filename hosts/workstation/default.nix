@@ -196,6 +196,13 @@
 
   /* Claude Desktop requires nix-ld */
   programs.nix-ld.enable = true;
+  systemd.tmpfiles.rules = [
+    "d /usr/share/OVMF 0755 root root -"
+    "L+ /usr/share/OVMF/OVMF_CODE.fd    - - - - ${pkgs.OVMF.firmware}"
+    "L+ /usr/share/OVMF/OVMF_CODE_4M.fd - - - - ${pkgs.OVMF.firmware}"
+    "L+ /usr/share/OVMF/OVMF_VARS.fd    - - - - ${pkgs.OVMF.variables}"
+    "L+ /usr/share/OVMF/OVMF_VARS_4M.fd - - - - ${pkgs.OVMF.variables}"
+  ];
 
   environment.shellInit = ''
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
