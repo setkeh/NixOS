@@ -161,7 +161,7 @@
   users.users.setkeh = {
     isNormalUser = true;
     description = "setkeh";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" ];
   };
 
   # Enable sound with pipewire.
@@ -184,8 +184,14 @@
     age-plugin-yubikey
     age
     nfs-utils
+
+    /* Claude Specific Packages */
     claude-desktop
     claude-code
+    /* Claude Requires KVM for co-work*/
+    qemu_kvm
+    OVMF
+    virtiofsd
   ];
 
   /* Claude Desktop requires nix-ld */
