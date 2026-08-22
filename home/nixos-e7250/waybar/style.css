@@ -1,109 +1,263 @@
+/*
+ * Waybar — workstation
+ *
+ * Three floating pills: the left group rounds off on its right edge, the
+ * centre group is fully rounded, the right group rounds off on its left edge.
+ * The bar itself is transparent so the wallpaper shows through the gaps.
+ *
+ * Managed by home-manager (home/workstation/waybar/default.nix) — this file is
+ * read verbatim into programs.waybar.style.
+ */
+
+/* ---------------------------------------------------------------- palette */
+
+@define-color bg          rgba(0, 0, 0, 0.82);
+@define-color fg          #e6e6e6;
+@define-color muted       #9a9a9a;
+
+@define-color accent      #7645ad;
+@define-color clock       #5fd1fa;
+@define-color weather     #ffd479;
+@define-color disk        #94e2d5;
+@define-color memory      #f9e2af;
+@define-color cpu         #a6e3a1;
+@define-color cputemp     #fab387;
+@define-color gpu         #f38ba8;
+@define-color audio       #cba6f7;
+@define-color net         #89b4fa;
+
+@define-color warning     #ffbe61;
+@define-color critical    #f53c3c;
+
+/* ------------------------------------------------------------------ base */
+
 * {
-    border: none;
-    font-size: 14px;
-    font-family: "JetBrainsMono Nerd Font,JetBrainsMono NF" ;
-    min-height: 25px;
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", "JetBrainsMono NF", monospace;
+  font-size: 14px;
+  min-height: 0;
 }
 
 window#waybar {
   background: transparent;
-  margin: 5px;
- }
-
-#custom-logo {
-  padding: 0 10px;
+  color: @fg;
 }
 
-.modules-right {
-  padding-left: 5px;
-  border-radius: 15px 0 0 15px;
-  margin-top: 2px;
-  background: #000000;
+/* The three pill groups. */
+.modules-left {
+  background: @bg;
+  border-radius: 0 16px 16px 0;
+  margin: 4px 0 0 0;
+  padding: 2px 12px 2px 6px;
 }
 
 .modules-center {
-  padding: 0 15px;
-  margin-top: 2px;
-  border-radius: 15px 15px 15px 15px;
-  background: #000000;
+  background: @bg;
+  border-radius: 16px;
+  margin: 4px 0 0 0;
+  padding: 2px 8px;
 }
 
-.modules-left {
-  border-radius: 0 15px 15px 0;
-  margin-top: 2px;
-  background: #000000;
+.modules-right {
+  background: @bg;
+  border-radius: 16px 0 0 16px;
+  margin: 4px 0 0 0;
+  padding: 2px 6px 2px 12px;
 }
 
-#battery,
-#custom-clipboard,
-#custom-colorpicker,
-#custom-powerDraw,
-#bluetooth,
-#pulseaudio,
-#network,
-#disk,
-#memory,
-#backlight,
-#cpu,
-#temperature,
+/* Every module gets breathing room and a consistent hit area. */
+#clock,
 #custom-weather,
-#idle_inhibitor,
-#jack,
-#tray,
+#custom-logo,
 #window,
 #workspaces,
-#workspaces button#niri-workspace-3,
-#workspaces button#niri-workspace-3 label {
-    opacity: 0;
-    font-size: 0;
-    padding: 0;
-    margin: 0;
-    min-width: 0;
+#disk,
+#memory,
+#cpu,
+#custom-cputemp,
+#custom-gpu,
+#pulseaudio,
+#network,
+#tray {
+  padding: 0 10px;
+  min-height: 26px;
 }
+
+/* -------------------------------------------------------------- left group */
+
+#custom-logo {
+  color: @net;
+  font-size: 17px;
+  padding: 0 12px 0 8px;
+}
+
+#custom-logo:hover {
+  color: @fg;
+}
+
 #clock {
-  padding: 0 5px;
+  color: @clock;
+  font-weight: bold;
 }
+
+#custom-weather {
+  color: @weather;
+}
+
+#custom-weather.storm {
+  color: @gpu;
+}
+
+#custom-weather.rain,
+#custom-weather.showers {
+  color: @net;
+}
+
+#custom-weather.snow {
+  color: @clock;
+}
+
+#custom-weather.cloudy,
+#custom-weather.fog {
+  color: @muted;
+}
+
+#custom-weather.weather-error {
+  color: @critical;
+}
+
+#window {
+  color: @muted;
+  font-style: italic;
+}
+
+/* Collapse the padding entirely when no window is focused, so the pill does
+   not leave a dangling empty margin. */
+window#waybar.empty #window {
+  padding: 0;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------ centre group */
+
+#workspaces {
+  padding: 0 2px;
+}
+
+#workspaces button {
+  color: @muted;
+  background: transparent;
+  border-radius: 12px;
+  padding: 0 10px;
+  margin: 2px 2px;
+  min-width: 20px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+#workspaces button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: @fg;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#workspaces button.active {
+  background: @accent;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+#workspaces button.urgent {
+  background: @critical;
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------- right group */
+
+#disk          { color: @disk; }
+#memory        { color: @memory; }
+#cpu           { color: @cpu; }
+#custom-cputemp { color: @cputemp; }
+#custom-gpu    { color: @gpu; }
+#pulseaudio    { color: @audio; }
+#network       { color: @net; }
+
+/* Fixed widths on the fast-changing readouts so the pill does not jitter as
+   values cross digit boundaries. */
+#cpu,
+#memory,
+#disk,
+#custom-gpu {
+  min-width: 62px;
+}
+
+#custom-cputemp {
+  min-width: 68px;
+}
+
 #pulseaudio {
-  padding-top: 3px;
+  min-width: 72px;
 }
 
-#temperature.critical,
+#custom-cputemp.cputemp-warning,
+#custom-gpu.gpu-warning {
+  color: @warning;
+}
+
+#custom-cputemp.cputemp-critical,
+#custom-gpu.gpu-critical {
+  color: @critical;
+  animation: blink 1s linear infinite alternate;
+}
+
+#custom-cputemp.cputemp-error,
+#custom-gpu.gpu-error {
+  color: @critical;
+}
+
+#custom-gpu.gpu-busy {
+  color: @weather;
+}
+
 #pulseaudio.muted {
-  color: #FF0000;
-  padding-top: 0;
+  color: @muted;
 }
 
-
-
-
-#clock{
-  color: #5fd1fa;
+#network.disconnected,
+#network.linked {
+  color: @critical;
 }
 
-#battery.charging {
-    color: #ffffff;
-    background-color: #26A65B;
+#tray {
+  padding: 0 8px;
 }
 
-#battery.warning:not(.charging) {
-    background-color: #ffbe61;
-    color: black;
+#tray > .passive {
+  -gtk-icon-effect: dim;
 }
 
-#battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
 }
 
+/* ---------------------------------------------------------------- tooltip */
+
+tooltip {
+  background: rgba(0, 0, 0, 0.94);
+  border: 1px solid @accent;
+  border-radius: 10px;
+}
+
+tooltip label {
+  color: @fg;
+  padding: 4px;
+}
+
+/* --------------------------------------------------------------- keyframes */
 
 @keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #000000;
-    }
+  to {
+    color: #ffffff;
+  }
 }

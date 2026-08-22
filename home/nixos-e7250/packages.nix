@@ -78,5 +78,6 @@
     pkgs.inetutils
     pkgs.claude-monitor
     pkgs.swayimg
+    pkgs.tibia
   ];
 }
