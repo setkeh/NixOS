@@ -92,7 +92,6 @@ in
         "memory"
         "cpu"
         "custom/cputemp"
-        "custom/gpu"
         "pulseaudio"
         "network"
         "tray"
