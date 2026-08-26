@@ -201,7 +201,7 @@ binds {
     Mod+Shift+Left  { focus-column-first; }
     Mod+Shift+Right { focus-column-last; }
 
-    Mod+Ctrl+Left  { focus-monitor-left }
+    Mod+Ctrl+Left  { focus-monitor-left; }
     Mod+Ctrl+Right { focus-monitor-right; }
 
     Mod+Ctrl+Shift+Left  { move-column-left; }
