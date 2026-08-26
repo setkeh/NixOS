@@ -149,6 +149,9 @@
 
   boot.initrd.kernelModules = [ "amdgpu" ];
 
+  /* Ensure unprivaledge user namespaces are allowed for Bubblewrap */
+  security.allowUserNamespaces = true;
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;                 /* 32-bit for Steam/Wine/Proton */
@@ -188,10 +191,14 @@
     /* Claude Specific Packages */
     claude-desktop
     claude-code
+
     /* Claude Requires KVM for co-work*/
     qemu_kvm
     OVMF
     virtiofsd
+
+    /* Sandbox Packages */
+    bubblewrap
   ];
 
   /* Claude Desktop requires nix-ld */
