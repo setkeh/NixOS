@@ -43,6 +43,7 @@
     }@inputs: {
     lib = {
       mkClaudeInfra = import ./common/claude-infra;
+      mkSandbox     = import ./common/sandbox;
     };
 
     nixosConfigurations = {
