@@ -65,5 +65,6 @@
     pkgs.discord
     pkgs.tibia
     pkgs.handbrake
+    pkgs.linode-cli
   ];
 }

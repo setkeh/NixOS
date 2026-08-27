@@ -34,6 +34,9 @@
 
     /* Obsidian */
     ./obsidian
+
+    /* Sandboxes */
+    ./sandboxes/ollama.nix
   ];
 
   xdg.configFile."wallpapers" = {

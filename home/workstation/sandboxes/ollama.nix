@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  sandboxLib = import ../../common/sandbox { inherit pkgs lib; };
+  sandboxLib = import ../../../common/sandbox { inherit pkgs lib; };
   inherit (sandboxLib) mkSandbox;
 
   home = config.home.homeDirectory;
