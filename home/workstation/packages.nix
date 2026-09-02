@@ -66,5 +66,6 @@
     pkgs.tibia
     pkgs.handbrake
     pkgs.linode-cli
+    pkgs.sox
   ];
 }
