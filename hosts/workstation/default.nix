@@ -146,6 +146,11 @@
     config.common.default = "*";
    };
 
+  /* Setting lpoptions for posteck label printer */
+  environment.etc."cups/lpoptions".text = ''
+    Dest labels media-type=labels
+  '';
+
   /* Electron/Chromium apps run native Wayland (helps VS Code, Claude-in-Chrome, etc.) */
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
