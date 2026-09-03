@@ -15,6 +15,5 @@
 
   environment.systemPackages = with pkgs; [
     cups          # lp, lpstat, lpoptions, cancel, plus libcups
-    glabels-qt    # label designer, optional
   ];
 }
