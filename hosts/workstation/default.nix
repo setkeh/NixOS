@@ -141,7 +141,8 @@
   /* XDG portals: screenshots, file pickers, screen share */
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+    config.common.default = "*";
    };
 
   /* Electron/Chromium apps run native Wayland (helps VS Code, Claude-in-Chrome, etc.) */
