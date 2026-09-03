@@ -7,6 +7,7 @@
     ../../common/cleanup.nix
     ../../common/firewall.nix
     ./pipewire
+    ./printing-client.nix
   ];
 
   /* Bootloader. */

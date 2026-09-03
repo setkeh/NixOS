@@ -67,5 +67,6 @@
     pkgs.handbrake
     pkgs.linode-cli
     pkgs.sox
+    pkgs.glabels
   ];
 }
