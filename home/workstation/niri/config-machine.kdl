@@ -60,7 +60,7 @@ window-rule {
 window-rule {
     match app-id="vivaldi-stable"
     open-on-workspace "Browsers"
-    opacity 0.75
+    opacity 1.0
 }
 
 window-rule {
