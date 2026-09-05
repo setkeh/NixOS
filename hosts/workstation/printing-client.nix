@@ -10,6 +10,7 @@
     /* Setting lpoptions for posteck label printer */
     "cups/lpoptions".text = ''
         Dest labels media-type=labels
+        Dest labels-red media-type=labels media-top-offset=400
     '';
   };
 
