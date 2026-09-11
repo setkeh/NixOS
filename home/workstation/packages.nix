@@ -68,5 +68,6 @@
     pkgs.linode-cli
     pkgs.sox
     pkgs.glabels-qt
+    pkgs.cura-appimage
   ];
 }
