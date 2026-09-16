@@ -79,6 +79,8 @@ window-rule {
     opacity 0.75
 }
 
-Mod+Space repeat=false hotkey-overlay-title="Aegis talk" {
-    spawn "/home/setkeh/Development/Aegis-AIOS/app/build/linux/x64/debug/bundle/aegis_shell" "--toggle-hud";
+binds {
+    Mod+Space repeat=false hotkey-overlay-title="Aegis talk" {
+        spawn "/home/setkeh/Development/Aegis-AIOS/app/build/linux/x64/debug/bundle/aegis_shell" "--toggle-hud";
+    }
 }
