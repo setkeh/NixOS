@@ -49,7 +49,8 @@
       ];
     };
   };
-  
+  };
+
   /* Firewall Rules Scoped to Network not Port */
   networking.firewall.extraInputRules = ''
     ip saddr 10.0.0.0/16 tcp dport 4713 accept
