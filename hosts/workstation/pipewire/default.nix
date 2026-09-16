@@ -31,6 +31,14 @@
       ];
     };
 
+    # Explicitly align PipeWire with the Razer firmware clock
+    extraConfig.pipewire."92-razer-rates" = {
+      "context.properties" = {
+        "default.clock.rate" = 48000;
+        "default.clock.allowed-rates" = [ 48000 44100 96000 ];
+      };
+    };
+
     /* Wireplumber rules to force correct profile logic */
     wireplumber.extraConfig."51-razer-blackshark-mic" = {
       "monitor.alsa.rules" = [
