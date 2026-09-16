@@ -37,6 +37,12 @@
 
     /* Sandboxes */
     ./sandboxes/ollama.nix
+
+    /* Hermes Desktop */
+    ./hermes
+
+    /* Llama-cpp */
+    ./llama-cpp
   ];
 
   xdg.configFile."wallpapers" = {
@@ -60,6 +66,18 @@
 
     mc = {
       enable = true;
+    };
+  };
+
+  xdg.mimeApps = {
+  enable = true;
+    defaultApplications = {
+      # Registers the custom protocol link used for Lychee cloud logins
+      "x-scheme-handler/lycheeslicer" = [ "lycheeslicer.desktop" ];
+      
+      # Optional: Map standard 3D print file extensions to open in Lychee automatically
+      "model/stl" = [ "lycheeslicer.desktop" ];
+      "model/3mf" = [ "lycheeslicer.desktop" ];
     };
   };
 

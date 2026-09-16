@@ -69,5 +69,7 @@
     pkgs.sox
     pkgs.glabels-qt
     pkgs.cura-appimage
+    pkgs.lycheeslicer
+    pkgs.pkgs.gnome-software
   ];
 }
