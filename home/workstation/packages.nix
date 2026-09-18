@@ -70,6 +70,7 @@
     pkgs.glabels-qt
     pkgs.cura-appimage
     pkgs.lycheeslicer
-    pkgs.pkgs.gnome-software
+    pkgs.gnome-software
+    pkgs.pcmanfm
   ];
 }
