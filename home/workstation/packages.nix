@@ -72,5 +72,6 @@
     pkgs.lycheeslicer
     pkgs.gnome-software
     pkgs.pcmanfm
+    pkgs.kicad
   ];
 }
