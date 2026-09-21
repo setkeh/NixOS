@@ -166,7 +166,7 @@
   users.users.setkeh = {
     isNormalUser = true;
     description = "setkeh";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" "dialout" "uucp" ];
   };
 
   /* These packages to make yubikey work */
