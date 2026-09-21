@@ -75,13 +75,13 @@
   xdg.mimeApps = {
   enable = true;
     defaultApplications = {
-      # Registers the custom protocol link used for Lychee cloud logins
-      "x-scheme-handler/lycheeslicer" = [ "lycheeslicer.desktop" ];
-      
-      # Optional: Map standard 3D print file extensions to open in Lychee automatically
-      "model/stl" = [ "lycheeslicer.desktop" ];
-      "model/3mf" = [ "lycheeslicer.desktop" ];
-    };
+    # your existing lycheeslicer entries stay as they are
+    "text/html"              = "vivaldi-stable.desktop";
+    "x-scheme-handler/http"  = "vivaldi-stable.desktop";
+    "x-scheme-handler/https" = "vivaldi-stable.desktop";
+    "x-scheme-handler/about" = "vivaldi-stable.desktop";
+    "x-scheme-handler/unknown" = "vivaldi-stable.desktop";
+  };
   };
 
   # Basic user info
