@@ -43,6 +43,9 @@
 
     /* Llama-cpp */
     ./llama-cpp
+
+    /* Direnv */
+    ./direnv
   ];
 
   xdg.configFile."wallpapers" = {
