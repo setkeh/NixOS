@@ -48,7 +48,42 @@ let
         # q8_0 KV cache halves the per-token KV cost; needs flash-attn (on).
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
-        ubatch-size = 2048;
+        # No ubatch-size above the default: 2048 grew the compute buffer at runtime until the
+        # GPU ran out of memory for command submission and niri crashed (Aegis-AIOS #140). The
+        # model still loads fine at 2048; the failure only shows on the first large prefill.
+        load-mode = "auto";
+      };
+    };
+
+    # The everyday tier: voice, home automation, coding, review and the librarian. A dense 27B
+    # small enough to live entirely in VRAM, so none of its weights are paged from disk or read
+    # from system RAM. Hybrid attention: only 16 of its 64 layers keep a KV cache, so a 128k
+    # context costs ~4.2 GiB at q8 (Aegis-AIOS #140).
+    "qwen3.8-27b" = {
+      repo = "unsloth/Qwen3.8-27B-GGUF";
+      revision = "4ca720788d1e01f1bff70c033e0d0028fd02e502";
+      # No `dir`: this repo keeps its GGUFs at the root.
+      shards = [
+        {
+          file = "Qwen3.8-27B-UD-Q4_K_M.gguf";
+          hash = "sha256-Mi4ZT/eXQce6pJfCQPZ39UsgGw76tEyo5Q8SKzkSNII=";
+        }
+      ];
+      mmproj = {
+        file = "mmproj-F16.gguf";
+        hash = "sha256-y7hBqe4GNrLsFy9buN8uqN/rAekP58YSZYHWYqC05D4=";
+      };
+      settings = {
+        # Hermes will not start below 64k.
+        ctx-size = 128000;
+        n-gpu-layers = 99;
+        flash-attn = true;
+        cache-type-k = "q8_0";
+        cache-type-v = "q8_0";
+        cache-ram = 6144;
+        # The projector stays on the CPU: 0.88 GiB of VRAM is the margin that keeps niri
+        # alive, and voice never sends images. Image turns still work, just slower.
+        no-mmproj-offload = true;
         load-mode = "auto";
       };
     };
@@ -68,6 +103,11 @@ let
       inherit hash;
     };
 
+  # Where a shard lives in its repo. `dir` is optional: some repos keep every quant in a
+  # subdirectory, others keep the GGUFs at the root.
+  shardPath = model: shard:
+    if model ? dir then "${model.dir}/${shard.file}" else shard.file;
+
   # The projector is linked under a per-model name so two models shipping a
   # file called mmproj-F16.gguf cannot collide in the shared directory.
   mmprojName = name: "${name}.mmproj.gguf";
@@ -79,7 +119,7 @@ let
     (name: model:
       map (shard: {
         name = shard.file;
-        path = fetchFile model "${model.dir}/${shard.file}" shard.hash;
+        path = fetchFile model (shardPath model shard) shard.hash;
       }) model.shards
       ++ lib.optional (model ? mmproj) {
         name = mmprojName name;
