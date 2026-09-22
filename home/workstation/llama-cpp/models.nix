@@ -85,6 +85,7 @@ let
         # alive, and voice never sends images. Image turns still work, just slower.
         no-mmproj-offload = true;
         load-mode = "auto";
+        log-verbosity = 4;
       };
     };
   };
