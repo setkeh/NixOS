@@ -48,6 +48,7 @@ let
         # q8_0 KV cache halves the per-token KV cost; needs flash-attn (on).
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
+        ubatch-size = 2048;
         load-mode = "auto";
       };
     };
