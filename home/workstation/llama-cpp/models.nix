@@ -80,7 +80,6 @@ let
         flash-attn = true;
         cache-type-k = "q8_0";
         cache-type-v = "q8_0";
-        cache-ram = 6144;
         # The projector stays on the CPU: 0.88 GiB of VRAM is the margin that keeps niri
         # alive, and voice never sends images. Image turns still work, just slower.
         no-mmproj-offload = true;
