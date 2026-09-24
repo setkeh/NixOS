@@ -73,5 +73,6 @@
     pkgs.gnome-software
     pkgs.pcmanfm
     pkgs.kicad
+    pkgs.openscad
   ];
 }
