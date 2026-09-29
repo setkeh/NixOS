@@ -27,8 +27,6 @@
     pkgs.spotify
     pkgs.cryptomator
     pkgs.fastfetch
-    pkgs._1password-cli
-    pkgs._1password-gui
     /* pkgs.rnix-lsp RIP @jD91mZM2 */
     pkgs.vivaldi
     pkgs.ipmitool

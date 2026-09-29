@@ -8,6 +8,7 @@
     ../../common/firewall.nix
     ./pipewire
     ./printing-client.nix
+    ./1password
   ];
 
   /* Bootloader. */
