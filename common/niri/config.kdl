@@ -3,7 +3,7 @@ input {
         xkb {
             layout "au,us"
             variant ",intl"
-            options "grp:ctrl_space_toggle"
+            //options "grp:ctrl_space_toggle"
         }
     }
 }
@@ -284,6 +284,9 @@ binds {
     Mod+Shift+P { power-off-monitors; }
     Mod+Shift+Q { quit; }
     Mod+Z { toggle-column-tabbed-display; }
+
+    // Change Keyboard layout
+    Mod+Shift+Space { switch-layout "next"; }
 }
 
 // ----------------------------------------------------------------------------

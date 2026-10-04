@@ -11,6 +11,10 @@
     nixpkgs-channel.url = "github:setkeh/nixpkgs-channel";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    /* ComfyUI with prebuilt ROCm torch wheels (validated on gfx1100). Keeps its
+       own nixpkgs pin on purpose: the wheels are matched to it. */
+    comfyui-nix.url = "github:utensils/comfyui-nix";
+
     /* Home Manager inputs */
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -75,6 +79,9 @@
 
                 /* llama-cpp from nixos-unstable (see etc/overlays/llama-cpp.nix) */
                 (import ./etc/overlays/llama-cpp.nix inputs.nixpkgs-unstable)
+
+                /* ComfyUI ROCm build (see etc/overlays/comfyui.nix) */
+                (import ./etc/overlays/comfyui.nix inputs.comfyui-nix)
               ];
               config = {
                 allowUnfree = true;

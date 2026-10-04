@@ -170,6 +170,9 @@
     extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" "dialout" "uucp" "onepassword" "onepassword-cli" ];
   };
 
+  /* temporary */
+  services.teamviewer.enable = true;
+
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [
     yubikey-manager

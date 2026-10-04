@@ -41,6 +41,9 @@
     /* Hermes Desktop */
     ./hermes
 
+    /* ComfyUI (desktop-style launcher) */
+    ./comfyui-desktop
+
     /* Llama-cpp */
     ./llama-cpp
 

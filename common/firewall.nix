@@ -11,7 +11,7 @@
     # Always allow traffic from your Tailscale network
     trustedInterfaces = [ "tailscale0" ];
     # Allow the Tailscale UDP port through the firewall
-    allowedUDPPorts = [ config.services.tailscale.port 24800 24802 ];
+    allowedUDPPorts = [ config.services.tailscale.port 24800 24802 5514 ];
   };
 
   # 2. Force tailscaled to use nftables (Critical for clean nftables-only systems)
