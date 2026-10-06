@@ -41,6 +41,10 @@
     /* Hermes Desktop */
     ./hermes
 
+    /* Gaming: Steam user tools + Wine/Lutris */
+    ./steam
+    ./wine
+
     /* ComfyUI (desktop-style launcher) */
     ./comfyui-desktop
 

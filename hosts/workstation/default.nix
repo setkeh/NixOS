@@ -219,6 +219,16 @@
   /* Install firefox.*/
   programs.firefox.enable = true;
 
+  /* Steam. The FHS environment, controller udev rules and Proton compat tools
+     are system-level; the user-side tools live in home/workstation/steam. */
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = [ pkgs.proton-ge-bin ];  /* Proton-GE for stubborn titles */
+    protontricks.enable = true;
+    gamescopeSession.enable = true;
+  };
+  programs.gamemode.enable = true;
+
   /* Allow unfree packages */
   nixpkgs.config.allowUnfree = true;
 
