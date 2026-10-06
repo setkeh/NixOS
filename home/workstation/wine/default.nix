@@ -8,6 +8,12 @@
 # - winetricks: for hand-built prefixes.
 # EVE Online is simplest through Steam + Proton (see ../steam).
 { pkgs, ... }: {
+  # The same Proton-GE that programs.steam installs, made visible to Lutris and
+  # umu (both scan this directory). Lets a Lutris install pick a Nix-pinned
+  # Proton without downloading one from GitHub.
+  home.file.".local/share/Steam/compatibilitytools.d/${pkgs.proton-ge-bin.version}".source =
+    pkgs.proton-ge-bin.steamcompattool;
+
   home.packages = with pkgs; [
     wineWowPackages.waylandFull
     winetricks

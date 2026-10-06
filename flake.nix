@@ -82,6 +82,9 @@
 
                 /* ComfyUI ROCm build (see etc/overlays/comfyui.nix) */
                 (import ./etc/overlays/comfyui.nix inputs.comfyui-nix)
+
+                /* umu-launcher from nixos-unstable (see etc/overlays/gaming.nix) */
+                (import ./etc/overlays/gaming.nix inputs.nixpkgs-unstable)
               ];
               config = {
                 allowUnfree = true;
