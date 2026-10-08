@@ -85,6 +85,9 @@
 
                 /* umu-launcher from nixos-unstable (see etc/overlays/gaming.nix) */
                 (import ./etc/overlays/gaming.nix inputs.nixpkgs-unstable)
+
+                /* OpenRazer from nixos-unstable (see etc/overlays/openrazer.nix) */
+                (import ./etc/overlays/openrazer.nix inputs.nixpkgs-unstable)
               ];
               config = {
                 allowUnfree = true;
