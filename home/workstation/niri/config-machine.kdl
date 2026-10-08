@@ -60,7 +60,7 @@ window-rule {
 window-rule {
     match app-id="vivaldi-stable"
     open-on-workspace "Browsers"
-    opacity 0.75
+    opacity 1.0
 }
 
 window-rule {
@@ -77,4 +77,17 @@ window-rule {
     match app-id="discord"
     open-on-workspace "Chat"
     opacity 0.75
+}
+
+// Games
+window-rule {
+    match app-id="steam_app_default"
+    opacity 1.0
+    open-floating false
+}
+
+binds {
+    Mod+Space repeat=false hotkey-overlay-title="Aegis talk" {
+        spawn "/home/setkeh/Development/Aegis-AIOS/app/build/linux/x64/debug/bundle/aegis_shell" "--toggle-hud";
+    }
 }

@@ -9,6 +9,11 @@
     /* Nixpkgs inputs */
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-channel.url = "github:setkeh/nixpkgs-channel";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    /* ComfyUI with prebuilt ROCm torch wheels (validated on gfx1100). Keeps its
+       own nixpkgs pin on purpose: the wheels are matched to it. */
+    comfyui-nix.url = "github:utensils/comfyui-nix";
 
     /* Home Manager inputs */
     home-manager.url = "github:nix-community/home-manager/release-26.05";
@@ -19,6 +24,10 @@
 
     /* Ai-Server specific inputs */
     hermes-agent.url = "github:NousResearch/hermes-agent";
+
+    /* Workstation: Hermes Desktop only. Separate pin from hermes-agent above so
+       bumping the desktop never changes what the ai-server builds. */
+    hermes-desktop.url = "github:NousResearch/hermes-agent";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     /* Non System Specific tooling imports */
@@ -43,6 +52,7 @@
     }@inputs: {
     lib = {
       mkClaudeInfra = import ./common/claude-infra;
+      mkSandbox     = import ./common/sandbox;
     };
 
     nixosConfigurations = {
@@ -66,6 +76,15 @@
 
                 /* Custom Package Configuration */
                 (import ./etc/overlays/age.nix)
+
+                /* llama-cpp from nixos-unstable (see etc/overlays/llama-cpp.nix) */
+                (import ./etc/overlays/llama-cpp.nix inputs.nixpkgs-unstable)
+
+                /* ComfyUI ROCm build (see etc/overlays/comfyui.nix) */
+                (import ./etc/overlays/comfyui.nix inputs.comfyui-nix)
+
+                /* umu-launcher from nixos-unstable (see etc/overlays/gaming.nix) */
+                (import ./etc/overlays/gaming.nix inputs.nixpkgs-unstable)
               ];
               config = {
                 allowUnfree = true;
@@ -98,6 +117,7 @@
             home-manager.sharedModules = [
               inputs.sops-nix.homeManagerModules.sops
               inputs.lan-mouse.homeManagerModules.default
+              inputs.hermes-desktop.homeManagerModules.default
             ];
             home-manager.users.setkeh = { config, pkgs, ... }: {
               imports = [

@@ -29,7 +29,22 @@
       swaybg # wallpaper
     ];
 
-    xdg.portal.config.niri = {
-        "org.freedesktop.impl.portal.FileChooser" = [ "kde" ]; # or "kde"
+    xdg.portal = {
+      enable = true;
+      # Tells xdg-open to rely explicitly on these portal backends
+      xdgOpenUsePortal = true; 
+  
+      extraPortals = [ 
+        pkgs.kdePackages.xdg-desktop-portal-kde
+        pkgs.xdg-desktop-portal-gtk # Highly recommended fallback for GTK/Wayland environments
+      ];
+
+      config.niri = {
+        # 1. Stop GNOME from taking over generic actions like "Open With"
+        default = [ "kde" "gtk" ];
+    
+        # 2. Keep your preferred file picker rule
+        "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+      };
     };
 }

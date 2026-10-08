@@ -34,11 +34,41 @@
 
     /* Obsidian */
     ./obsidian
+
+    /* Sandboxes */
+    ./sandboxes/ollama.nix
+
+    /* Hermes Desktop */
+    ./hermes
+
+    /* Gaming: Steam user tools + Wine/Lutris */
+    ./steam
+    ./wine
+
+    /* ComfyUI (desktop-style launcher) */
+    ./comfyui-desktop
+
+    /* Llama-cpp */
+    ./llama-cpp
+
+    /* Direnv */
+    ./direnv
   ];
 
-  xdg.configFile."wallpapers" = {
-    source = ../../common/wallpapers;
-    recursive = true;
+  xdg.configFile={
+    "wallpapers" = {
+      source = ../../common/wallpapers;
+      recursive = true;
+    };
+
+    "openrazer/razer.conf".text = ''
+      [General]
+      verbose_logging = false
+
+      [Startup]
+      sync_effects = true
+      devices_off_on_screensaver = false
+    '';
   };
 
   programs = {
@@ -58,6 +88,18 @@
     mc = {
       enable = true;
     };
+  };
+
+  xdg.mimeApps = {
+  enable = true;
+    defaultApplications = {
+    # your existing lycheeslicer entries stay as they are
+    "text/html"              = "vivaldi-stable.desktop";
+    "x-scheme-handler/http"  = "vivaldi-stable.desktop";
+    "x-scheme-handler/https" = "vivaldi-stable.desktop";
+    "x-scheme-handler/about" = "vivaldi-stable.desktop";
+    "x-scheme-handler/unknown" = "vivaldi-stable.desktop";
+  };
   };
 
   # Basic user info

@@ -7,6 +7,8 @@
     ../../common/cleanup.nix
     ../../common/firewall.nix
     ./pipewire
+    ./printing-client.nix
+    ./1password
   ];
 
   /* Bootloader. */
@@ -141,13 +143,17 @@
   /* XDG portals: screenshots, file pickers, screen share */
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+    config.common.default = "*";
    };
 
   /* Electron/Chromium apps run native Wayland (helps VS Code, Claude-in-Chrome, etc.) */
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   boot.initrd.kernelModules = [ "amdgpu" ];
+
+  /* Ensure unprivaledge user namespaces are allowed for Bubblewrap */
+  security.allowUserNamespaces = true;
 
   hardware.graphics = {
     enable = true;
@@ -161,20 +167,10 @@
   users.users.setkeh = {
     isNormalUser = true;
     description = "setkeh";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" "dialout" "uucp" "onepassword" "onepassword-cli" "openrazer" ];
   };
 
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-  };
+  hardware.openrazer.enable = true;
 
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [
@@ -188,10 +184,14 @@
     /* Claude Specific Packages */
     claude-desktop
     claude-code
+
     /* Claude Requires KVM for co-work*/
     qemu_kvm
     OVMF
     virtiofsd
+
+    /* Sandbox Packages */
+    bubblewrap
   ];
 
   /* Claude Desktop requires nix-ld */
@@ -217,6 +217,16 @@
 
   /* Install firefox.*/
   programs.firefox.enable = true;
+
+  /* Steam. The FHS environment, controller udev rules and Proton compat tools
+     are system-level; the user-side tools live in home/workstation/steam. */
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = [ pkgs.proton-ge-bin ];  /* Proton-GE for stubborn titles */
+    protontricks.enable = true;
+    gamescopeSession.enable = true;
+  };
+  programs.gamemode.enable = true;
 
   /* Allow unfree packages */
   nixpkgs.config.allowUnfree = true;

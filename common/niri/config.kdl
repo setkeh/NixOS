@@ -3,7 +3,7 @@ input {
         xkb {
             layout "au,us"
             variant ",intl"
-            options "grp:ctrl_space_toggle"
+            //options "grp:ctrl_space_toggle"
         }
     }
 }
@@ -201,10 +201,13 @@ binds {
     Mod+Shift+Left  { focus-column-first; }
     Mod+Shift+Right { focus-column-last; }
 
-    Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Down  { move-window-down; }
-    Mod+Ctrl+Up    { move-window-up; }
-    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+Left  { focus-monitor-left; }
+    Mod+Ctrl+Right { focus-monitor-right; }
+
+    Mod+Ctrl+Shift+Left  { move-column-left; }
+    Mod+Ctrl+Shift+Down  { move-window-down; }
+    Mod+Ctrl+Shift+Up    { move-window-up; }
+    Mod+Ctrl+Shift+Right { move-column-right; }
 
     Mod+U              { focus-workspace-down; }
     Mod+I              { focus-workspace-up; }
@@ -281,6 +284,9 @@ binds {
     Mod+Shift+P { power-off-monitors; }
     Mod+Shift+Q { quit; }
     Mod+Z { toggle-column-tabbed-display; }
+
+    // Change Keyboard layout
+    Mod+Shift+Space { switch-layout "next"; }
 }
 
 // ----------------------------------------------------------------------------

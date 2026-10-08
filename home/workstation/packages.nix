@@ -27,8 +27,6 @@
     pkgs.spotify
     pkgs.cryptomator
     pkgs.fastfetch
-    pkgs._1password-cli
-    pkgs._1password-gui
     /* pkgs.rnix-lsp RIP @jD91mZM2 */
     pkgs.vivaldi
     pkgs.ipmitool
@@ -65,5 +63,15 @@
     pkgs.discord
     pkgs.tibia
     pkgs.handbrake
+    pkgs.linode-cli
+    pkgs.sox
+    pkgs.glabels-qt
+    pkgs.cura-appimage
+    pkgs.lycheeslicer
+    pkgs.gnome-software
+    pkgs.pcmanfm
+    pkgs.kicad
+    pkgs.openscad
+    pkgs.polychromatic
   ];
 }
