@@ -167,11 +167,10 @@
   users.users.setkeh = {
     isNormalUser = true;
     description = "setkeh";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" "dialout" "uucp" "onepassword" "onepassword-cli" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" "dialout" "uucp" "onepassword" "onepassword-cli" "openrazer" ];
   };
 
-  /* temporary */
-  services.teamviewer.enable = true;
+  hardware.openrazer.enable = true;
 
   /* These packages to make yubikey work */
   environment.systemPackages = with pkgs; [

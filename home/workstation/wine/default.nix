@@ -6,7 +6,6 @@
 #   downloads the CCP launcher). Lutris manages its own wine-ge runners.
 # - umu-launcher: run a Windows launcher under Steam's Proton outside Steam.
 # - winetricks: for hand-built prefixes.
-# EVE Online is simplest through Steam + Proton (see ../steam).
 { pkgs, ... }: {
   # The same Proton-GE that programs.steam installs, made visible to Lutris and
   # umu (both scan this directory). Lets a Lutris install pick a Nix-pinned

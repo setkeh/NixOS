@@ -72,5 +72,6 @@
     pkgs.pcmanfm
     pkgs.kicad
     pkgs.openscad
+    pkgs.polychromatic
   ];
 }

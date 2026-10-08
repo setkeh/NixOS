@@ -55,9 +55,20 @@
     ./direnv
   ];
 
-  xdg.configFile."wallpapers" = {
-    source = ../../common/wallpapers;
-    recursive = true;
+  xdg.configFile={
+    "wallpapers" = {
+      source = ../../common/wallpapers;
+      recursive = true;
+    };
+
+    "openrazer/razer.conf".text = ''
+      [General]
+      verbose_logging = false
+
+      [Startup]
+      sync_effects = true
+      devices_off_on_screensaver = false
+    '';
   };
 
   programs = {
