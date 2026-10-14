@@ -9,6 +9,7 @@
     ./pipewire
     ./printing-client.nix
     ./1password
+    ./vr
   ];
 
   /* Bootloader. */
