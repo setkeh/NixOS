@@ -27,7 +27,8 @@
       ripgrep
       fd
       git
-      gopls                                 # (go +lsp)
+      direnv                                # :tools direnv (envrc)
+      gopls                                # (go +lsp)
       nil                                   # (nix +lsp)
       rust-analyzer                         # (rust +lsp)
       terraform-ls                          # (terraform +lsp)
