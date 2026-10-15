@@ -147,6 +147,12 @@
   :after (ghostel evil)
   :hook (ghostel-mode . evil-ghostel-mode))
 
+;; Open ghostel terminals in a split along the bottom instead of over the
+;; editor, like Doom's vterm (SPC o t). Unlike vterm's rule (:ttl 0), closing the
+;; split keeps the shell; running ghostel again brings the same one back.
+;; Claude's buffers are named *claude-code[...]*, so this doesn't touch them.
+(set-popup-rule! "^\\*ghostel" :size 0.3 :vslot -4 :select t :quit nil :ttl nil)
+
 ;; Claude Code
 (use-package! claude-code-ide
   :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
