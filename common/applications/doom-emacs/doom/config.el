@@ -80,15 +80,19 @@
                                        ))
 
 ;; Projectile + Auto TreeMacs
-(use-package treemacs
-  :ensure t
-  :defer t
-  :config
+;; Doom's :ui workspaces takes over projectile's switch action and then calls
+;; +workspaces-switch-project-function with the new project's root, so that is
+;; where to hook in. Show that project (only that one) in Treemacs without
+;; moving focus, then prompt for a file as Doom does by default.
+(after! treemacs
   (setq treemacs-show-hidden-files nil))
 
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
+(setq +workspaces-switch-project-function
+      (lambda (dir)
+        (let ((default-directory dir))
+          (save-selected-window
+            (treemacs-add-and-display-current-project-exclusively)))
+        (doom-project-find-file dir)))
 
 ;; Go - lsp-mode
 ;; Set up before-save hooks to format buffer and add/delete imports.
