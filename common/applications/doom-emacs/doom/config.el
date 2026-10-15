@@ -74,17 +74,21 @@
 )
 
 (setq projectile-project-search-path '(
-                                       "~/git"
-                                       "~/go/src/github.com/setkeh/"
-                                       "~/go/src/github.com/thesetkehproject/"
-                                       "~/storage/org"
-                                       "~/storage/WorkStuff"
-                                       "~/storage/HackTheBox"
                                        "~/.config/home-manager"
-                                       "~/.config"
-                                       "~/.esp"
-                                       "~/rust"
+                                       "~/SecondMind"
+                                       ("~/Development" . 1)
                                        ))
+
+;; Projectile + Auto TreeMacs
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (setq treemacs-show-hidden-files nil))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
 
 ;; Go - lsp-mode
 ;; Set up before-save hooks to format buffer and add/delete imports.
