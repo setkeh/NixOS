@@ -153,6 +153,21 @@
 ;; Claude's buffers are named *claude-code[...]*, so this doesn't touch them.
 (set-popup-rule! "^\\*ghostel" :size 0.3 :vslot -4 :select t :quit nil :ttl nil)
 
+;; SPC o t toggles the ghostel split, replacing Doom's vterm toggle there.
+(defun +ghostel/toggle (&optional arg)
+  "Show or hide the ghostel terminal split; the shell keeps running when hidden.
+With a prefix ARG, hand it to `ghostel' instead: \\[universal-argument] opens
+another terminal."
+  (interactive "P")
+  (if-let* ((win (and (not arg)
+                      (seq-find (lambda (w)
+                                  (string-prefix-p "*ghostel" (buffer-name (window-buffer w))))
+                                (window-list)))))
+      (delete-window win)
+    (ghostel arg)))
+
+(map! :leader :desc "Toggle ghostel" "o t" #'+ghostel/toggle)
+
 ;; Claude Code
 (use-package! claude-code-ide
   :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
