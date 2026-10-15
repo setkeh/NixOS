@@ -19,6 +19,11 @@
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    /* Doom Emacs built entirely in Nix from common/applications/doom-emacs/doom
+       (no `doom sync` at runtime). The module and overlay don't use its nixpkgs. */
+    nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
+    nix-doom-emacs-unstraightened.inputs.nixpkgs.follows = "";
+
     /* WSL Host inputs */
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
@@ -121,6 +126,7 @@
               inputs.sops-nix.homeManagerModules.sops
               inputs.lan-mouse.homeManagerModules.default
               inputs.hermes-desktop.homeManagerModules.default
+              inputs.nix-doom-emacs-unstraightened.homeModule
             ];
             home-manager.users.setkeh = { config, pkgs, ... }: {
               imports = [

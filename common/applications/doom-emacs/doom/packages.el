@@ -56,18 +56,11 @@
 
 ;; Bookmarks
 ;; noflet
-(package! noflet)
 ;; org-web-tools
-(package! dash)
-(package! esxml)
-(package! request)
-(package! s)
 (package! org-web-tools)
 (package! org-cliplink)
 
 ;; weechat
-(package! s)
-(package! weechat)
 
 ;; LSP Servers
 (package! lsp-jedi)

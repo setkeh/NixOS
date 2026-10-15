@@ -80,7 +80,7 @@
                                        "~/storage/org"
                                        "~/storage/WorkStuff"
                                        "~/storage/HackTheBox"
-                                       "~/.doom.d"
+                                       "~/.config/home-manager"
                                        "~/.config"
                                        "~/.esp"
                                        "~/rust"
