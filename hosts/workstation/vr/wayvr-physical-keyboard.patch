@@ -1,0 +1,555 @@
+From 13f1eaf496dadaadad6f699acc762752e7ae59fd Mon Sep 17 00:00:00 2001
+From: James <setkeh@gmail.com>
+Date: Thu, 15 Oct 2026 08:17:13 +1100
+Subject: [PATCH] Forward physical keyboards into native WayVR windows
+
+Native apps launched by WayVR run in its built-in Wayland compositor,
+which only receives keys from the in-VR keyboard, so a real keyboard
+on the desk can't type into them.
+
+Add an opt-in `physical_keyboard` setting. When enabled, WayVR:
+
+- grabs all physical keyboards (EVIOCGRAB) while keyboard focus is
+  on a WayVR window and forwards their keys into the compositor;
+- releases the grab and returns focus to the desktop on any physical
+  mouse click, so clicking into a window on a real display just works;
+- toggles focus between desktop and WayVR on Ctrl+Alt+Escape.
+
+Keys pressed inside WayVR are released when focus leaves, and keys
+held across a focus switch don't produce stray releases. WayVR's own
+uinput devices are never grabbed. Needs the user in the `input` group.
+---
+ wayvr/src/backend/openvr/mod.rs     |   1 +
+ wayvr/src/backend/openxr/mod.rs     |   1 +
+ wayvr/src/state.rs                  |   5 +-
+ wayvr/src/subsystem/hid/mod.rs      |   1 +
+ wayvr/src/subsystem/hid/physical.rs | 409 ++++++++++++++++++++++++++++
+ wayvr/src/subsystem/input.rs        |  12 +-
+ wlx-common/src/config.rs            |   5 +
+ 7 files changed, 432 insertions(+), 2 deletions(-)
+ create mode 100644 wayvr/src/subsystem/hid/physical.rs
+
+diff --git a/wayvr/src/backend/openvr/mod.rs b/wayvr/src/backend/openvr/mod.rs
+index d13850d..65f9eeb 100644
+--- a/wayvr/src/backend/openvr/mod.rs
++++ b/wayvr/src/backend/openvr/mod.rs
+@@ -296,6 +296,7 @@ pub fn openvr_run(args: &Args) -> Result<(), BackendError> {
+             );
+         }
+ 
++        app.hid_provider.poll_physical(app.wvr_server.as_mut());
+         app.hid_provider.inner.commit();
+         let mut futures = GpuFutures::default();
+ 
+diff --git a/wayvr/src/backend/openxr/mod.rs b/wayvr/src/backend/openxr/mod.rs
+index af703ab..e1d93e1 100644
+--- a/wayvr/src/backend/openxr/mod.rs
++++ b/wayvr/src/backend/openxr/mod.rs
+@@ -341,6 +341,7 @@ pub fn openxr_run(args: &Args) -> Result<(), BackendError> {
+             );
+         }
+ 
++        app.hid_provider.poll_physical(app.wvr_server.as_mut());
+         app.hid_provider.inner.commit();
+ 
+         let watch = overlays.mut_by_id(watch_id).unwrap(); // want panic
+diff --git a/wayvr/src/state.rs b/wayvr/src/state.rs
+index 91a6b8f..c867eb0 100644
+--- a/wayvr/src/state.rs
++++ b/wayvr/src/state.rs
+@@ -110,7 +110,10 @@ impl AppState {
+             .log_err("Could not initialize WayVR Server")
+             .ok();
+ 
+-        let (hid_provider, mut hid_error) = HidWrapper::new(session.config.input_emulation_method);
++        let (hid_provider, mut hid_error) = HidWrapper::new(
++            session.config.input_emulation_method,
++            session.config.physical_keyboard,
++        );
+ 
+         #[cfg(feature = "osc")]
+         let osc_sender = crate::subsystem::osc::OscSender::new(session.config.osc_out_port).ok();
+diff --git a/wayvr/src/subsystem/hid/mod.rs b/wayvr/src/subsystem/hid/mod.rs
+index 7ebcbae..4d0a381 100644
+--- a/wayvr/src/subsystem/hid/mod.rs
++++ b/wayvr/src/subsystem/hid/mod.rs
+@@ -10,6 +10,7 @@ use xkbcommon::xkb;
+ #[cfg(feature = "wayland")]
+ pub mod wayland;
+ 
++pub mod physical;
+ pub mod provider;
+ #[cfg(feature = "x11")]
+ mod x11;
+diff --git a/wayvr/src/subsystem/hid/physical.rs b/wayvr/src/subsystem/hid/physical.rs
+new file mode 100644
+index 0000000..d0a3c48
+--- /dev/null
++++ b/wayvr/src/subsystem/hid/physical.rs
+@@ -0,0 +1,409 @@
++//! Physical keyboard passthrough for native WayVR windows.
++//!
++//! Native apps launched by WayVR live in WayVR's built-in Wayland compositor,
++//! which otherwise only receives keys from the in-VR keyboard. When enabled
++//! (`physical_keyboard: true`), this module:
++//!
++//! - Grabs every physical keyboard exclusively (`EVIOCGRAB`) while keyboard
++//!   focus is on a WayVR window, and forwards its keys into the compositor.
++//!   The desktop compositor sees nothing while the grab is held.
++//! - Releases the grab and hands focus back to the desktop when you click any
++//!   physical mouse button, i.e. when you click into a window on a real display.
++//! - Toggles focus between desktop and WayVR with Ctrl+Alt+Escape.
++//!
++//! Focus is entered via the existing paths too: clicking a WayVR window with a
++//! controller sets `KeyboardFocus::WayVR` as before.
++//!
++//! Needs read access to `/dev/input/event*` (the `input` group).
++
++use std::{
++    collections::BTreeSet,
++    fs::{File, OpenOptions},
++    io::ErrorKind,
++    os::unix::fs::OpenOptionsExt,
++    path::{Path, PathBuf},
++    time::{Duration, Instant},
++};
++
++use input_linux::{AbsoluteAxis, EvdevHandle, Key, RelativeAxis, sys::input_event};
++
++use crate::{backend::wayvr::WvrServerState, subsystem::input::KeyboardFocus};
++
++const EV_KEY: u16 = 0x01;
++/// evdev keycode -> XKB keycode, matching `VirtualKey` and `WvrServerState::send_key`.
++const XKB_OFFSET: u32 = 8;
++const RESCAN_INTERVAL: Duration = Duration::from_secs(3);
++/// Devices created by WayVR itself (uinput provider). Never grab or watch these,
++/// or controller clicks would immediately release the grab.
++const OWN_DEVICE_PREFIX: &[u8] = b"WayVR";
++
++const KEY_ESC: u16 = Key::Esc as u16;
++const KEY_LEFTCTRL: u16 = Key::LeftCtrl as u16;
++const KEY_RIGHTCTRL: u16 = Key::RightCtrl as u16;
++const KEY_LEFTALT: u16 = Key::LeftAlt as u16;
++const KEY_RIGHTALT: u16 = Key::RightAlt as u16;
++const BTN_LEFT: u16 = Key::ButtonLeft as u16;
++const BTN_RIGHT: u16 = Key::ButtonRight as u16;
++const BTN_MIDDLE: u16 = Key::ButtonMiddle as u16;
++
++/// Where forwarded keys go. Implemented by the WayVR compositor; a trait so the
++/// routing logic can be unit-tested without one.
++trait KeySink {
++    fn send_key(&mut self, xkb_keycode: u32, down: bool);
++}
++
++impl KeySink for WvrServerState {
++    fn send_key(&mut self, xkb_keycode: u32, down: bool) {
++        Self::send_key(self, xkb_keycode, down);
++    }
++}
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++enum DevKind {
++    Keyboard,
++    Mouse,
++}
++
++struct Device {
++    path: PathBuf,
++    name: String,
++    kind: DevKind,
++    handle: EvdevHandle<File>,
++    grabbed: bool,
++}
++
++pub struct PhysicalKeyboard {
++    devices: Vec<Device>,
++    last_scan: Option<Instant>,
++    /// evdev codes currently held down on any keyboard (forwarded or not).
++    held: BTreeSet<u16>,
++    /// evdev codes we sent as "pressed" into WayVR and still owe a release for.
++    forwarded: BTreeSet<u16>,
++    warned_permissions: bool,
++}
++
++impl PhysicalKeyboard {
++    pub fn new() -> Self {
++        log::info!("Physical keyboard passthrough enabled (toggle: Ctrl+Alt+Escape)");
++        Self {
++            devices: Vec::new(),
++            last_scan: None,
++            held: BTreeSet::new(),
++            forwarded: BTreeSet::new(),
++            warned_permissions: false,
++        }
++    }
++
++    /// Call once per frame.
++    pub fn poll(&mut self, focus: &mut KeyboardFocus, mut wvr: Option<&mut WvrServerState>) {
++        self.rescan_if_due();
++
++        let mut events = [unsafe { std::mem::zeroed::<input_event>() }; 64];
++        let mut dead = Vec::new();
++
++        for idx in 0..self.devices.len() {
++            loop {
++                let n = match self.devices[idx].handle.read(&mut events) {
++                    Ok(0) => break,
++                    Ok(n) => n,
++                    Err(e) if e.kind() == ErrorKind::WouldBlock => break,
++                    Err(e) => {
++                        log::info!("Input device {} gone: {e}", self.devices[idx].name);
++                        dead.push(idx);
++                        break;
++                    }
++                };
++
++                let kind = self.devices[idx].kind;
++                for ev in &events[..n] {
++                    if ev.type_ != EV_KEY || ev.value == 2 {
++                        continue; // only press/release; clients do their own key repeat
++                    }
++                    let down = ev.value == 1;
++                    match kind {
++                        DevKind::Mouse => {
++                            if down
++                                && matches!(ev.code, BTN_LEFT | BTN_RIGHT | BTN_MIDDLE)
++                                && *focus == KeyboardFocus::WayVR
++                            {
++                                log::debug!("Physical mouse click: keyboard focus -> desktop");
++                                self.release_all(wvr.as_deref_mut());
++                                *focus = KeyboardFocus::PhysicalScreen;
++                            }
++                        }
++                        DevKind::Keyboard => {
++                            self.handle_key(ev.code, down, focus, wvr.as_deref_mut());
++                        }
++                    }
++                }
++            }
++        }
++
++        for idx in dead.into_iter().rev() {
++            self.devices.remove(idx);
++        }
++
++        // Grab exactly while WayVR has focus and its compositor exists.
++        let want_grab = *focus == KeyboardFocus::WayVR && wvr.is_some();
++        if !want_grab && !self.forwarded.is_empty() {
++            self.release_all(wvr);
++        }
++        for dev in self
++            .devices
++            .iter_mut()
++            .filter(|d| d.kind == DevKind::Keyboard && d.grabbed != want_grab)
++        {
++            match dev.handle.grab(want_grab) {
++                Ok(()) => {
++                    dev.grabbed = want_grab;
++                    log::debug!(
++                        "{} {}",
++                        if want_grab { "Grabbed" } else { "Released" },
++                        dev.name
++                    );
++                }
++                Err(e) => log::warn!("Could not change grab on {}: {e}", dev.name),
++            }
++        }
++    }
++
++    fn handle_key<K: KeySink>(
++        &mut self,
++        code: u16,
++        down: bool,
++        focus: &mut KeyboardFocus,
++        wvr: Option<&mut K>,
++    ) {
++        if down {
++            self.held.insert(code);
++        } else {
++            self.held.remove(&code);
++        }
++
++        // Ctrl+Alt+Escape toggles focus. The Escape press is swallowed.
++        if down && code == KEY_ESC && self.ctrl_held() && self.alt_held() {
++            match *focus {
++                KeyboardFocus::WayVR => {
++                    log::info!("Ctrl+Alt+Escape: keyboard -> desktop");
++                    self.release_all(wvr);
++                    *focus = KeyboardFocus::PhysicalScreen;
++                }
++                KeyboardFocus::PhysicalScreen if wvr.is_some() => {
++                    log::info!("Ctrl+Alt+Escape: keyboard -> WayVR");
++                    *focus = KeyboardFocus::WayVR;
++                    // Ctrl and Alt are physically down but the desktop saw them
++                    // pressed, not WayVR. Don't forward them until re-pressed.
++                }
++                KeyboardFocus::PhysicalScreen => {}
++            }
++            return;
++        }
++
++        if *focus != KeyboardFocus::WayVR {
++            return; // not grabbed: the desktop already received this key
++        }
++        let Some(wvr) = wvr else { return };
++
++        if down {
++            self.forwarded.insert(code);
++            wvr.send_key(u32::from(code) + XKB_OFFSET, true);
++        } else if self.forwarded.remove(&code) {
++            // Only release what we pressed, so keys held across the focus
++            // switch don't produce a stray release in the VR app.
++            wvr.send_key(u32::from(code) + XKB_OFFSET, false);
++        }
++    }
++
++    /// Release every key we pressed inside WayVR, so nothing gets stuck down
++    /// when focus leaves.
++    fn release_all<K: KeySink>(&mut self, wvr: Option<&mut K>) {
++        let forwarded = std::mem::take(&mut self.forwarded);
++        if let Some(wvr) = wvr {
++            for code in forwarded {
++                wvr.send_key(u32::from(code) + XKB_OFFSET, false);
++            }
++        }
++    }
++
++    fn ctrl_held(&self) -> bool {
++        self.held.contains(&KEY_LEFTCTRL) || self.held.contains(&KEY_RIGHTCTRL)
++    }
++
++    fn alt_held(&self) -> bool {
++        self.held.contains(&KEY_LEFTALT) || self.held.contains(&KEY_RIGHTALT)
++    }
++
++    fn rescan_if_due(&mut self) {
++        let now = Instant::now();
++        if self
++            .last_scan
++            .is_some_and(|t| now.duration_since(t) < RESCAN_INTERVAL)
++        {
++            return;
++        }
++        self.last_scan = Some(now);
++
++        let Ok(dir) = std::fs::read_dir("/dev/input") else {
++            return;
++        };
++        let mut denied = 0;
++        for entry in dir.flatten() {
++            let path = entry.path();
++            let is_event_node = path
++                .file_name()
++                .and_then(|n| n.to_str())
++                .is_some_and(|n| n.starts_with("event"));
++            if !is_event_node || self.devices.iter().any(|d| d.path == path) {
++                continue;
++            }
++            match open_device(&path) {
++                Ok(Some(dev)) => {
++                    log::info!("Physical {:?}: {} ({})", dev.kind, dev.name, path.display());
++                    self.devices.push(dev);
++                }
++                Ok(None) => {}
++                Err(e) if e.kind() == ErrorKind::PermissionDenied => denied += 1,
++                Err(e) => log::debug!("Skipping {}: {e}", path.display()),
++            }
++        }
++        if denied > 0 && self.devices.is_empty() && !self.warned_permissions {
++            self.warned_permissions = true;
++            log::warn!(
++                "Physical keyboard passthrough: no access to /dev/input/event* \
++                 ({denied} denied). Add your user to the 'input' group."
++            );
++        }
++    }
++}
++
++/// Open and classify an evdev node. `Ok(None)` = not a keyboard or mouse we care about.
++fn open_device(path: &Path) -> std::io::Result<Option<Device>> {
++    let file = OpenOptions::new()
++        .read(true)
++        .custom_flags(libc::O_NONBLOCK | libc::O_CLOEXEC)
++        .open(path)?;
++    let handle = EvdevHandle::new(file);
++
++    let raw_name = handle.device_name().unwrap_or_default();
++    if raw_name.starts_with(OWN_DEVICE_PREFIX) {
++        return Ok(None);
++    }
++    let name = String::from_utf8_lossy(&raw_name)
++        .trim_end_matches('\0')
++        .to_string();
++
++    let keys = handle.key_bits()?;
++    let is_keyboard = keys.get(Key::A) && keys.get(Key::Z) && keys.get(Key::Space);
++    // Mice report relative motion; touchpads report absolute.
++    let is_mouse = !is_keyboard
++        && keys.get(Key::ButtonLeft)
++        && (handle
++            .relative_bits()
++            .is_ok_and(|rel| rel.get(RelativeAxis::X) && rel.get(RelativeAxis::Y))
++            || handle
++                .absolute_bits()
++                .is_ok_and(|abs| abs.get(AbsoluteAxis::X) && abs.get(AbsoluteAxis::Y)));
++
++    let kind = if is_keyboard {
++        DevKind::Keyboard
++    } else if is_mouse {
++        DevKind::Mouse
++    } else {
++        return Ok(None);
++    };
++
++    Ok(Some(Device {
++        path: path.to_path_buf(),
++        name,
++        kind,
++        handle,
++        grabbed: false,
++    }))
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    const A: u16 = Key::A as u16;
++
++    #[derive(Default)]
++    struct Recorder(Vec<(u32, bool)>);
++
++    impl KeySink for Recorder {
++        fn send_key(&mut self, xkb_keycode: u32, down: bool) {
++            self.0.push((xkb_keycode, down));
++        }
++    }
++
++    impl Recorder {
++        fn recorded_keys(&self) -> &[(u32, bool)] {
++            &self.0
++        }
++    }
++
++    fn test_server() -> Recorder {
++        Recorder::default()
++    }
++
++    #[test]
++    fn forwards_keys_with_xkb_offset_while_focused() {
++        let mut pk = PhysicalKeyboard::new();
++        let mut focus = KeyboardFocus::WayVR;
++        let mut wvr = test_server();
++        pk.handle_key(A, true, &mut focus, Some(&mut wvr));
++        pk.handle_key(A, false, &mut focus, Some(&mut wvr));
++        assert_eq!(wvr.recorded_keys(), [(u32::from(A) + 8, true), (u32::from(A) + 8, false)]);
++    }
++
++    #[test]
++    fn ignores_keys_while_desktop_has_focus() {
++        let mut pk = PhysicalKeyboard::new();
++        let mut focus = KeyboardFocus::PhysicalScreen;
++        let mut wvr = test_server();
++        pk.handle_key(A, true, &mut focus, Some(&mut wvr));
++        assert!(wvr.recorded_keys().is_empty());
++    }
++
++    #[test]
++    fn chord_releases_held_keys_and_returns_focus_to_desktop() {
++        let mut pk = PhysicalKeyboard::new();
++        let mut focus = KeyboardFocus::WayVR;
++        let mut wvr = test_server();
++        pk.handle_key(KEY_LEFTCTRL, true, &mut focus, Some(&mut wvr));
++        pk.handle_key(KEY_LEFTALT, true, &mut focus, Some(&mut wvr));
++        pk.handle_key(KEY_ESC, true, &mut focus, Some(&mut wvr));
++        assert_eq!(focus, KeyboardFocus::PhysicalScreen);
++        let sent = wvr.recorded_keys();
++        // Ctrl + Alt pressed, then both released; Escape never reaches the app.
++        assert_eq!(sent.iter().filter(|(_, d)| *d).count(), 2);
++        assert_eq!(sent.iter().filter(|(_, d)| !*d).count(), 2);
++        assert!(!sent.iter().any(|(k, _)| *k == u32::from(KEY_ESC) + 8));
++    }
++
++    #[test]
++    fn chord_from_desktop_enters_wayvr_without_stray_releases() {
++        let mut pk = PhysicalKeyboard::new();
++        let mut focus = KeyboardFocus::PhysicalScreen;
++        let mut wvr = test_server();
++        pk.handle_key(KEY_LEFTCTRL, true, &mut focus, Some(&mut wvr));
++        pk.handle_key(KEY_LEFTALT, true, &mut focus, Some(&mut wvr));
++        pk.handle_key(KEY_ESC, true, &mut focus, Some(&mut wvr));
++        assert_eq!(focus, KeyboardFocus::WayVR);
++        // Releasing modifiers the app never saw pressed must not be forwarded.
++        pk.handle_key(KEY_ESC, false, &mut focus, Some(&mut wvr));
++        pk.handle_key(KEY_LEFTALT, false, &mut focus, Some(&mut wvr));
++        pk.handle_key(KEY_LEFTCTRL, false, &mut focus, Some(&mut wvr));
++        assert!(wvr.recorded_keys().is_empty());
++    }
++
++    #[test]
++    fn chord_does_nothing_without_a_wayvr_server() {
++        let mut pk = PhysicalKeyboard::new();
++        let mut focus = KeyboardFocus::PhysicalScreen;
++        pk.handle_key::<Recorder>(KEY_LEFTCTRL, true, &mut focus, None);
++        pk.handle_key::<Recorder>(KEY_LEFTALT, true, &mut focus, None);
++        pk.handle_key::<Recorder>(KEY_ESC, true, &mut focus, None);
++        assert_eq!(focus, KeyboardFocus::PhysicalScreen);
++    }
++}
+diff --git a/wayvr/src/subsystem/input.rs b/wayvr/src/subsystem/input.rs
+index 3b8d82e..35e639f 100644
+--- a/wayvr/src/subsystem/input.rs
++++ b/wayvr/src/subsystem/input.rs
+@@ -16,10 +16,11 @@ pub struct HidWrapper {
+     pub keyboard_focus: KeyboardFocus,
+     pub inner: Box<dyn HidProvider>,
+     pub keymap: Option<XkbKeymap>,
++    pub physical: Option<hid::physical::PhysicalKeyboard>,
+ }
+ 
+ impl HidWrapper {
+-    pub fn new(method: InputEmulationMethod) -> (Self, Option<Toast>) {
++    pub fn new(method: InputEmulationMethod, physical_keyboard: bool) -> (Self, Option<Toast>) {
+         let maybe_provider = match method {
+             InputEmulationMethod::Uinput => hid::provider::uinput::initialize_uinput(),
+             InputEmulationMethod::WlVirtual => hid::provider::wl_virtual::initialize_wl_virtual(),
+@@ -35,11 +36,20 @@ impl HidWrapper {
+                 keyboard_focus: KeyboardFocus::PhysicalScreen,
+                 inner: provider,
+                 keymap: None,
++                physical: physical_keyboard.then(hid::physical::PhysicalKeyboard::new),
+             },
+             toast,
+         )
+     }
+ 
++    /// Forward physical keyboard input into WayVR while it has focus.
++    /// No-op unless `physical_keyboard` is enabled in config.
++    pub fn poll_physical(&mut self, wvr_server: Option<&mut WvrServerState>) {
++        if let Some(physical) = self.physical.as_mut() {
++            physical.poll(&mut self.keyboard_focus, wvr_server);
++        }
++    }
++
+     pub fn send_key_routed(
+         &self,
+         wvr_server: Option<&mut WvrServerState>,
+diff --git a/wlx-common/src/config.rs b/wlx-common/src/config.rs
+index 289ba05..a2917ae 100644
+--- a/wlx-common/src/config.rs
++++ b/wlx-common/src/config.rs
+@@ -353,6 +353,11 @@ pub struct GeneralConfig {
+ 	#[serde(default)]
+ 	pub input_emulation_method: InputEmulationMethod,
+ 
++	/// Forward physical keyboards into native WayVR windows while they have focus.
++	/// See wayvr/src/subsystem/hid/physical.rs.
++	#[serde(default = "def_false")]
++	pub physical_keyboard: bool,
++
+ 	#[serde(default = "def_true")]
+ 	pub allow_sliding: bool,
+ 
+-- 
+2.43.0
+
