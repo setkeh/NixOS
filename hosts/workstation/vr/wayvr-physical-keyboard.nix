@@ -17,9 +17,16 @@
    - Ctrl+Alt+Escape toggles either way
    If WayVR ever hangs while holding the grab: `pkill wayvr` frees the keyboard.
 
+   Optional physical_mouse (needs physical_keyboard): while a VR window has
+   keyboard focus the mouse is grabbed too and drives that window: motion, real
+   left/middle/right click (context menus work), scroll wheel. The existing
+   cursor dot shows it. A mouse click then no longer returns to the desktop;
+   use Ctrl+Alt+Escape.
+
    Enable it per user, outside WayVR's auto-saved config (which it rewrites):
-     ~/.config/wayvr/conf.d/physical-keyboard.json5  ->  { physical_keyboard: true }
-   Check /tmp/wayvr.log for "Physical keyboard passthrough enabled". */
+     ~/.config/wayvr/conf.d/physical-keyboard.json5
+       ->  { physical_keyboard: true, physical_mouse: true }
+   Check /tmp/wayvr.log for "Physical keyboard passthrough enabled, with mouse". */
 let
   wayvrPatched = pkgs.wayvr.overrideAttrs (old: {
     patches = (old.patches or [ ]) ++ [ ./wayvr-physical-keyboard.patch ];

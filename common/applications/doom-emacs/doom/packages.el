@@ -64,3 +64,7 @@
 
 ;; LSP Servers
 (package! lsp-jedi)
+
+;; Claude Code
+(package! claude-code-ide
+  :recipe (:host github :repo "manzaltu/claude-code-ide.el"))

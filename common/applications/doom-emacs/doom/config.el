@@ -137,3 +137,10 @@
 
 ;;(erc-tls :server "irc.libera.chat" :port 6697 :nick "setkeh")
 ;;(erc-tls :server "irc.oftc.net" :port 6697 :nick "setkeh")
+
+
+;; Claude Code
+(use-package! claude-code-ide
+  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+  :config
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools

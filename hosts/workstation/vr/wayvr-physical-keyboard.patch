@@ -1,34 +1,3 @@
-From 13f1eaf496dadaadad6f699acc762752e7ae59fd Mon Sep 17 00:00:00 2001
-From: James <setkeh@gmail.com>
-Date: Thu, 15 Oct 2026 08:17:13 +1100
-Subject: [PATCH] Forward physical keyboards into native WayVR windows
-
-Native apps launched by WayVR run in its built-in Wayland compositor,
-which only receives keys from the in-VR keyboard, so a real keyboard
-on the desk can't type into them.
-
-Add an opt-in `physical_keyboard` setting. When enabled, WayVR:
-
-- grabs all physical keyboards (EVIOCGRAB) while keyboard focus is
-  on a WayVR window and forwards their keys into the compositor;
-- releases the grab and returns focus to the desktop on any physical
-  mouse click, so clicking into a window on a real display just works;
-- toggles focus between desktop and WayVR on Ctrl+Alt+Escape.
-
-Keys pressed inside WayVR are released when focus leaves, and keys
-held across a focus switch don't produce stray releases. WayVR's own
-uinput devices are never grabbed. Needs the user in the `input` group.
----
- wayvr/src/backend/openvr/mod.rs     |   1 +
- wayvr/src/backend/openxr/mod.rs     |   1 +
- wayvr/src/state.rs                  |   5 +-
- wayvr/src/subsystem/hid/mod.rs      |   1 +
- wayvr/src/subsystem/hid/physical.rs | 409 ++++++++++++++++++++++++++++
- wayvr/src/subsystem/input.rs        |  12 +-
- wlx-common/src/config.rs            |   5 +
- 7 files changed, 432 insertions(+), 2 deletions(-)
- create mode 100644 wayvr/src/subsystem/hid/physical.rs
-
 diff --git a/wayvr/src/backend/openvr/mod.rs b/wayvr/src/backend/openvr/mod.rs
 index d13850d..65f9eeb 100644
 --- a/wayvr/src/backend/openvr/mod.rs
@@ -53,11 +22,183 @@ index af703ab..e1d93e1 100644
          app.hid_provider.inner.commit();
  
          let watch = overlays.mut_by_id(watch_id).unwrap(); // want panic
+diff --git a/wayvr/src/overlays/wayvr.rs b/wayvr/src/overlays/wayvr.rs
+index ea2dff9..d4cc15c 100644
+--- a/wayvr/src/overlays/wayvr.rs
++++ b/wayvr/src/overlays/wayvr.rs
+@@ -51,7 +51,13 @@ use crate::{
+     },
+     overlays::screen::capture::ScreenPipeline,
+     state::{self, AppState},
+-    subsystem::{hid::WheelDelta, input::KeyboardFocus},
++    subsystem::{
++        hid::{
++            WheelDelta,
++            physical::{PhysicalButton, PhysicalMouseEvent},
++        },
++        input::KeyboardFocus,
++    },
+     windowing::{
+         OverlayID, OverlaySelector,
+         backend::{
+@@ -457,6 +463,143 @@ impl WvrWindowBackend {
+         Some(WvrHitTarget::Toplevel { pos })
+     }
+ 
++    /// Like `hit_target`, but for a position in client pixels, confined to the
++    /// client area. Used for the physical mouse, which can't reach the panel.
++    fn client_area_hit_target(&self, client_pos: Vec2) -> WvrHitTarget {
++        if let Some((surface, origin)) = self.popup_hit_at_client_pos(client_pos) {
++            return WvrHitTarget::Popup {
++                surface,
++                global_pos: client_pos,
++                origin,
++            };
++        }
++
++        if let Some(surface) = self
++            .surfaces
++            .iter()
++            .rev()
++            .find(|s| surface_accepts_input(s, client_pos))
++        {
++            return WvrHitTarget::Surface {
++                surface: surface.surface.clone(),
++                global_pos: client_pos,
++                origin: surface.pos,
++            };
++        }
++
++        WvrHitTarget::Toplevel { pos: client_pos }
++    }
++
++    /// Apply physical mouse input queued by `PhysicalKeyboard` if this window
++    /// has keyboard focus. The cursor shares `wm.mouse` with the controller
++    /// laser, so both drive the same pointer and the existing cursor dot.
++    fn apply_physical_mouse(&mut self, app: &mut AppState, toplevel: &WlSurface) {
++        if self.inner_extent[0] == 0 || self.inner_extent[1] == 0 {
++            return;
++        }
++        let Some(physical) = app.hid_provider.physical.as_mut() else {
++            return;
++        };
++        let Some(wvr_server) = app.wvr_server.as_mut() else {
++            return;
++        };
++        if wvr_server.manager.seat_keyboard.current_focus().as_ref() != Some(toplevel) {
++            return;
++        }
++        let events = physical.take_mouse_events();
++        if events.is_empty() {
++            return;
++        }
++
++        #[allow(clippy::cast_precision_loss)]
++        let max = vec2(
++            self.inner_extent[0] as f32 - 1.0,
++            self.inner_extent[1] as f32 - 1.0,
++        );
++        #[allow(clippy::cast_precision_loss)]
++        let mut pos = wvr_server
++            .wm
++            .mouse
++            .as_ref()
++            .filter(|m| m.hover_window == self.window)
++            .map_or(max * 0.5, |m| vec2(m.x as f32, m.y as f32));
++        let click_freeze = app.session.config.click_freeze_time_ms;
++
++        for event in events {
++            match event {
++                PhysicalMouseEvent::Motion { dx, dy } => {
++                    pos = (pos + vec2(dx, dy)).clamp(Vec2::ZERO, max);
++                    let (target, at) = Self::focus_target(self.client_area_hit_target(pos));
++                    wvr_server.send_mouse_move(target, at, self.window);
++                }
++                PhysicalMouseEvent::Button { button, pressed } => {
++                    let index = match button {
++                        PhysicalButton::Left => wayvr::MouseIndex::Left,
++                        PhysicalButton::Middle => wayvr::MouseIndex::Center,
++                        PhysicalButton::Right => wayvr::MouseIndex::Right,
++                    };
++                    let hit = self.client_area_hit_target(pos);
++
++                    // Same popup rules as `on_pointer`: a press outside an open
++                    // popup dismisses it, and its release is swallowed too.
++                    if !pressed && self.popup_outside_button == Some(index) {
++                        self.popup_outside_button = None;
++                        wvr_server.send_mouse_button(
++                            PointerFocusTarget::None,
++                            pos,
++                            self.window,
++                            index,
++                            false,
++                            click_freeze,
++                        );
++                        continue;
++                    }
++                    let outside_popup = !self.popups.is_empty()
++                        && wvr_server.pointer_is_grabbed()
++                        && !matches!(hit, WvrHitTarget::Popup { .. });
++                    if outside_popup {
++                        if pressed {
++                            self.popup_outside_button = Some(index);
++                        }
++                        wvr_server.send_mouse_button(
++                            PointerFocusTarget::None,
++                            pos,
++                            self.window,
++                            index,
++                            pressed,
++                            click_freeze,
++                        );
++                        continue;
++                    }
++
++                    let (target, at) = Self::focus_target(hit);
++                    wvr_server.send_mouse_button(target, at, self.window, index, pressed, click_freeze);
++                }
++                PhysicalMouseEvent::Wheel { x, y } => {
++                    wvr_server.send_mouse_scroll(self.window, pos, WheelDelta { x, y });
++                }
++            }
++        }
++    }
++
++    fn focus_target(hit: WvrHitTarget) -> (PointerFocusTarget, Vec2) {
++        match hit {
++            WvrHitTarget::Popup {
++                surface,
++                global_pos,
++                origin,
++            }
++            | WvrHitTarget::Surface {
++                surface,
++                global_pos,
++                origin,
++            } => (PointerFocusTarget::Surface { surface, origin }, global_pos),
++            WvrHitTarget::Toplevel { pos } => (PointerFocusTarget::Toplevel, pos),
++            // Never produced by `client_area_hit_target`.
++            WvrHitTarget::Panel(_) => (PointerFocusTarget::None, Vec2::ZERO),
++        }
++    }
++
+     fn mouse_index_from_mode(mode: input::PointerMode) -> Option<wayvr::MouseIndex> {
+         match mode {
+             input::PointerMode::Left => Some(wayvr::MouseIndex::Left),
+@@ -574,6 +717,8 @@ impl OverlayBackend for WvrWindowBackend {
+             return Ok(ShouldRender::Unable);
+         };
+ 
++        self.apply_physical_mouse(app, toplevel.wl_surface());
++
+         let surface_id = toplevel.wl_surface().id();
+         let surfaces = collect_rendered_surface_tree(toplevel.wl_surface());
+         let should_render_panel = self.panel.should_render(app)?;
 diff --git a/wayvr/src/state.rs b/wayvr/src/state.rs
-index 91a6b8f..c867eb0 100644
+index 91a6b8f..ceaf487 100644
 --- a/wayvr/src/state.rs
 +++ b/wayvr/src/state.rs
-@@ -110,7 +110,10 @@ impl AppState {
+@@ -110,7 +110,11 @@ impl AppState {
              .log_err("Could not initialize WayVR Server")
              .ok();
  
@@ -65,6 +206,7 @@ index 91a6b8f..c867eb0 100644
 +        let (hid_provider, mut hid_error) = HidWrapper::new(
 +            session.config.input_emulation_method,
 +            session.config.physical_keyboard,
++            session.config.physical_mouse,
 +        );
  
          #[cfg(feature = "osc")]
@@ -83,10 +225,10 @@ index 7ebcbae..4d0a381 100644
  mod x11;
 diff --git a/wayvr/src/subsystem/hid/physical.rs b/wayvr/src/subsystem/hid/physical.rs
 new file mode 100644
-index 0000000..d0a3c48
+index 0000000..dbf693a
 --- /dev/null
 +++ b/wayvr/src/subsystem/hid/physical.rs
-@@ -0,0 +1,409 @@
+@@ -0,0 +1,584 @@
 +//! Physical keyboard passthrough for native WayVR windows.
 +//!
 +//! Native apps launched by WayVR live in WayVR's built-in Wayland compositor,
@@ -99,6 +241,11 @@ index 0000000..d0a3c48
 +//! - Releases the grab and hands focus back to the desktop when you click any
 +//!   physical mouse button, i.e. when you click into a window on a real display.
 +//! - Toggles focus between desktop and WayVR with Ctrl+Alt+Escape.
++//!
++//! With `physical_mouse: true` as well, physical mice are grabbed alongside the
++//! keyboards and their motion, buttons and wheel are queued for the focused
++//! WayVR window (see `WvrWindowBackend::apply_physical_mouse`). A mouse click
++//! then no longer returns focus to the desktop; use Ctrl+Alt+Escape.
 +//!
 +//! Focus is entered via the existing paths too: clicking a WayVR window with a
 +//! controller sets `KeyboardFocus::WayVR` as before.
@@ -119,6 +266,14 @@ index 0000000..d0a3c48
 +use crate::{backend::wayvr::WvrServerState, subsystem::input::KeyboardFocus};
 +
 +const EV_KEY: u16 = 0x01;
++const EV_REL: u16 = 0x02;
++const REL_X: u16 = 0x00;
++const REL_Y: u16 = 0x01;
++const REL_HWHEEL: u16 = 0x06;
++const REL_WHEEL: u16 = 0x08;
++/// One wheel detent in WayVR's `WheelDelta` units: `send_pointer_axis_wheel`
++/// multiplies by 32 and emits a discrete step every 120.
++const WHEEL_NOTCH: f32 = 120.0 / 32.0;
 +/// evdev keycode -> XKB keycode, matching `VirtualKey` and `WvrServerState::send_key`.
 +const XKB_OFFSET: u32 = 8;
 +const RESCAN_INTERVAL: Duration = Duration::from_secs(3);
@@ -148,6 +303,23 @@ index 0000000..d0a3c48
 +}
 +
 +#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum PhysicalButton {
++    Left,
++    Middle,
++    Right,
++}
++
++/// Physical mouse input destined for the focused WayVR window.
++#[derive(Debug, Clone, Copy, PartialEq)]
++pub enum PhysicalMouseEvent {
++    /// Relative motion in device units (treated as window pixels, 1:1).
++    Motion { dx: f32, dy: f32 },
++    Button { button: PhysicalButton, pressed: bool },
++    /// In `WheelDelta` units; positive y scrolls up, positive x scrolls right.
++    Wheel { x: f32, y: f32 },
++}
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 +enum DevKind {
 +    Keyboard,
 +    Mouse,
@@ -169,22 +341,42 @@ index 0000000..d0a3c48
 +    /// evdev codes we sent as "pressed" into WayVR and still owe a release for.
 +    forwarded: BTreeSet<u16>,
 +    warned_permissions: bool,
++    /// Forward physical mice into WayVR instead of using clicks to leave it.
++    forward_mouse: bool,
++    /// Mouse buttons pressed inside WayVR that still owe a release.
++    mouse_held: Vec<PhysicalButton>,
++    /// Filled by `poll`, drained by the focused window's overlay each frame.
++    mouse_events: Vec<PhysicalMouseEvent>,
 +}
 +
 +impl PhysicalKeyboard {
-+    pub fn new() -> Self {
-+        log::info!("Physical keyboard passthrough enabled (toggle: Ctrl+Alt+Escape)");
++    pub fn new(forward_mouse: bool) -> Self {
++        log::info!(
++            "Physical keyboard passthrough enabled{} (toggle: Ctrl+Alt+Escape)",
++            if forward_mouse { ", with mouse" } else { "" }
++        );
 +        Self {
 +            devices: Vec::new(),
 +            last_scan: None,
 +            held: BTreeSet::new(),
 +            forwarded: BTreeSet::new(),
 +            warned_permissions: false,
++            forward_mouse,
++            mouse_held: Vec::new(),
++            mouse_events: Vec::new(),
 +        }
++    }
++
++    /// Mouse events gathered by the last `poll`. Called by the overlay of the
++    /// WayVR window that has keyboard focus.
++    pub fn take_mouse_events(&mut self) -> Vec<PhysicalMouseEvent> {
++        std::mem::take(&mut self.mouse_events)
 +    }
 +
 +    /// Call once per frame.
 +    pub fn poll(&mut self, focus: &mut KeyboardFocus, mut wvr: Option<&mut WvrServerState>) {
++        // Anything not consumed last frame (e.g. focused window hidden) is stale.
++        self.mouse_events.clear();
 +        self.rescan_if_due();
 +
 +        let mut events = [unsafe { std::mem::zeroed::<input_event>() }; 64];
@@ -205,23 +397,23 @@ index 0000000..d0a3c48
 +
 +                let kind = self.devices[idx].kind;
 +                for ev in &events[..n] {
-+                    if ev.type_ != EV_KEY || ev.value == 2 {
-+                        continue; // only press/release; clients do their own key repeat
-+                    }
-+                    let down = ev.value == 1;
 +                    match kind {
 +                        DevKind::Mouse => {
-+                            if down
-+                                && matches!(ev.code, BTN_LEFT | BTN_RIGHT | BTN_MIDDLE)
-+                                && *focus == KeyboardFocus::WayVR
-+                            {
++                            if self.handle_mouse(ev.type_, ev.code, ev.value, *focus) {
 +                                log::debug!("Physical mouse click: keyboard focus -> desktop");
 +                                self.release_all(wvr.as_deref_mut());
 +                                *focus = KeyboardFocus::PhysicalScreen;
 +                            }
 +                        }
 +                        DevKind::Keyboard => {
-+                            self.handle_key(ev.code, down, focus, wvr.as_deref_mut());
++                            if ev.type_ != EV_KEY || ev.value == 2 {
++                                continue; // press/release only; clients do their own key repeat
++                            }
++                            let was_wayvr = *focus == KeyboardFocus::WayVR;
++                            self.handle_key(ev.code, ev.value == 1, focus, wvr.as_deref_mut());
++                            if was_wayvr && *focus != KeyboardFocus::WayVR {
++                                self.release_mouse_buttons();
++                            }
 +                        }
 +                    }
 +                }
@@ -237,11 +429,15 @@ index 0000000..d0a3c48
 +        if !want_grab && !self.forwarded.is_empty() {
 +            self.release_all(wvr);
 +        }
-+        for dev in self
-+            .devices
-+            .iter_mut()
-+            .filter(|d| d.kind == DevKind::Keyboard && d.grabbed != want_grab)
-+        {
++        let forward_mouse = self.forward_mouse;
++        for (dev, want) in self.devices.iter_mut().filter_map(|d| {
++            let want = match d.kind {
++                DevKind::Keyboard => want_grab,
++                DevKind::Mouse => want_grab && forward_mouse,
++            };
++            (d.grabbed != want).then_some((d, want))
++        }) {
++            let want_grab = want;
 +            match dev.handle.grab(want_grab) {
 +                Ok(()) => {
 +                    dev.grabbed = want_grab;
@@ -253,6 +449,71 @@ index 0000000..d0a3c48
 +                }
 +                Err(e) => log::warn!("Could not change grab on {}: {e}", dev.name),
 +            }
++        }
++    }
++
++    /// Handle one event from a physical mouse. Returns true when the event
++    /// should hand keyboard focus back to the desktop.
++    fn handle_mouse(&mut self, type_: u16, code: u16, value: i32, focus: KeyboardFocus) -> bool {
++        if focus != KeyboardFocus::WayVR {
++            return false; // not grabbed: the desktop already received this
++        }
++
++        let button = match code {
++            BTN_LEFT => Some(PhysicalButton::Left),
++            BTN_RIGHT => Some(PhysicalButton::Right),
++            BTN_MIDDLE => Some(PhysicalButton::Middle),
++            _ => None,
++        };
++
++        if !self.forward_mouse {
++            // Keyboard-only mode: a click means "I'm back on the desktop".
++            return type_ == EV_KEY && value == 1 && button.is_some();
++        }
++
++        match (type_, code) {
++            (EV_KEY, _) if value != 2 => {
++                let Some(button) = button else { return false };
++                let pressed = value == 1;
++                if pressed {
++                    self.mouse_held.push(button);
++                } else if let Some(i) = self.mouse_held.iter().position(|b| *b == button) {
++                    self.mouse_held.remove(i);
++                } else {
++                    return false; // pressed before the grab: never sent to WayVR
++                }
++                self.mouse_events.push(PhysicalMouseEvent::Button { button, pressed });
++            }
++            (EV_REL, REL_X | REL_Y) => {
++                #[allow(clippy::cast_precision_loss)]
++                let d = value as f32;
++                let (dx, dy) = if code == REL_X { (d, 0.0) } else { (0.0, d) };
++                // Coalesce with a trailing motion event so one frame = one move.
++                if let Some(PhysicalMouseEvent::Motion { dx: px, dy: py }) =
++                    self.mouse_events.last_mut()
++                {
++                    *px += dx;
++                    *py += dy;
++                } else {
++                    self.mouse_events.push(PhysicalMouseEvent::Motion { dx, dy });
++                }
++            }
++            (EV_REL, REL_WHEEL | REL_HWHEEL) => {
++                #[allow(clippy::cast_precision_loss)]
++                let notches = value as f32 * WHEEL_NOTCH;
++                let (x, y) = if code == REL_WHEEL { (0.0, notches) } else { (notches, 0.0) };
++                self.mouse_events.push(PhysicalMouseEvent::Wheel { x, y });
++            }
++            _ => {}
++        }
++        false
++    }
++
++    /// Queue releases for any mouse buttons held inside WayVR, so nothing
++    /// stays stuck down when focus leaves.
++    fn release_mouse_buttons(&mut self) {
++        for button in std::mem::take(&mut self.mouse_held) {
++            self.mouse_events.push(PhysicalMouseEvent::Button { button, pressed: false });
 +        }
 +    }
 +
@@ -437,7 +698,7 @@ index 0000000..d0a3c48
 +
 +    #[test]
 +    fn forwards_keys_with_xkb_offset_while_focused() {
-+        let mut pk = PhysicalKeyboard::new();
++        let mut pk = PhysicalKeyboard::new(false);
 +        let mut focus = KeyboardFocus::WayVR;
 +        let mut wvr = test_server();
 +        pk.handle_key(A, true, &mut focus, Some(&mut wvr));
@@ -447,7 +708,7 @@ index 0000000..d0a3c48
 +
 +    #[test]
 +    fn ignores_keys_while_desktop_has_focus() {
-+        let mut pk = PhysicalKeyboard::new();
++        let mut pk = PhysicalKeyboard::new(false);
 +        let mut focus = KeyboardFocus::PhysicalScreen;
 +        let mut wvr = test_server();
 +        pk.handle_key(A, true, &mut focus, Some(&mut wvr));
@@ -456,7 +717,7 @@ index 0000000..d0a3c48
 +
 +    #[test]
 +    fn chord_releases_held_keys_and_returns_focus_to_desktop() {
-+        let mut pk = PhysicalKeyboard::new();
++        let mut pk = PhysicalKeyboard::new(false);
 +        let mut focus = KeyboardFocus::WayVR;
 +        let mut wvr = test_server();
 +        pk.handle_key(KEY_LEFTCTRL, true, &mut focus, Some(&mut wvr));
@@ -472,7 +733,7 @@ index 0000000..d0a3c48
 +
 +    #[test]
 +    fn chord_from_desktop_enters_wayvr_without_stray_releases() {
-+        let mut pk = PhysicalKeyboard::new();
++        let mut pk = PhysicalKeyboard::new(false);
 +        let mut focus = KeyboardFocus::PhysicalScreen;
 +        let mut wvr = test_server();
 +        pk.handle_key(KEY_LEFTCTRL, true, &mut focus, Some(&mut wvr));
@@ -488,19 +749,75 @@ index 0000000..d0a3c48
 +
 +    #[test]
 +    fn chord_does_nothing_without_a_wayvr_server() {
-+        let mut pk = PhysicalKeyboard::new();
++        let mut pk = PhysicalKeyboard::new(false);
 +        let mut focus = KeyboardFocus::PhysicalScreen;
 +        pk.handle_key::<Recorder>(KEY_LEFTCTRL, true, &mut focus, None);
 +        pk.handle_key::<Recorder>(KEY_LEFTALT, true, &mut focus, None);
 +        pk.handle_key::<Recorder>(KEY_ESC, true, &mut focus, None);
 +        assert_eq!(focus, KeyboardFocus::PhysicalScreen);
 +    }
++
++    const BTN_R: u16 = BTN_RIGHT;
++
++    #[test]
++    fn mouse_mode_queues_motion_buttons_and_wheel() {
++        let mut pk = PhysicalKeyboard::new(true);
++        let focus = KeyboardFocus::WayVR;
++        assert!(!pk.handle_mouse(EV_REL, REL_X, 5, focus));
++        assert!(!pk.handle_mouse(EV_REL, REL_Y, -3, focus));
++        assert!(!pk.handle_mouse(EV_KEY, BTN_R, 1, focus));
++        assert!(!pk.handle_mouse(EV_KEY, BTN_R, 0, focus));
++        assert!(!pk.handle_mouse(EV_REL, REL_WHEEL, 1, focus));
++        assert_eq!(
++            pk.take_mouse_events(),
++            [
++                PhysicalMouseEvent::Motion { dx: 5.0, dy: -3.0 },
++                PhysicalMouseEvent::Button { button: PhysicalButton::Right, pressed: true },
++                PhysicalMouseEvent::Button { button: PhysicalButton::Right, pressed: false },
++                PhysicalMouseEvent::Wheel { x: 0.0, y: WHEEL_NOTCH },
++            ]
++        );
++    }
++
++    #[test]
++    fn keyboard_only_mode_click_returns_to_desktop() {
++        let mut pk = PhysicalKeyboard::new(false);
++        let focus = KeyboardFocus::WayVR;
++        assert!(pk.handle_mouse(EV_KEY, BTN_LEFT, 1, focus));
++        assert!(pk.take_mouse_events().is_empty());
++    }
++
++    #[test]
++    fn mouse_ignored_while_desktop_has_focus() {
++        let mut pk = PhysicalKeyboard::new(true);
++        let focus = KeyboardFocus::PhysicalScreen;
++        assert!(!pk.handle_mouse(EV_KEY, BTN_LEFT, 1, focus));
++        assert!(!pk.handle_mouse(EV_REL, REL_X, 10, focus));
++        assert!(pk.take_mouse_events().is_empty());
++    }
++
++    #[test]
++    fn release_without_press_is_dropped_and_held_buttons_released_on_leave() {
++        let mut pk = PhysicalKeyboard::new(true);
++        let focus = KeyboardFocus::WayVR;
++        // Release of a button pressed before the grab never reaches WayVR.
++        pk.handle_mouse(EV_KEY, BTN_LEFT, 0, focus);
++        assert!(pk.take_mouse_events().is_empty());
++        // A button held when focus leaves gets a synthetic release.
++        pk.handle_mouse(EV_KEY, BTN_LEFT, 1, focus);
++        pk.take_mouse_events();
++        pk.release_mouse_buttons();
++        assert_eq!(
++            pk.take_mouse_events(),
++            [PhysicalMouseEvent::Button { button: PhysicalButton::Left, pressed: false }]
++        );
++    }
 +}
 diff --git a/wayvr/src/subsystem/input.rs b/wayvr/src/subsystem/input.rs
-index 3b8d82e..35e639f 100644
+index 3b8d82e..4f71ef6 100644
 --- a/wayvr/src/subsystem/input.rs
 +++ b/wayvr/src/subsystem/input.rs
-@@ -16,10 +16,11 @@ pub struct HidWrapper {
+@@ -16,10 +16,15 @@ pub struct HidWrapper {
      pub keyboard_focus: KeyboardFocus,
      pub inner: Box<dyn HidProvider>,
      pub keymap: Option<XkbKeymap>,
@@ -509,15 +826,20 @@ index 3b8d82e..35e639f 100644
  
  impl HidWrapper {
 -    pub fn new(method: InputEmulationMethod) -> (Self, Option<Toast>) {
-+    pub fn new(method: InputEmulationMethod, physical_keyboard: bool) -> (Self, Option<Toast>) {
++    pub fn new(
++        method: InputEmulationMethod,
++        physical_keyboard: bool,
++        physical_mouse: bool,
++    ) -> (Self, Option<Toast>) {
          let maybe_provider = match method {
              InputEmulationMethod::Uinput => hid::provider::uinput::initialize_uinput(),
              InputEmulationMethod::WlVirtual => hid::provider::wl_virtual::initialize_wl_virtual(),
-@@ -35,11 +36,20 @@ impl HidWrapper {
+@@ -35,11 +40,21 @@ impl HidWrapper {
                  keyboard_focus: KeyboardFocus::PhysicalScreen,
                  inner: provider,
                  keymap: None,
-+                physical: physical_keyboard.then(hid::physical::PhysicalKeyboard::new),
++                physical: physical_keyboard
++                    .then(|| hid::physical::PhysicalKeyboard::new(physical_mouse)),
              },
              toast,
          )
@@ -535,10 +857,10 @@ index 3b8d82e..35e639f 100644
          &self,
          wvr_server: Option<&mut WvrServerState>,
 diff --git a/wlx-common/src/config.rs b/wlx-common/src/config.rs
-index 289ba05..a2917ae 100644
+index 289ba05..9234656 100644
 --- a/wlx-common/src/config.rs
 +++ b/wlx-common/src/config.rs
-@@ -353,6 +353,11 @@ pub struct GeneralConfig {
+@@ -353,6 +353,16 @@ pub struct GeneralConfig {
  	#[serde(default)]
  	pub input_emulation_method: InputEmulationMethod,
  
@@ -547,9 +869,11 @@ index 289ba05..a2917ae 100644
 +	#[serde(default = "def_false")]
 +	pub physical_keyboard: bool,
 +
++	/// With `physical_keyboard`, also forward physical mice into the focused
++	/// WayVR window (motion, buttons incl. right-click, wheel).
++	#[serde(default = "def_false")]
++	pub physical_mouse: bool,
++
  	#[serde(default = "def_true")]
  	pub allow_sliding: bool,
  
--- 
-2.43.0
-
