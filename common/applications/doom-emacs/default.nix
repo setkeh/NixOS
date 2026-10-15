@@ -13,6 +13,15 @@
     doomDir = ./doom;
     emacs = pkgs.emacs-pgtk; # native Wayland
 
+    # ghostel (claude-code-ide's terminal backend) needs its compiled
+    # libghostty module, which a packages.el recipe wouldn't build; evil-ghostel
+    # is its Evil integration. Both come from etc/overlays/emacs-ghostel.nix,
+    # so a host using this module needs that overlay too.
+    extraPackages = epkgs: [
+      (pkgs.ghostelFor epkgs)
+      (pkgs.evilGhostelFor epkgs)
+    ];
+
     # Language servers for the +lsp modules in init.el, on Doom's PATH only.
     extraBinPackages = with pkgs; [
       ripgrep

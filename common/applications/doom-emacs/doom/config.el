@@ -140,8 +140,18 @@
 ;;(erc-tls :server "irc.oftc.net" :port 6697 :nick "setkeh")
 
 
+;; Evil in ghostel terminals. claude-code-ide sets ESC in its buffers to switch
+;; to normal state (claude-code-ide-ghostel-evil-escape), so ESC then SPC w
+;; changes pane; C-c C-r toggles sending ESC to Claude instead.
+(use-package! evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
+
 ;; Claude Code
 (use-package! claude-code-ide
   :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
   :config
+  ;; ghostel instead of vterm: vterm garbles Claude's screen when the window is
+  ;; resized or refocused. ghostel comes from nixpkgs (see default.nix).
+  (setq claude-code-ide-terminal-backend 'ghostel)
   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools

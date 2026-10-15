@@ -93,6 +93,9 @@
 
                 /* OpenRazer from nixos-unstable (see etc/overlays/openrazer.nix) */
                 (import ./etc/overlays/openrazer.nix inputs.nixpkgs-unstable)
+
+                /* ghostel for Doom's claude-code-ide (see etc/overlays/emacs-ghostel.nix) */
+                (import ./etc/overlays/emacs-ghostel.nix inputs.nixpkgs-unstable)
               ];
               config = {
                 allowUnfree = true;
