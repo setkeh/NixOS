@@ -60,6 +60,7 @@
     pkgs.xwayland-satellite
     pkgs.swaybg
     pkgs.pwvucontrol
+    pkgs.qpwgraph
     pkgs.xwayland-satellite
     pkgs.discord
     pkgs.tibia
