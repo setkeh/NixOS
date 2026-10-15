@@ -153,6 +153,12 @@
 ;; Claude's buffers are named *claude-code[...]*, so this doesn't touch them.
 (set-popup-rule! "^\\*ghostel" :size 0.3 :vslot -4 :select t :quit nil :ttl nil)
 
+;; Terminals run fish, like alacritty, not the bash login shell from $SHELL:
+;; same prompt (which shows nix shell / develop) and the same history.
+;; Claude's ghostel buffers run claude directly, so they aren't affected.
+(setq ghostel-shell "/etc/profiles/per-user/setkeh/bin/fish"
+      vterm-shell "/etc/profiles/per-user/setkeh/bin/fish")
+
 ;; SPC o t toggles the ghostel split, replacing Doom's vterm toggle there.
 (defun +ghostel/toggle (&optional arg)
   "Show or hide the ghostel terminal split; the shell keeps running when hidden.
