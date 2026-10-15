@@ -55,16 +55,9 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(after! evil
-  (map! :map evil-window-map
-        (:leader
-         (:prefix ("w" . "Select Window")
-          :n :desc "Left"  "<left>" 'evil-window-left
-          :n :desc "Up"    "<up>" 'evil-window-up
-          :n :desc "Down"  "<down>" 'evil-window-down
-          :n :desc "Right" "<right>" 'evil-window-right
-          ))
-        ))
+;; Window switching: SPC w <arrow> (and C-w <arrow>) come from evil's own
+;; evil-window-map, which Doom binds to SPC w. Rebinding the "w" prefix under
+;; :leader here would replace that whole map, so don't.
 
 ;; Bookmark clipping
 (after! org

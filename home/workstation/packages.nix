@@ -5,6 +5,7 @@
     pkgs.vim
     pkgs.gemini-cli
     pkgs.xclip
+    pkgs.wl-clipboard  # wl-paste: native Wayland clipboard; xclip can't see images copied under niri
     pkgs.feh
     pkgs.nerd-fonts.space-mono
     pkgs.imagemagick 
