@@ -106,6 +106,13 @@
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  /* Build parallelism by memory, not core count. The default (max-jobs auto, cores 0)
+     means 48 x 48 on this Threadripper: one C++ derivation ran -j48 at ~1.1 GB per
+     compiler and swapped the desktop to a standstill (2026-10-05). Worst case here is
+     2 x 16 = 32 compilers, ~35 GB, which leaves room for the desktop in 62 GB. */
+  nix.settings.max-jobs = 2;
+  nix.settings.cores = 16;
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
   nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
