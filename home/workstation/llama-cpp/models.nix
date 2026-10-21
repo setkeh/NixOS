@@ -88,6 +88,62 @@ let
         log-verbosity = 4;
       };
     };
+
+    # Coding MoE: 30B total, 3B active. Text only. 17.3 GiB of weights plus ~52 KiB of q8 KV
+    # per token (48 layers x 4 KV heads x 128) would overrun the card at 64k, so the experts of
+    # 6 layers (~2 GiB) stay in system RAM; with 3B active that costs little speed.
+    "qwen3-coder-30b" = {
+      repo = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF";
+      revision = "b17cb02dd882d5b6ab62fc777ad2995f19668350";
+      shards = [
+        {
+          file = "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf";
+          hash = "sha256-+tw+X41Cv36JSnhbBQguR9ruTfJmgDiYF+IJMFbwiK0=";
+        }
+      ];
+      settings = {
+        ctx-size = 65536;
+        n-gpu-layers = 99;
+        n-cpu-moe = 6;
+        flash-attn = true;
+        cache-type-k = "q8_0";
+        cache-type-v = "q8_0";
+        load-mode = "auto";
+        # Model card defaults; requests can still override them.
+        temp = 0.7;
+        top-p = 0.8;
+        top-k = 20;
+        repeat-penalty = 1.05;
+      };
+    };
+
+    # Gemma 4 MoE: 26B total, 4B active, 15.8 GiB of weights. Sliding-window attention on most
+    # layers keeps the KV cache small, so it stays at the default f16 and flash-attn is left on
+    # auto (Gemma's wide global-layer heads are not a given on the ROCm flash-attn path).
+    "gemma4-26b" = {
+      repo = "unsloth/gemma-4-26B-A4B-it-GGUF";
+      revision = "c099eb48e663fd284577b04978a94ffccb261841";
+      shards = [
+        {
+          file = "gemma-4-26B-A4B-it-UD-Q4_K_XL.gguf";
+          hash = "sha256-73KMjgwzf9EGe5R68Abjip7yQZ5W/s7U/Sm0vwY24ww=";
+        }
+      ];
+      mmproj = {
+        file = "mmproj-F16.gguf";
+        hash = "sha256-QYpthyMGfNcSI1+su8XLpsj7vUE/wSktKqzloCfVpC8=";
+      };
+      settings = {
+        ctx-size = 65536;
+        n-gpu-layers = 99;
+        # Same VRAM margin as the 27B: the projector stays on the CPU.
+        no-mmproj-offload = true;
+        load-mode = "auto";
+        temp = 1.0;
+        top-p = 0.95;
+        top-k = 64;
+      };
+    };
   };
 
   # Settings applied to every model via the `[*]` section.
