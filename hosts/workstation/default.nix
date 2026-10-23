@@ -18,7 +18,12 @@
   boot = {
     /* Use Latest Kernel */
     kernelPackages = pkgs.linuxPackages_latest;
-
+    kernelModules = [ "v4l2loopback" ];
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    extraModprobeConfig = ''
+        options v4l2loopback exclusive_caps=1 card_label="Pixel 5 Webcam"
+    '';
+    
     /* Configure Loader */
     loader = {
       efi.canTouchEfiVariables = true;
