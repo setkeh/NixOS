@@ -96,6 +96,9 @@
 
                 /* ghostel for Doom's claude-code-ide (see etc/overlays/emacs-ghostel.nix) */
                 (import ./etc/overlays/emacs-ghostel.nix inputs.nixpkgs-unstable)
+
+                /* NDI SDK at the version NDI currently serves (see etc/overlays/ndi.nix) */
+                (import ./etc/overlays/ndi.nix)
               ];
               config = {
                 allowUnfree = true;

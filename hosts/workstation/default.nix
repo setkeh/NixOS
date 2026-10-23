@@ -241,6 +241,30 @@
   programs.obs-studio = {
     enable = true;
     enableVirtualCamera = true;
+    /* NDI in and out (DistroAV, formerly obs-ndi); pulls in the unfree NDI 6 runtime. */
+    plugins = [ pkgs.obs-studio-plugins.distroav ];
+  };
+
+  /* NDI discovery is mDNS, which libndi does through avahi on Linux. */
+  services.avahi = {
+    enable = true;
+    openFirewall = true;  /* UDP 5353 */
+  };
+
+  /* NDI stream ports (docs.ndi.video, "NDI Related Network Ports"): 5960 source query,
+     5961+ one per stream, 6960+ receiving and 7960+ sending in multi-TCP/UDP modes.
+     Thirty of each is far more than a few streams use. */
+  networking.firewall = {
+    allowedTCPPortRanges = [
+      { from = 5960; to = 5990; }
+      { from = 6960; to = 6990; }
+      { from = 7960; to = 7990; }
+    ];
+    allowedUDPPortRanges = [
+      { from = 5960; to = 5990; }
+      { from = 6960; to = 6990; }
+      { from = 7960; to = 7990; }
+    ];
   };
 
   /* Allow unfree packages */
