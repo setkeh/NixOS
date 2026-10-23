@@ -78,7 +78,8 @@
 ;; where to hook in. Show that project (only that one) in Treemacs without
 ;; moving focus, then prompt for a file as Doom does by default.
 (after! treemacs
-  (setq treemacs-show-hidden-files nil))
+  (setq treemacs-show-hidden-files t))
+  (setq treemacs-hide-dot-git-directory nil)
 
 (setq +workspaces-switch-project-function
       (lambda (dir)
