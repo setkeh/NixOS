@@ -236,6 +236,13 @@
   };
   programs.gamemode.enable = true;
 
+  /* OBS lives here rather than in home packages: the virtual camera needs the
+     v4l2loopback kernel module, which only the system can load. */
+  programs.obs-studio = {
+    enable = true;
+    enableVirtualCamera = true;
+  };
+
   /* Allow unfree packages */
   nixpkgs.config.allowUnfree = true;
 

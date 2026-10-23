@@ -9,7 +9,6 @@
     pkgs.feh
     pkgs.nerd-fonts.space-mono
     pkgs.imagemagick 
-    pkgs.obs-studio
     pkgs.slack
     pkgs.unzip
     pkgs.gnupg
@@ -75,5 +74,6 @@
     pkgs.kicad
     pkgs.openscad
     pkgs.polychromatic
+    pkgs.jamesdsp
   ];
 }
