@@ -75,5 +75,7 @@
     pkgs.openscad
     pkgs.polychromatic
     pkgs.jamesdsp
+    pkgs.bitcoin
+    pkgs.brows3
   ];
 }
