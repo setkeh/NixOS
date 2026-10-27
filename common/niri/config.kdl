@@ -73,7 +73,10 @@ hotkey-overlay {
 }
 
 environment {
-    XDG_CURRENT_DESKTOP "niri"
+    // ":GNOME" makes Electron/Chromium apps use gnome-keyring (libsecret); with
+    // plain "niri" they fall back to a weak plain-text store. Portals still read
+    // niri-portals.conf first.
+    XDG_CURRENT_DESKTOP "niri:GNOME"
     DISPLAY null
     XDG_SESSION_TYPE "wayland"
     QT_QPA_PLATFORM "wayland"

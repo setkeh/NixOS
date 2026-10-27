@@ -26,10 +26,22 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-    "/mnt/dev-disk" = {
-      device = "/dev/disk/by-uuid/CA5E410B5E40F22D";
-      fsType = "ntfs-3g";
-      options = [ "uid=1000" "gid=100" ];
+    /* Nix store on the 980 PRO (nvme1n1p1, LUKS + XFS), off the SATA disk that also
+       holds swap. neededForBoot: the system can't start without its store. */
+    "/nix" = {
+      device = "/dev/mapper/store";
+      fsType = "xfs";
+      neededForBoot = true;
+      options = [ "noatime" ];
+    };
+
+    /* ~/Development on the same NVMe (nvme1n1p2, LUKS + XFS). Ownership lives on the
+       filesystem (setkeh:users on its top directory), not in mount options.
+       From Windows: wsl --mount --bare, then cryptsetup + mount -t xfs in WSL. */
+    "/home/setkeh/Development" = {
+      device = "/dev/mapper/dev";
+      fsType = "xfs";
+      options = [ "noatime" ];
     };
 
     "/mnt/backup-disk" = {
@@ -57,6 +69,17 @@
   };
 
   boot.initrd.luks.devices."luks-a6074c99-c7c5-43a6-b15b-8d64317ab374".device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
+
+  /* NVMe (nvme1n1). Unlocked in the initrd with the root disk; a passphrase entered
+     once is tried on these too (reusePassphrases), so matching passphrases mean one prompt. */
+  boot.initrd.luks.devices.store = {
+    device = "/dev/disk/by-uuid/56748ea0-1432-4d98-9335-0a41bf7647a0";
+    bypassWorkqueues = true;
+  };
+  boot.initrd.luks.devices.dev = {
+    device = "/dev/disk/by-uuid/e6c8c375-dbbf-4684-afbb-f486d6e7d187";
+    bypassWorkqueues = true;
+  };
 
   swapDevices = [{
     device = "/dev/disk/by-partuuid/dd090197-b8da-4702-ab8a-a24fdb7149a8";

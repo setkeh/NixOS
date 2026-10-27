@@ -12,6 +12,9 @@
     ../../common/applications/fish/plugins.nix
     ../../common/applications/fish/functions.nix
 
+    /* Doom Emacs */
+    ../../common/applications/doom-emacs
+
     /* Alacritty Terminal */
     ../../common/applications/alacritty/default.nix
 

@@ -9,6 +9,7 @@
     ./pipewire
     ./printing-client.nix
     ./1password
+    ./vr
   ];
 
   /* Bootloader. */
@@ -17,7 +18,12 @@
   boot = {
     /* Use Latest Kernel */
     kernelPackages = pkgs.linuxPackages_latest;
-
+    kernelModules = [ "v4l2loopback" ];
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    extraModprobeConfig = ''
+        options v4l2loopback exclusive_caps=1 card_label="Pixel 5 Webcam"
+    '';
+    
     /* Configure Loader */
     loader = {
       efi.canTouchEfiVariables = true;
@@ -105,6 +111,13 @@
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  /* Build parallelism by memory, not core count. The default (max-jobs auto, cores 0)
+     means 48 x 48 on this Threadripper: one C++ derivation ran -j48 at ~1.1 GB per
+     compiler and swapped the desktop to a standstill (2026-10-05). Worst case here is
+     2 x 16 = 32 compilers, ~35 GB, which leaves room for the desktop in 62 GB. */
+  nix.settings.max-jobs = 2;
+  nix.settings.cores = 16;
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
   nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
@@ -227,6 +240,37 @@
     gamescopeSession.enable = true;
   };
   programs.gamemode.enable = true;
+
+  /* OBS lives here rather than in home packages: the virtual camera needs the
+     v4l2loopback kernel module, which only the system can load. */
+  programs.obs-studio = {
+    enable = true;
+    enableVirtualCamera = true;
+    /* NDI in and out (DistroAV, formerly obs-ndi); pulls in the unfree NDI 6 runtime. */
+    plugins = [ pkgs.obs-studio-plugins.distroav ];
+  };
+
+  /* NDI discovery is mDNS, which libndi does through avahi on Linux. */
+  services.avahi = {
+    enable = true;
+    openFirewall = true;  /* UDP 5353 */
+  };
+
+  /* NDI stream ports (docs.ndi.video, "NDI Related Network Ports"): 5960 source query,
+     5961+ one per stream, 6960+ receiving and 7960+ sending in multi-TCP/UDP modes.
+     Thirty of each is far more than a few streams use. */
+  networking.firewall = {
+    allowedTCPPortRanges = [
+      { from = 5960; to = 5990; }
+      { from = 6960; to = 6990; }
+      { from = 7960; to = 7990; }
+    ];
+    allowedUDPPortRanges = [
+      { from = 5960; to = 5990; }
+      { from = 6960; to = 6990; }
+      { from = 7960; to = 7990; }
+    ];
+  };
 
   /* Allow unfree packages */
   nixpkgs.config.allowUnfree = true;

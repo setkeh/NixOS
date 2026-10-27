@@ -32,9 +32,10 @@
     xdg.portal = {
       enable = true;
       # Tells xdg-open to rely explicitly on these portal backends
-      xdgOpenUsePortal = true; 
-  
-      extraPortals = [ 
+      xdgOpenUsePortal = true;
+
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gnome
         pkgs.kdePackages.xdg-desktop-portal-kde
         pkgs.xdg-desktop-portal-gtk # Highly recommended fallback for GTK/Wayland environments
       ];
@@ -45,6 +46,11 @@
     
         # 2. Keep your preferred file picker rule
         "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+
+        # 3. Screen and window capture (OBS, browsers, Discord). niri implements the Mutter
+        #    screencast API that only the GNOME portal speaks; kde and gtk can't capture here.
+        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
       };
     };
 }

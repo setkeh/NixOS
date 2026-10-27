@@ -5,10 +5,10 @@
     pkgs.vim
     pkgs.gemini-cli
     pkgs.xclip
+    pkgs.wl-clipboard  # wl-paste: native Wayland clipboard; xclip can't see images copied under niri
     pkgs.feh
     pkgs.nerd-fonts.space-mono
     pkgs.imagemagick 
-    pkgs.obs-studio
     pkgs.slack
     pkgs.unzip
     pkgs.gnupg
@@ -59,6 +59,7 @@
     pkgs.xwayland-satellite
     pkgs.swaybg
     pkgs.pwvucontrol
+    pkgs.qpwgraph
     pkgs.xwayland-satellite
     pkgs.discord
     pkgs.tibia
@@ -73,5 +74,8 @@
     pkgs.kicad
     pkgs.openscad
     pkgs.polychromatic
+    pkgs.jamesdsp
+    pkgs.bitcoin
+    pkgs.brows3
   ];
 }

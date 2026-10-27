@@ -55,16 +55,9 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(after! evil
-  (map! :map evil-window-map
-        (:leader
-         (:prefix ("w" . "Select Window")
-          :n :desc "Left"  "<left>" 'evil-window-left
-          :n :desc "Up"    "<up>" 'evil-window-up
-          :n :desc "Down"  "<down>" 'evil-window-down
-          :n :desc "Right" "<right>" 'evil-window-right
-          ))
-        ))
+;; Window switching: SPC w <arrow> (and C-w <arrow>) come from evil's own
+;; evil-window-map, which Doom binds to SPC w. Rebinding the "w" prefix under
+;; :leader here would replace that whole map, so don't.
 
 ;; Bookmark clipping
 (after! org
@@ -74,17 +67,26 @@
 )
 
 (setq projectile-project-search-path '(
-                                       "~/git"
-                                       "~/go/src/github.com/setkeh/"
-                                       "~/go/src/github.com/thesetkehproject/"
-                                       "~/storage/org"
-                                       "~/storage/WorkStuff"
-                                       "~/storage/HackTheBox"
-                                       "~/.doom.d"
-                                       "~/.config"
-                                       "~/.esp"
-                                       "~/rust"
+                                       "~/.config/home-manager"
+                                       "~/SecondMind"
+                                       ("~/Development" . 1)
                                        ))
+
+;; Projectile + Auto TreeMacs
+;; Doom's :ui workspaces takes over projectile's switch action and then calls
+;; +workspaces-switch-project-function with the new project's root, so that is
+;; where to hook in. Show that project (only that one) in Treemacs without
+;; moving focus, then prompt for a file as Doom does by default.
+(after! treemacs
+  (setq treemacs-show-hidden-files t))
+  (setq treemacs-hide-dot-git-directory nil)
+
+(setq +workspaces-switch-project-function
+      (lambda (dir)
+        (let ((default-directory dir))
+          (save-selected-window
+            (treemacs-add-and-display-current-project-exclusively)))
+        (doom-project-find-file dir)))
 
 ;; Go - lsp-mode
 ;; Set up before-save hooks to format buffer and add/delete imports.
@@ -137,3 +139,47 @@
 
 ;;(erc-tls :server "irc.libera.chat" :port 6697 :nick "setkeh")
 ;;(erc-tls :server "irc.oftc.net" :port 6697 :nick "setkeh")
+
+
+;; Evil in ghostel terminals. claude-code-ide sets ESC in its buffers to switch
+;; to normal state (claude-code-ide-ghostel-evil-escape), so ESC then SPC w
+;; changes pane; C-c C-r toggles sending ESC to Claude instead.
+(use-package! evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
+
+;; Open ghostel terminals in a split along the bottom instead of over the
+;; editor, like Doom's vterm (SPC o t). Unlike vterm's rule (:ttl 0), closing the
+;; split keeps the shell; running ghostel again brings the same one back.
+;; Claude's buffers are named *claude-code[...]*, so this doesn't touch them.
+(set-popup-rule! "^\\*ghostel" :size 0.3 :vslot -4 :select t :quit nil :ttl nil)
+
+;; Terminals run fish, like alacritty, not the bash login shell from $SHELL:
+;; same prompt (which shows nix shell / develop) and the same history.
+;; Claude's ghostel buffers run claude directly, so they aren't affected.
+(setq ghostel-shell "/etc/profiles/per-user/setkeh/bin/fish"
+      vterm-shell "/etc/profiles/per-user/setkeh/bin/fish")
+
+;; SPC o t toggles the ghostel split, replacing Doom's vterm toggle there.
+(defun +ghostel/toggle (&optional arg)
+  "Show or hide the ghostel terminal split; the shell keeps running when hidden.
+With a prefix ARG, hand it to `ghostel' instead: \\[universal-argument] opens
+another terminal."
+  (interactive "P")
+  (if-let* ((win (and (not arg)
+                      (seq-find (lambda (w)
+                                  (string-prefix-p "*ghostel" (buffer-name (window-buffer w))))
+                                (window-list)))))
+      (delete-window win)
+    (ghostel arg)))
+
+(map! :leader :desc "Toggle ghostel" "o t" #'+ghostel/toggle)
+
+;; Claude Code
+(use-package! claude-code-ide
+  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+  :config
+  ;; ghostel instead of vterm: vterm garbles Claude's screen when the window is
+  ;; resized or refocused. ghostel comes from nixpkgs (see default.nix).
+  (setq claude-code-ide-terminal-backend 'ghostel)
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
