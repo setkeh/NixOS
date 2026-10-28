@@ -183,3 +183,43 @@ another terminal."
   ;; resized or refocused. ghostel comes from nixpkgs (see default.nix).
   (setq claude-code-ide-terminal-backend 'ghostel)
   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+
+;;; Jinja templates (SaltStack)
+;; foo.yaml.jinja, pg_hba.conf.jinja, ...: drop the Jinja suffix and pick the
+;; mode from what's left, so the file indents as YAML/conf/etc. The trailing t
+;; tells set-auto-mode to strip the match and search again. This also wins over
+;; the ansible module's jinja2-mode for .j2, which is HTML-based and reindents
+;; YAML templates badly.
+(add-to-list 'auto-mode-alist '("\\.\\(?:jinja2?\\|j2\\)\\'" nil t))
+
+;; Jinja highlighting layered over whatever mode the file got.
+(defvar +jinja-font-lock-keywords
+  `(("{#\\(?:.\\|\n\\)*?#}" 0 'font-lock-comment-face t)
+    ("\\({%-?\\|-?%}\\|{{-?\\|-?}}\\)" 1 'font-lock-preprocessor-face t)
+    (,(concat "{%-?\\s-*\\(" (regexp-opt '("if" "elif" "else" "endif" "for" "endfor"
+                                            "set" "endset" "macro" "endmacro" "call" "endcall"
+                                            "block" "endblock" "filter" "endfilter" "raw" "endraw"
+                                            "with" "endwith" "import" "from" "include" "load_yaml"
+                                            "load_json" "load_text" "import_yaml" "import_json")
+                                          'words)
+              "\\)")
+     1 'font-lock-keyword-face t)
+    ("{{-?\\s-*\\(.*?\\)\\s-*-?}}" 1 'font-lock-variable-name-face t)))
+
+(define-minor-mode +jinja-highlight-mode
+  "Highlight Jinja tags on top of the buffer's own major mode."
+  :lighter nil
+  (if +jinja-highlight-mode
+      (progn (setq-local font-lock-multiline t)  ; {# ... #} spans lines
+             (font-lock-add-keywords nil +jinja-font-lock-keywords 'append))
+    (font-lock-remove-keywords nil +jinja-font-lock-keywords))
+  (font-lock-flush))
+
+(defun +jinja-maybe-highlight-h ()
+  (when (and buffer-file-name
+             (string-match-p "\\.\\(?:jinja2?\\|j2\\)\\'" buffer-file-name))
+    (+jinja-highlight-mode +1)))
+(add-hook 'find-file-hook #'+jinja-maybe-highlight-h)
+;; salt-mode has its own Jinja support through mmm-mode, but it is off unless
+;; mmm-mode is enabled; this gives .sls the same highlighting as the templates.
+(add-hook 'salt-mode-hook #'+jinja-highlight-mode)
