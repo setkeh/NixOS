@@ -3,6 +3,17 @@
 {
   programs.fish.enable = true;
 
+  # ls colours. GNU's defaults paint world-writable directories blue on a green
+  # background, which is unreadable, and every path on an NTFS mount is 0777. Keep
+  # them bold blue like ordinary directories, with the sticky variant underlined.
+  programs.dircolors = {
+    enable = true;
+    settings = {
+      OTHER_WRITABLE = "01;34";
+      STICKY_OTHER_WRITABLE = "01;04;34";
+    };
+  };
+
     # Starship Prompt
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.starship.enable
   programs.starship.enable = true;

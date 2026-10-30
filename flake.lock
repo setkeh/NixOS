@@ -455,11 +455,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1786821798,
-        "narHash": "sha256-+x/KccNwjQDTtTqGZZd9uPiaCOdwIgZrA2KarSaRUms=",
+        "lastModified": 1793104415,
+        "narHash": "sha256-FUlDZgHlXiDXdEkxHUFx/2fz5Lh9j0FwWECyJZktWBg=",
         "owner": "setkeh",
         "repo": "nixpkgs-channel",
-        "rev": "182f7f2430b6fddd7c3a9d4eadceb1cb5e8edf8d",
+        "rev": "2c1a0ef02414e92b547619c4b4dad3c8e08fb39a",
         "type": "github"
       },
       "original": {
