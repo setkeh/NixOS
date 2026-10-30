@@ -119,6 +119,10 @@
                   owner = config.users.users.setkeh.name;
                   path = "/home/setkeh/.config/fish/conf.d/alias.fish";
                 };
+                /* Read by the Home Manager restic backup (common/backup). Decrypted here
+                   because HM sops runs as setkeh and has no key for this file. */
+                "workstation/restic/repository".owner = config.users.users.setkeh.name;
+                "workstation/restic/password".owner = config.users.users.setkeh.name;
               };
             };
           })

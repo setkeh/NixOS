@@ -27,6 +27,9 @@
     /* Btop */
     ../../common/applications/btop
 
+    /* Restic backup of ~ to the NAS */
+    ../../common/backup
+
     /* Wayland / Niri WM Config */
     ./mako.nix
     ./niri.nix
@@ -104,6 +107,8 @@
     "x-scheme-handler/unknown" = "vivaldi-stable.desktop";
   };
   };
+
+  setkeh.backup.enable = true;
 
   # Basic user info
   home.stateVersion = "26.05";
