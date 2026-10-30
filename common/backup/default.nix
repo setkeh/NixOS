@@ -39,6 +39,12 @@ in {
           "!${home}/.local"
           "${home}/.local/*"
           "!${home}/.local/bin"
+          # Same trick for the Bitcoin Core datadir: the 430 GB chain stays out, but the
+          # wallets and the node's settings are irreplaceable.
+          "!${home}/.bitcoin"
+          "${home}/.bitcoin/*"
+          "!${home}/.bitcoin/settings.json"
+          "!${home}/.bitcoin/wallets"
 
           "${home}/Downloads"
           "${home}/Development"
