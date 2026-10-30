@@ -30,12 +30,22 @@ in {
         # Everything here is either backed up some other way or can be rebuilt.
         # Patterns without a slash match that name at any depth.
         exclude = [
-          "${home}/.cache"
-          "${home}/.local/share/Steam"
-          "${home}/.steam"
-          "${home}/.local/share/Trash"
+          # Every dotfile and dot-directory in ~ (this covers .cache, .steam, Steam and
+          # Trash under .local/share, and the 430 GB .bitcoin), except ~/.local/bin, which
+          # holds the hand-written MCP scripts. restic can't re-include anything under an
+          # excluded directory, so .local is let through and its contents are excluded
+          # instead, then .local/bin is negated back in.
+          "${home}/.*"
+          "!${home}/.local"
+          "${home}/.local/*"
+          "!${home}/.local/bin"
+
           "${home}/Downloads"
           "${home}/Development"
+          "${home}/Games"
+          # Mostly model weights, re-downloadable.
+          "${home}/llm-experiments"
+          "${home}/ComfyUI"
           "node_modules"
           "target"
           ".direnv"
