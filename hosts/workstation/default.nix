@@ -183,6 +183,10 @@
     extraGroups = [ "networkmanager" "wheel" "video" "render" "kvm" "dialout" "uucp" "onepassword" "onepassword-cli" "openrazer" ];
   };
 
+  /* Start the user manager at boot so user timers (the hourly restic backup) run
+     without a login session. */
+  users.users.setkeh.linger = true;
+
   hardware.openrazer.enable = true;
 
   /* These packages to make yubikey work */

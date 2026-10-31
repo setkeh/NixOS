@@ -19,15 +19,19 @@ input {
     // focus-follows-mouse
 }
 
+output "DP-1" {
+position x=0 y=0
+}
+
 // Setup Workspaces For Display DP-2
 workspace "Common" {
-    open-on-output "DP-2"
+    open-on-output "DP-1"
 }
 workspace "ADE-Devel" {
-    open-on-output "DP-2"
+    open-on-output "DP-1"
 }
 workspace "OzRust Devel" {
-    open-on-output "DP-2"
+    open-on-output "DP-1"
 }
 
 // Setup Workspaces For Display HDMI-A-1
