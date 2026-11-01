@@ -25,6 +25,9 @@
     ./mako.nix
     ./niri.nix
     ./waybar
+
+    /* Obsidian */
+    ../../common/obsidian
   ];
 
   # Enable X Compositing

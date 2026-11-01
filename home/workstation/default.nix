@@ -59,6 +59,9 @@
 
     /* Direnv */
     ./direnv
+
+    /* Obsidian */
+    ../../common/obsidian
   ];
 
   xdg.configFile={
