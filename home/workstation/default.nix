@@ -41,9 +41,6 @@
     /* Lan-Mouse */
     ./lan-mouse
 
-    /* Obsidian */
-    ./obsidian
-
     /* Sandboxes */
     ./sandboxes/ollama.nix
 
