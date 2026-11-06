@@ -37,7 +37,7 @@ in {
       Description = "ComfyUI server (ROCm)";
     };
     Service = {
-      ExecStart = "${lib.getExe pkgs.comfyui-rocm} --base-directory ${dataDir} --port ${toString port} --enable-manager";
+      ExecStart = "${lib.getExe pkgs.comfyui-rocm} --base-directory ${dataDir} --port ${toString port} --enable-manager --use-pytorch-cross-attention";
       Restart = "on-failure";
     };
     # No Install section: started by the launcher, never at login.
