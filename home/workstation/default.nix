@@ -18,6 +18,9 @@
     /* Alacritty Terminal */
     ../../common/applications/alacritty/default.nix
 
+    /* Kitty Terminal */
+    ../../common/kitty
+
     /* Tmux Config */
     ../../common/applications/tmux/e7250.nix
 
@@ -85,6 +88,10 @@
       settings = {
         font.size = lib.mkForce 8.0;
       };
+    };
+
+    kitty = {
+      font.size = lib.mkForce 8.0;
     };
 
     btop = {

@@ -15,6 +15,9 @@
     /* Alacritty Terminal */
     ../../common/applications/alacritty/default.nix
 
+    /* Kitty Terminal */
+    ../../common/kitty
+
     /* Tmux Config */
     ../../common/applications/tmux/e7250.nix
 
