@@ -24,13 +24,22 @@ position x=0 y=0
 }
 
 // Setup Workspaces For Display DP-2
-workspace "Common" {
+workspace "Shell" {
+    open-on-output "DP-1"
+}
+workspace "Agents" {
     open-on-output "DP-1"
 }
 workspace "ADE-Devel" {
     open-on-output "DP-1"
 }
 workspace "OzRust Devel" {
+    open-on-output "DP-1"
+}
+workspace "Audio" {
+    open-on-output "DP-1"
+}
+workspace "Gaming" {
     open-on-output "DP-1"
 }
 
@@ -93,6 +102,11 @@ window-rule {
     match app-id="steam_app_default"
     opacity 1.0
     open-floating false
+}
+
+window-rule {
+    match app-id="com.moonlight_stream.Moonlight"
+    open-on-workspace "Gaming"
 }
 
 // Image viewing
