@@ -79,5 +79,8 @@
     pkgs.brows3
     pkgs.swayimg #ImageViwer
     pkgs.viu #kitty Cli Image Viewer
+    pkgs.fzf
+    pkgs.eza
+    pkgs.ripgrep
   ];
 }
