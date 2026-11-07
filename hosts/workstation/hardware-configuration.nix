@@ -68,23 +68,35 @@
     };
   };
 
-  boot.initrd.luks.devices."luks-a6074c99-c7c5-43a6-b15b-8d64317ab374".device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
+  boot.initrd.luks.devices = {
+    "luks-a6074c99-c7c5-43a6-b15b-8d64317ab374" = {
+      device = "/dev/disk/by-uuid/a6074c99-c7c5-43a6-b15b-8d64317ab374";
+      bypassWorkqueues = true;
+      allowDiscards = true;
+    };
 
-  /* NVMe (nvme1n1). Unlocked in the initrd with the root disk; a passphrase entered
+    /* NVMe (nvme1n1). Unlocked in the initrd with the root disk; a passphrase entered
      once is tried on these too (reusePassphrases), so matching passphrases mean one prompt. */
-  boot.initrd.luks.devices.store = {
-    device = "/dev/disk/by-uuid/56748ea0-1432-4d98-9335-0a41bf7647a0";
-    bypassWorkqueues = true;
-  };
-  boot.initrd.luks.devices.dev = {
-    device = "/dev/disk/by-uuid/e6c8c375-dbbf-4684-afbb-f486d6e7d187";
-    bypassWorkqueues = true;
-    allowDiscards = true;
+    store = {
+      device = "/dev/disk/by-uuid/56748ea0-1432-4d98-9335-0a41bf7647a0";
+      bypassWorkqueues = true;
+      allowDiscards = true;
+    };
+
+    dev = {
+      device = "/dev/disk/by-uuid/e6c8c375-dbbf-4684-afbb-f486d6e7d187";
+      bypassWorkqueues = true;
+      allowDiscards = true;
+    };
   };
 
   swapDevices = [{
     device = "/dev/disk/by-partuuid/dd090197-b8da-4702-ab8a-a24fdb7149a8";
-    randomEncryption.enable = true;
+    randomEncryption = {
+      enable = true;
+      allowDiscards = true;
+    };
+    discardPolicy = "both"; 
   }];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
