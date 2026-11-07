@@ -120,4 +120,8 @@ binds {
     Mod+Space repeat=false hotkey-overlay-title="Aegis talk" {
         spawn "/home/setkeh/Development/Aegis-AIOS/app/build/linux/x64/debug/bundle/aegis_shell" "--toggle-hud";
     }
+
+    // Allow Reordering Workspaces
+    Mod+Shift+Down { move-workspace-down; }
+    Mod+Shift+Up   { move-workspace-up; }
 }
