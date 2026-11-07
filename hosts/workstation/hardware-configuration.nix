@@ -79,6 +79,7 @@
   boot.initrd.luks.devices.dev = {
     device = "/dev/disk/by-uuid/e6c8c375-dbbf-4684-afbb-f486d6e7d187";
     bypassWorkqueues = true;
+    allowDiscards = true;
   };
 
   swapDevices = [{
