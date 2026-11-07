@@ -77,5 +77,6 @@
     pkgs.jamesdsp
     pkgs.bitcoin
     pkgs.brows3
+    pkgs.swayimg
   ];
 }
