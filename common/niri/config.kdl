@@ -176,7 +176,7 @@ window-rule {
 
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+Return { spawn "alacritty"; }
+    Mod+Return { spawn "kitty"; }
     Mod+W { spawn "fuzzel"; }
     Mod+P { spawn "1password"; }
     Mod+T { spawn "alacritty"; }
