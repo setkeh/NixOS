@@ -23,6 +23,14 @@
     extraModprobeConfig = ''
         options v4l2loopback exclusive_caps=1 card_label="Pixel 5 Webcam"
     '';
+
+    kernel = {
+      sysctl = {
+        "vm.dirty_background_bytes" = 268435456;   # 256 MiB
+        "vm.dirty_bytes"            = 1073741824;  # 1 GiB
+        "kernel.task_delayacct"     = 1;
+      };
+    };
     
     /* Configure Loader */
     loader = {
@@ -213,51 +221,78 @@
 
   /* Claude Desktop requires nix-ld */
   programs.nix-ld.enable = true;
-  systemd.tmpfiles.rules = [
-    "d /usr/share/OVMF 0755 root root -"
-    "L+ /usr/share/OVMF/OVMF_CODE.fd    - - - - ${pkgs.OVMF.firmware}"
-    "L+ /usr/share/OVMF/OVMF_CODE_4M.fd - - - - ${pkgs.OVMF.firmware}"
-    "L+ /usr/share/OVMF/OVMF_VARS.fd    - - - - ${pkgs.OVMF.variables}"
-    "L+ /usr/share/OVMF/OVMF_VARS_4M.fd - - - - ${pkgs.OVMF.variables}"
+  systemd = {
+    tmpfiles.rules = [
+      "d /usr/share/OVMF 0755 root root -"
+      "L+ /usr/share/OVMF/OVMF_CODE.fd    - - - - ${pkgs.OVMF.firmware}"
+      "L+ /usr/share/OVMF/OVMF_CODE_4M.fd - - - - ${pkgs.OVMF.firmware}"
+      "L+ /usr/share/OVMF/OVMF_VARS.fd    - - - - ${pkgs.OVMF.variables}"
+      "L+ /usr/share/OVMF/OVMF_VARS_4M.fd - - - - ${pkgs.OVMF.variables}"
 
-    "d /usr/libexec 0755 root root -"
-    "L+ /usr/libexec/virtiofsd - - - - ${pkgs.virtiofsd}/bin/virtiofsd"
-  ];
+      "d /usr/libexec 0755 root root -"
+      "L+ /usr/libexec/virtiofsd - - - - ${pkgs.virtiofsd}/bin/virtiofsd"
+    ];
+
+    coredump.extraConfig = ''
+      ProcessSizeMax=1G
+      ExternalSizeMax=1G
+    '';
+  };
 
   environment.shellInit = ''
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
   '';
 
-  services.openssh = {
-    enable = true;
+  /* System Services */
+  services = {
+    openssh = {
+      enable = true;
+    };
+
+    fstrim = {
+      enable = true;
+    };
+
+    /* NDI discovery is mDNS, which libndi does through avahi on Linux. */
+    avahi = {
+      enable = true;
+      openFirewall = true;  /* UDP 5353 */
+    };
+
+      /* Keyring */
+    gnome = {
+      gnome-keyring = {
+        enable = true;
+      };
+    };
   };
 
-  /* Install firefox.*/
-  programs.firefox.enable = true;
+  /* Program Defs*/
+  programs = {
+    /* Install firefox.*/
+    firefox.enable = true;
 
   /* Steam. The FHS environment, controller udev rules and Proton compat tools
      are system-level; the user-side tools live in home/workstation/steam. */
-  programs.steam = {
-    enable = true;
-    extraCompatPackages = [ pkgs.proton-ge-bin ];  /* Proton-GE for stubborn titles */
-    protontricks.enable = true;
-    gamescopeSession.enable = true;
-  };
-  programs.gamemode.enable = true;
+    steam = {
+      enable = true;
+      extraCompatPackages = [ pkgs.proton-ge-bin ];  /* Proton-GE for stubborn titles */
+      protontricks.enable = true;
+      gamescopeSession.enable = true;
+    };
+
+    gamemode = {
+      enable = true;
+    };
 
   /* OBS lives here rather than in home packages: the virtual camera needs the
      v4l2loopback kernel module, which only the system can load. */
-  programs.obs-studio = {
-    enable = true;
-    enableVirtualCamera = true;
-    /* NDI in and out (DistroAV, formerly obs-ndi); pulls in the unfree NDI 6 runtime. */
-    plugins = [ pkgs.obs-studio-plugins.distroav ];
-  };
-
-  /* NDI discovery is mDNS, which libndi does through avahi on Linux. */
-  services.avahi = {
-    enable = true;
-    openFirewall = true;  /* UDP 5353 */
+    obs-studio = {
+      enable = true;
+      enableVirtualCamera = true;
+      /* NDI in and out (DistroAV, formerly obs-ndi); pulls in the unfree NDI 6 runtime. */
+      plugins = [ pkgs.obs-studio-plugins.distroav ];
+    };
   };
 
   /* NDI stream ports (docs.ndi.video, "NDI Related Network Ports"): 5960 source query,
@@ -278,9 +313,6 @@
 
   /* Allow unfree packages */
   nixpkgs.config.allowUnfree = true;
-
-  /* Keyring */
-  services.gnome.gnome-keyring.enable = true;
 
   /* RECOMMENDED: run ROCm PyTorch in a container, not a Nix build. */
   virtualisation.podman.enable = true;
