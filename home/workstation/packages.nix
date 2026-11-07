@@ -77,6 +77,7 @@
     pkgs.jamesdsp
     pkgs.bitcoin
     pkgs.brows3
-    pkgs.swayimg
+    pkgs.swayimg #ImageViwer
+    pkgs.viu #kitty Cli Image Viewer
   ];
 }

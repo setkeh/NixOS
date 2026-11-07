@@ -52,6 +52,11 @@ spawn-at-startup "waybar"
 
 //Window Rules
 
+// Commands to get window details
+// niri msg pick-window      # then click the window you want
+// niri msg focused-window   # the window that currently has focus
+// niri msg windows          # every window with its ID, title and app ID
+
 // Secrets Management
 window-rule {
     match app-id="1password"
@@ -86,6 +91,13 @@ window-rule {
 // Games
 window-rule {
     match app-id="steam_app_default"
+    opacity 1.0
+    open-floating false
+}
+
+// Image viewing
+window-rule {
+    match app-id="swayimg"
     opacity 1.0
     open-floating false
 }
