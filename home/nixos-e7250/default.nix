@@ -18,6 +18,9 @@
     /* Kitty Terminal */
     ../../common/kitty
 
+    /* herdr (agent/terminal workspaces) */
+    ../../common/herdr
+
     /* Tmux Config */
     ../../common/applications/tmux/e7250.nix
 

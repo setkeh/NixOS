@@ -99,6 +99,9 @@
 
                 /* NDI SDK at the version NDI currently serves (see etc/overlays/ndi.nix) */
                 (import ./etc/overlays/ndi.nix)
+
+                /* herdr from nixos-unstable (see etc/overlays/herdr.nix) */
+                (import ./etc/overlays/herdr.nix inputs.nixpkgs-unstable)
               ];
               config = {
                 allowUnfree = true;
@@ -220,6 +223,9 @@
                 (import ./etc/overlays/slstatus.nix)
                 (import ./etc/overlays/dwm.nix)
                 (import ./etc/overlays/age.nix)
+
+                /* herdr from nixos-unstable (see etc/overlays/herdr.nix) */
+                (import ./etc/overlays/herdr.nix inputs.nixpkgs-unstable)
               ];
               config = {
                 allowUnfree = true;
