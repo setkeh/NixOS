@@ -221,6 +221,8 @@
 
   /* Claude Desktop requires nix-ld */
   programs.nix-ld.enable = true;
+
+  /* Systemd Config */
   systemd = {
     tmpfiles.rules = [
       "d /usr/share/OVMF 0755 root root -"
@@ -233,10 +235,10 @@
       "L+ /usr/libexec/virtiofsd - - - - ${pkgs.virtiofsd}/bin/virtiofsd"
     ];
 
-    coredump.extraConfig = ''
-      ProcessSizeMax=1G
-      ExternalSizeMax=1G
-    '';
+    coredump.settings.Coredump = {
+      ProcessSizeMax = "1G";
+      ExternalSizeMax = "1G";
+    };
   };
 
   environment.shellInit = ''
