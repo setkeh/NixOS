@@ -81,5 +81,6 @@
     pkgs.viu #kitty Cli Image Viewer
     pkgs.fzf
     pkgs.yazi
+    pkgs.digikam
   ];
 }
