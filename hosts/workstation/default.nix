@@ -69,13 +69,26 @@
 
     useDHCP = false; /* Use Interface Specific Settings */
 
-    /* Setup Bonds Using kernel bonding because Windows sucks and does not support LACP */
+    /* Setup Bonds Using kernel bonding.
+       bond0 is balance-alb (switch-independent) because it must survive a Windows
+       dual-boot, which does not do LACP.
+       bond-stor is the Linux-only 40G storage bond to the MXL stack
+       (VLAN 1 / 172.0.0.0/24), so it runs 802.3ad against MXL Po6. */
     bonds = {
       bond0 = {
         interfaces = [ "enp65s0" "enp69s0" ];
         driverOptions = {
           mode = "balance-alb";
           miimon = "100";            /* link-health poll, milliseconds */
+        };
+      };
+      bond-stor = {
+        interfaces = [ "enp131s0f0np0" "enp131s0f1np1" ];  /* Mellanox dual-port 40G */
+        driverOptions = {
+          mode = "802.3ad";          /* LACP, matches MXL Po6 "mode active" */
+          lacp_rate = "fast";
+          xmit_hash_policy = "layer3+4";
+          miimon = "100";
         };
       };
     };
@@ -93,11 +106,21 @@
       wlp68s0 = {
         useDHCP = false;
       };
+      /* 40G storage bond members: no L3 of their own, jumbo to match the NAS. */
       enp131s0f0np0 = {
         useDHCP = false;
+        mtu = 9000;
       };
       enp131s0f1np1 = {
         useDHCP = false;
+        mtu = 9000;
+      };
+      /* Storage bond: static on the chassis-internal 172.0.0.0/24, no gateway,
+         jumbo end-to-end with the NAS (which runs 9000 on its storage NICs). */
+      bond-stor = {
+        useDHCP = false;
+        mtu = 9000;
+        ipv4.addresses = [ { address = "172.0.0.100"; prefixLength = 24; } ];
       };
     };
   };
@@ -108,12 +131,8 @@
         wlp68s0 = {
           enable = false;
         };
-        enp131s0f0np0 = {
-          enable = false;
-        };
-        enp131s0f1np1 = {
-          enable = false;
-        };
+        /* enp131s0f0np0 / enp131s0f1np1 are no longer disabled here: they are now
+           members of bond-stor (the 40G storage bond). */
       };
     };
   };
