@@ -44,6 +44,15 @@
       options = [ "noatime" ];
     };
 
+    /* Foundry share on the NAS, over the bond-stor storage network. Mounted on first
+       access so a NAS outage can't hold up boot. Read/write is decided on the server:
+       ownership lives on the dataset, and the client sends setkeh's uid (1000). */
+    "/home/setkeh/Foundry" = {
+      device = "172.0.0.1:/mnt/MainPool/Foundry";
+      fsType = "nfs";
+      options = [ "rw" "nfsvers=4.2" "nconnect=8" "noatime" "_netdev" "noauto" "x-systemd.automount" ];
+    };
+
     "/mnt/backup-disk" = {
       device = "/dev/disk/by-uuid/1ACEC9B8CEC98D07";
       fsType = "ntfs-3g";

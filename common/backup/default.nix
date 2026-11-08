@@ -49,6 +49,8 @@ in {
           "${home}/Downloads"
           "${home}/Development"
           "${home}/Games"
+          # NFS share that already lives on the NAS this backs up to.
+          "${home}/Foundry"
           # Mostly model weights, re-downloadable.
           "${home}/llm-experiments"
           "${home}/ComfyUI"
