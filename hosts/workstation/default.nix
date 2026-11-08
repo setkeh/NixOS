@@ -205,6 +205,7 @@
     age-plugin-yubikey
     age
     nfs-utils
+    pciutils
 
     /* Claude Specific Packages */
     claude-desktop
