@@ -30,7 +30,9 @@ let
     '';
   };
 in {
-  home.packages = [ pkgs.comfyui-rocm launcher ];
+  # bitsandbytes shells out to rocminfo for the GPU arch and warp size; the service gets it from the
+  # user profile, which is on the systemd user PATH.
+  home.packages = [ pkgs.comfyui-rocm launcher pkgs.rocmPackages.rocminfo ];
 
   systemd.user.services.comfyui = {
     Unit = {
