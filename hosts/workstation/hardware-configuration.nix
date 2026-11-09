@@ -59,6 +59,12 @@
       options = [ "uid=1000" "gid=100" ];
     };
 
+    "/mnt/storage" = {
+      device = "/dev/disk/by-uuid/6eade72e-4bbf-3339-bcaf-f04c7500940e";
+      fsType = "ntfs-3g";
+      options = [ "uid=1000" "gid=100" ];
+    };
+
     "/mnt/winders" = {
       device = "/dev/disk/by-uuid/D250EE2650EE1151";
       fsType = "ntfs-3g";
