@@ -55,20 +55,31 @@
 
     "/mnt/backup-disk" = {
       device = "/dev/disk/by-uuid/1ACEC9B8CEC98D07";
-      fsType = "ntfs-3g";
-      options = [ "uid=1000" "gid=100" ];
+      fsType = "ntfs3";
+      options = [ "uid=1000" "gid=100" "nofail" ];
     };
 
+    /* "Storage Disk": NTFS on the 2 TB Crucial SATA SSD (sdb2). nofail so a mount
+       problem can't hold boot in the emergency shell. */
     "/mnt/storage" = {
+      device = "/dev/disk/by-uuid/B81652D2165290EC";
+      fsType = "ntfs3";
+      options = [ "uid=1000" "gid=100" "nofail" ];
+    };
+
+    /* Old OSX disk (HFS+, label StorageDisk, 1 TB WD on USB), mounted only to back it up before
+       it's reformatted. Read-only: Linux can't safely write journaled HFS+, and the volume
+       wasn't cleanly unmounted. nofail so an unplugged or bad disk can't stop boot. */
+    "/mnt/airwallex-data" = {
       device = "/dev/disk/by-uuid/6eade72e-4bbf-3339-bcaf-f04c7500940e";
-      fsType = "ntfs-3g";
-      options = [ "uid=1000" "gid=100" ];
+      fsType = "hfsplus";
+      options = [ "ro" "uid=1000" "gid=100" "nofail" ];
     };
 
     "/mnt/winders" = {
       device = "/dev/disk/by-uuid/D250EE2650EE1151";
-      fsType = "ntfs-3g";
-      options = [ "uid=1000" "gid=100" ];
+      fsType = "ntfs3";
+      options = [ "uid=1000" "gid=100" "nofail" ];
     };
 
     /* For some Reason Clause does not work with skills in linux with symlinks like it does in WSL

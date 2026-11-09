@@ -39,7 +39,7 @@ in {
       Description = "ComfyUI server (ROCm)";
     };
     Service = {
-      ExecStart = "${lib.getExe pkgs.comfyui-rocm} --base-directory ${dataDir} --port ${toString port} --enable-manager --use-pytorch-cross-attention";
+      ExecStart = "${lib.getExe pkgs.comfyui-rocm} --base-directory ${dataDir} --port ${toString port} --enable-manager --use-pytorch-cross-attention --disable-pinned-memory";
       Nice = 10;
       Restart = "on-failure";
       StandardError = "append:%h/ComfyUI/comfyui.log";
