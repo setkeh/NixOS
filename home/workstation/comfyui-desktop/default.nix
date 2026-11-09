@@ -40,6 +40,7 @@ in {
       ExecStart = "${lib.getExe pkgs.comfyui-rocm} --base-directory ${dataDir} --port ${toString port} --enable-manager --use-pytorch-cross-attention";
       Nice = 10;
       Restart = "on-failure";
+      StandardError = "append:%h/ComfyUI/comfyui.log";
     };
     # No Install section: started by the launcher, never at login.
   };
