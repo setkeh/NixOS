@@ -9,7 +9,7 @@ input {
         accel-profile "flat"
 
         // Faster scrolling with the mouse wheel.
-        scroll-factor 2.0
+        scroll-factor 1.0
     }
 
     // Uncomment this to make the mouse warp to the center of newly focused windows.
@@ -107,6 +107,12 @@ window-rule {
 window-rule {
     match app-id="com.moonlight_stream.Moonlight"
     open-on-workspace "Gaming"
+}
+
+window-rule {
+    match app-id="steam_app_513710"
+    open-on-workspace "Gaming"
+    opacity 1.0
 }
 
 // Image viewing

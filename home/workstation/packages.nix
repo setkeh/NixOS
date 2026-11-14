@@ -82,5 +82,6 @@
     pkgs.fzf
     pkgs.yazi
     pkgs.digikam
+    pkgs.blender
   ];
 }
