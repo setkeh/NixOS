@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ../../common/gpg.nix
     ../../common/cleanup.nix
+    ../../common/pki
     ../../common/firewall.nix
     ./pipewire
     ./printing-client.nix

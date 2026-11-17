@@ -13,6 +13,7 @@
     ./services.nix
     #../../common/gpg.nix
     ../../common/cleanup.nix
+    ../../common/pki
 
     /* Windows GPG Fuckery */
     ./gpg-forward.nix

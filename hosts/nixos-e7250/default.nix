@@ -10,6 +10,7 @@
     #./services.nix
     ../../common/gpg.nix
     ../../common/cleanup.nix
+    ../../common/pki
     ../../common/firewall.nix
   ];
 
