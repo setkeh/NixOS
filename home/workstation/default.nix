@@ -30,6 +30,9 @@
     /* SSH Configuration */
     ../../common/ssh.nix
 
+    /* Internal root CA in the browser NSS database */
+    ../../common/pki/home.nix
+
     /* Btop */
     ../../common/applications/btop
 
